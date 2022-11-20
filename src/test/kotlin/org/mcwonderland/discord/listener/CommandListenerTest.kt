@@ -5,10 +5,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.command.CommandService
 import org.mcwonderland.domain.config.Config
+import org.mcwonderland.domain.model.User
 import kotlin.test.Test
 
 internal class CommandListenerTest {
@@ -19,6 +19,8 @@ internal class CommandListenerTest {
 
     private lateinit var messageMock: Message
 
+    private val user = User("user_id")
+
     @BeforeEach
     fun setup() {
         commandService = mockk(relaxed = true)
@@ -26,6 +28,7 @@ internal class CommandListenerTest {
         commandListener = CommandListener(commandService, config)
 
         messageMock = mockk(relaxed = true)
+        every { messageMock.author.id } returns user.id
     }
 
     @Test
@@ -33,8 +36,7 @@ internal class CommandListenerTest {
         every { messageMock.isFromGuild } returns false
 
         sendMessage()
-
-        verify(exactly = 0) { commandService.onCommand(any(), any()) }
+        assertIgnored()
     }
 
     @Test
@@ -44,7 +46,7 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify(exactly = 0) { commandService.onCommand(any(), any()) }
+        assertIgnored()
     }
 
     @Test
@@ -56,7 +58,7 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify(exactly = 0) { commandService.onCommand(any(), any()) }
+        assertIgnored()
     }
 
     @Test
@@ -68,7 +70,11 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify { commandService.onCommand("cw", listOf("command", "sub")) }
+        verify { commandService.onCommand(user, "cw", listOf("command", "sub")) }
+    }
+
+    private fun assertIgnored() {
+        verify(exactly = 0) { commandService.onCommand(any(), any(), any()) }
     }
 
     private fun sendMessage() {
