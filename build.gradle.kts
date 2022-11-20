@@ -12,7 +12,10 @@ repositories {
 }
 
 dependencies {
+    implementation("net.dv8tion:JDA:5.0.0-alpha.22")
+
     testImplementation(kotlin("test"))
+    testImplementation("io.mockk:mockk:1.13.2")
 }
 
 tasks.test {
