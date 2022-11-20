@@ -1,7 +1,7 @@
 package org.mcwonderland.domain
 
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.model.User
 
 interface AccountLinker {
-    fun link(commandSender: CommandSender, platformId: String)
+    fun link(user: User, platformId: String)
 }

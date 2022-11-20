@@ -1,6 +1,6 @@
 package org.mcwonderland.domain
 
-interface AccountFinder {
+interface MojangAccount {
 
     fun isAccountExist(id: String): Boolean
 

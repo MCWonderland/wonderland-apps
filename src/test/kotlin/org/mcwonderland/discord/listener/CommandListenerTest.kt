@@ -6,7 +6,7 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.domain.Dummies
+import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
 import kotlin.test.Test

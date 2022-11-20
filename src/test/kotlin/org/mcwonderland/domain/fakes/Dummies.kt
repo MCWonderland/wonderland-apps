@@ -1,4 +1,4 @@
-package org.mcwonderland.domain
+package org.mcwonderland.domain.fakes
 
 import org.mcwonderland.domain.model.CommandSender
 import org.mcwonderland.domain.model.User
