@@ -3,16 +3,16 @@ package org.mcwonderland.domain.command
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.Dummies
 import kotlin.test.Test
 
-internal class CommandServiceImplTest {
+internal class CommandProcessorImplTest {
 
     @Test
     fun shouldForwardToCorrectCommand() {
-        val commandSender = CommandSender("user_id")
+        val commandSender = Dummies.createCommandSender()
         val command = mockk<Command>(relaxed = true) { every { label } returns "test" }
-        val commandService = CommandServiceImpl(listOf(command))
+        val commandService = CommandProcessorImpl(listOf(command))
 
         commandService.onCommand(commandSender, "test", listOf("arg"))
 

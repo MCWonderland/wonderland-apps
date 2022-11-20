@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.command.impl
 
+import org.mcwonderland.domain.AccountLinker
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.getUuid
 import org.mcwonderland.domain.model.CommandSender

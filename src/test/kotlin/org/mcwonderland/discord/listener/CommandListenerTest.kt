@@ -6,26 +6,26 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.domain.command.CommandService
+import org.mcwonderland.domain.Dummies
+import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.model.CommandSender
 import kotlin.test.Test
 
 internal class CommandListenerTest {
 
     private lateinit var commandListener: CommandListener
-    private lateinit var commandService: CommandService
+    private lateinit var commandProcessor: CommandProcessor
     private lateinit var config: Config
 
     private lateinit var messageMock: Message
 
-    private val commandSender = CommandSender("user_id")
+    private val commandSender = Dummies.createCommandSender()
 
     @BeforeEach
     fun setup() {
-        commandService = mockk(relaxed = true)
+        commandProcessor = mockk(relaxed = true)
         config = mockk()
-        commandListener = CommandListener(commandService, config)
+        commandListener = CommandListener(commandProcessor, config)
 
         messageMock = mockk(relaxed = true)
         every { messageMock.author.id } returns commandSender.id
@@ -70,11 +70,11 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify { commandService.onCommand(commandSender, "cw", listOf("command", "sub")) }
+        verify { commandProcessor.onCommand(commandSender, "cw", listOf("command", "sub")) }
     }
 
     private fun assertIgnored() {
-        verify(exactly = 0) { commandService.onCommand(any(), any(), any()) }
+        verify(exactly = 0) { commandProcessor.onCommand(any(), any(), any()) }
     }
 
     private fun sendMessage() {

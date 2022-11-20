@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain
 
 import org.mcwonderland.domain.model.CommandSender
 

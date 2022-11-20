@@ -4,6 +4,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
+import org.mcwonderland.domain.AccountLinker
+import org.mcwonderland.domain.Dummies
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.exception.InvalidArgumentException
 import org.mcwonderland.domain.command.exception.MissingArgumentException
@@ -16,7 +18,7 @@ class CommandLinkTest {
     private lateinit var accountLinker: AccountLinker
 
     private val label = "link"
-    private val commandSender = CommandSender("user_id")
+    private val commandSender = Dummies.createCommandSender()
 
     @BeforeEach
     fun setUp() {
