@@ -1,7 +1,7 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.CommandSender
 
 interface CommandService {
-    fun onCommand(sender: User, label: String, args: List<String>)
+    fun onCommand(sender: CommandSender, label: String, args: List<String>)
 }

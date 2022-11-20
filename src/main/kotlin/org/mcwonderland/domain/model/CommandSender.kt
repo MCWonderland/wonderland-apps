@@ -1,5 +1,5 @@
 package org.mcwonderland.domain.model
 
-data class User(
+data class CommandSender(
     val id: String
 )

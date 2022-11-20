@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.command.CommandService
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.CommandSender
 import kotlin.test.Test
 
 internal class CommandListenerTest {
@@ -19,7 +19,7 @@ internal class CommandListenerTest {
 
     private lateinit var messageMock: Message
 
-    private val user = User("user_id")
+    private val commandSender = CommandSender("user_id")
 
     @BeforeEach
     fun setup() {
@@ -28,7 +28,7 @@ internal class CommandListenerTest {
         commandListener = CommandListener(commandService, config)
 
         messageMock = mockk(relaxed = true)
-        every { messageMock.author.id } returns user.id
+        every { messageMock.author.id } returns commandSender.id
     }
 
     @Test
@@ -70,7 +70,7 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify { commandService.onCommand(user, "cw", listOf("command", "sub")) }
+        verify { commandService.onCommand(commandSender, "cw", listOf("command", "sub")) }
     }
 
     private fun assertIgnored() {
