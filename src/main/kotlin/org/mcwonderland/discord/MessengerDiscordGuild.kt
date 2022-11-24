@@ -1,9 +1,9 @@
 package org.mcwonderland.discord
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
-import org.mcwonderland.domain.MessageSender
+import org.mcwonderland.domain.Messenger
 
-class MessageSenderDiscordGuild(private val channel: TextChannel) : MessageSender {
+class MessengerDiscordGuild(private val channel: TextChannel) : Messenger {
 
     override fun sendMessage(message: String) {
         channel.sendMessage(message).queue()

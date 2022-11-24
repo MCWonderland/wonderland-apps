@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.domain.AccountLinker
-import org.mcwonderland.domain.MessageSender
+import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.UserFinder
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.Command
@@ -21,7 +21,7 @@ class CommandLinkTest {
     private lateinit var command: Command
     private lateinit var accountLinker: AccountLinker
     private lateinit var userFinder: UserFinder
-    private lateinit var messageSender: MessageSender
+    private lateinit var messenger: Messenger
 
     private val label = "link"
     private val commandSender = Dummies.createCommandSender()
@@ -30,9 +30,9 @@ class CommandLinkTest {
     fun setUp() {
         accountLinker = mockk(relaxed = true)
         userFinder = mockk(relaxed = true)
-        messageSender = mockk(relaxed = true)
+        messenger = mockk(relaxed = true)
 
-        command = CommandLink(label, accountLinker, userFinder, messageSender)
+        command = CommandLink(label, accountLinker, userFinder, messenger)
     }
 
     @Test
@@ -62,7 +62,7 @@ class CommandLinkTest {
             try {
                 command.execute(commandSender, listOf(uuid))
             } finally {
-                verify { messageSender.sendMessage(message) }
+                verify { messenger.sendMessage(message) }
             }
         }
     }

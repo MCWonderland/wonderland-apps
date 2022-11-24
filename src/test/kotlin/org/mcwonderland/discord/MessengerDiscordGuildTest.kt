@@ -5,12 +5,12 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import kotlin.test.Test
 
-internal class MessageSenderDiscordGuildTest {
+internal class MessengerDiscordGuildTest {
 
     @Test
     fun shouldSendToGuildChannel() {
         val channel: TextChannel = mockk(relaxed = true)
-        val messageSender = MessageSenderDiscordGuild(channel)
+        val messageSender = MessengerDiscordGuild(channel)
 
         messageSender.sendMessage("Hello World")
 

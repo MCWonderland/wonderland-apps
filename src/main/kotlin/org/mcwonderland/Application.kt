@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.access.MongoClientFactory
 import org.mcwonderland.access.UserRepositoryImpl
 import org.mcwonderland.discord.DiscordMcAccountLinker
-import org.mcwonderland.discord.MessageSenderDiscordGuild
+import org.mcwonderland.discord.MessengerDiscordGuild
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.command.CommandProcessorImpl
@@ -45,7 +45,7 @@ fun main() {
                             userRepository = userRepository
                         ),
                         userFinder = UserFinderByDiscordId(userRepository),
-                        messageSender = MessageSenderDiscordGuild(channel)
+                        messenger = MessengerDiscordGuild(channel)
                     )
                 )
             ),

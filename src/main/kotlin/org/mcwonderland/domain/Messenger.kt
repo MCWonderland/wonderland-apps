@@ -1,5 +1,5 @@
 package org.mcwonderland.domain
 
-interface MessageSender {
+interface Messenger {
     fun sendMessage(message: String)
 }
