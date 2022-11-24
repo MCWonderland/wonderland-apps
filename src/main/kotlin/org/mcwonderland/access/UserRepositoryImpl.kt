@@ -13,7 +13,7 @@ class UserRepositoryImpl(
 
     override fun findUserByMcId(mcUUID: String): User? {
         return mongoClient.getDatabase(config.dbName)
-            .getCollection("users", User::class.java)
+            .getUserCollection()
             .find(eq(User::mcId.name, mcUUID))
             .first()
     }

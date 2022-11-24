@@ -23,9 +23,7 @@ internal class UserRepositoryImplTest : MongoDBTest() {
     fun findByMcId() {
         val user = User(id = "123", mcId = "mc_id")
 
-        mongoClient.getDatabase(config.dbName)
-            .getCollection("users", User::class.java)
-            .insertOne(user)
+        mongoClient.getDatabase(config.dbName).getUserCollection().insertOne(user)
 
         assertEquals(user, userRepository.findUserByMcId("mc_id"))
     }
