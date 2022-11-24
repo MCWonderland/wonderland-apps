@@ -12,6 +12,8 @@ internal class UserRepositoryImplTest : MongoDBTest() {
     private lateinit var config: Config
     private lateinit var userRepository: UserRepositoryImpl
 
+    private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id")
+
     @BeforeEach
     fun setUp() {
         config = ConfigStub()
@@ -21,10 +23,25 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun findByMcId() {
-        val user = User(id = "123", mcId = "mc_id")
-
         mongoClient.getDatabase(config.dbName).getUserCollection().insertOne(user)
 
         assertEquals(user, userRepository.findUserByMcId("mc_id"))
+    }
+
+    @Test
+    fun findByDiscordId() {
+        mongoClient.getDatabase(config.dbName).getUserCollection().insertOne(user)
+
+        assertEquals(user, userRepository.findUserByDiscordId("discord_id"))
+    }
+
+    @Test
+    fun updateMcId() {
+        mongoClient.getDatabase(config.dbName).getUserCollection().insertOne(user)
+
+        val newMcId = "new_mc_id"
+        val user = userRepository.updateMcId(user.id, newMcId)
+
+        assertEquals(newMcId, user?.mcId)
     }
 }
