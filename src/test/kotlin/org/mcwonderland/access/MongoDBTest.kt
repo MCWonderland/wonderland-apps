@@ -1,8 +1,6 @@
 package org.mcwonderland.access
 
 import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoClientFactory
-import com.mongodb.client.MongoClients
 import de.flapdoodle.embed.mongo.Command
 import de.flapdoodle.embed.mongo.MongodExecutable
 import de.flapdoodle.embed.mongo.MongodProcess
@@ -18,7 +16,6 @@ import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.runtime.Network
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import kotlin.properties.Delegates
 
 
 open class MongoDBTest {
@@ -44,7 +41,7 @@ open class MongoDBTest {
         this.mongodExecutable = doGetExecutable(config)
         this.mongodExecutable.start()
 
-        this.mongoClient = MongoClients.create("mongodb://localhost:$port")
+        this.mongoClient = MongoClientFactory.createClient("mongodb://localhost:$port")
     }
 
     @AfterEach

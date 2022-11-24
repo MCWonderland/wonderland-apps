@@ -1,7 +1,6 @@
 package org.mcwonderland.access
 
 import com.mongodb.client.MongoClient
-import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Filters.eq
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.model.User
