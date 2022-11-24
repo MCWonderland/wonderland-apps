@@ -1,12 +1,14 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.model.PlatformUser
 
 interface Command {
     val label: String
     val usage: String
         get() = "Usage: /$label"
 
-    fun execute(sender: CommandSender, args: List<String>)
+    fun execute(sender: PlatformUser, args: List<String>)
+
+
 
 }

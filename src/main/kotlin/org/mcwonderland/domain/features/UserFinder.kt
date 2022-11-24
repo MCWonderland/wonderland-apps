@@ -1,4 +1,4 @@
-package org.mcwonderland.domain
+package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.model.User
 

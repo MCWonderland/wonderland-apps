@@ -1,5 +1,6 @@
 package org.mcwonderland.domain
 
+import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 import java.util.UUID

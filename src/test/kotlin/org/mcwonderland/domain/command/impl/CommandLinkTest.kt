@@ -6,9 +6,9 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.domain.AccountLinker
+import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.Messenger
-import org.mcwonderland.domain.UserFinder
+import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.exception.InvalidArgumentException

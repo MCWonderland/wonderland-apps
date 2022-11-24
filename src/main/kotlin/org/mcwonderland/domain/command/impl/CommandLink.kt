@@ -1,11 +1,11 @@
 package org.mcwonderland.domain.command.impl
 
-import org.mcwonderland.domain.AccountLinker
+import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.Messenger
-import org.mcwonderland.domain.UserFinder
+import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.getUuid
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.model.PlatformUser
 
 class CommandLink(
     override val label: String,
@@ -14,7 +14,7 @@ class CommandLink(
     private val messenger: Messenger
 ) : Command {
 
-    override fun execute(sender: CommandSender, args: List<String>) {
+    override fun execute(sender: PlatformUser, args: List<String>) {
 
         try {
             val uuid = args.getUuid(0)

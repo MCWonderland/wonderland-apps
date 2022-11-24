@@ -1,11 +1,11 @@
 package org.mcwonderland.domain.fakes
 
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.model.PlatformUser
 import org.mcwonderland.domain.model.User
 
 object Dummies {
 
-    fun createCommandSender() = CommandSender(
+    fun createCommandSender() = PlatformUser(
         id = "123"
     )
 

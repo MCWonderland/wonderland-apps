@@ -1,12 +1,10 @@
 package org.mcwonderland.discord
 
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.AccountLinker
-import org.mcwonderland.domain.UserCreator
+import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.exception.AccountAlreadyOwnedException
 import org.mcwonderland.domain.exception.AccountNotExistException
 import org.mcwonderland.domain.exception.AlreadyLinkedException
-import org.mcwonderland.domain.model.CommandSender
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 
