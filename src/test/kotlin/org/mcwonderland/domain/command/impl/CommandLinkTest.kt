@@ -13,11 +13,9 @@ import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.exception.InvalidArgumentException
 import org.mcwonderland.domain.command.exception.MissingArgumentException
-import org.mcwonderland.domain.exception.AlreadyLinkedException
 import java.lang.Exception
 import java.util.UUID
 import kotlin.test.Test
-import kotlin.test.assertFails
 
 class CommandLinkTest {
     private lateinit var command: Command
@@ -64,7 +62,7 @@ class CommandLinkTest {
             try {
                 command.execute(commandSender, listOf(uuid))
             } finally {
-                verify { messageSender.sendMessage(commandSender.id, message) }
+                verify { messageSender.sendMessage(message) }
             }
         }
     }

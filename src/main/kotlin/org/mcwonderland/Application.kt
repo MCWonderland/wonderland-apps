@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.JDABuilder
 import org.mcwonderland.access.MongoClientFactory
 import org.mcwonderland.access.UserRepositoryImpl
 import org.mcwonderland.discord.DiscordMcAccountLinker
-import org.mcwonderland.discord.MessageSenderDiscord
+import org.mcwonderland.discord.MessageSenderDiscordGuild
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.command.CommandProcessorImpl
@@ -25,6 +25,8 @@ fun main() {
     val config = AppConfig()
     val userRepository = UserRepositoryImpl(mongoClient, config)
 
+    val channel = jda.getGuildById("guildId")!!.getTextChannelById("channelId")!!
+
     jda.addEventListener(
         CommandListener(
             CommandProcessorImpl(
@@ -36,7 +38,7 @@ fun main() {
                             userRepository = userRepository
                         ),
                         userFinder = UserFinderByDiscordId(userRepository),
-                        messageSender = MessageSenderDiscord()
+                        messageSender = MessageSenderDiscordGuild(channel)
                     )
                 )
             ),

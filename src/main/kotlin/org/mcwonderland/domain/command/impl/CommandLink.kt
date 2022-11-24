@@ -5,11 +5,7 @@ import org.mcwonderland.domain.MessageSender
 import org.mcwonderland.domain.UserFinder
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.getUuid
-import org.mcwonderland.domain.exception.AccountAlreadyOwnedException
-import org.mcwonderland.domain.exception.AccountNotExistException
-import org.mcwonderland.domain.exception.AlreadyLinkedException
 import org.mcwonderland.domain.model.CommandSender
-import org.mcwonderland.domain.repository.UserRepository
 
 class CommandLink(
     override val label: String,
@@ -24,7 +20,7 @@ class CommandLink(
         try {
             accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
         } catch (e: Exception) {
-            messageSender.sendMessage(sender.id, e.message ?: "Unknown error")
+            messageSender.sendMessage(e.message ?: "Unknown error")
         }
     }
 
