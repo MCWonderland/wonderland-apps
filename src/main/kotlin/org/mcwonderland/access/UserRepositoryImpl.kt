@@ -35,4 +35,8 @@ class UserRepositoryImpl(
         )
     }
 
+    override fun insertUser(user: User): User {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -6,4 +6,5 @@ interface UserRepository {
     fun findUserByMcId(mcUUID: String): User?
     fun findUserByDiscordId(discordId: String): User?
     fun updateMcId(userId: String, mcId: String): User?
+    fun insertUser(user: User): User
 }

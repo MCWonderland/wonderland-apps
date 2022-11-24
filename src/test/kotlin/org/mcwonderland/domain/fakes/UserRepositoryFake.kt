@@ -21,6 +21,11 @@ class UserRepositoryFake : UserRepository {
         return user
     }
 
+    override fun insertUser(user: User): User {
+        users.add(user)
+        return user
+    }
+
     fun addUser(user: User) {
         this.users.add(user)
     }
