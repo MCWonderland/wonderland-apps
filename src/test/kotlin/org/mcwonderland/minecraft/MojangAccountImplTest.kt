@@ -25,7 +25,6 @@ internal class MojangAccountImplTest {
 
     @Nested
     inner class IsAccountExist {
-
         @Test
         fun apiResponseNull_shouldReturnsFalse() {
             val uuid = UUID.randomUUID()
