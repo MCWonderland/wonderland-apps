@@ -1,5 +1,5 @@
 package org.mcwonderland.domain.command.exception
 
-class InvalidArgumentException(override val message: String) : RuntimeException(message) {
+class InvalidArgumentException(message: String) : RuntimeException("Invalid argument: $message") {
 
 }

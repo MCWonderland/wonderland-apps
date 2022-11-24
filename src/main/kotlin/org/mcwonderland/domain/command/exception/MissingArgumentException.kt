@@ -1,3 +1,3 @@
 package org.mcwonderland.domain.command.exception
 
-class MissingArgumentException(override val message: String) : RuntimeException(message)
+class MissingArgumentException(message: String) : RuntimeException("Missing argument: $message")

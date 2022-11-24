@@ -15,10 +15,11 @@ class CommandLink(
 ) : Command {
 
     override fun execute(sender: CommandSender, args: List<String>) {
-        val uuid = args.getUuid(0)
 
         try {
+            val uuid = args.getUuid(0)
             accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
+            messageSender.sendMessage("Successfully linked your account to $uuid")
         } catch (e: Exception) {
             messageSender.sendMessage(e.message ?: "Unknown error")
         }

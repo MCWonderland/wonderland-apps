@@ -1,6 +1,7 @@
 package org.mcwonderland
 
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.access.MongoClientFactory
 import org.mcwonderland.access.UserRepositoryImpl
 import org.mcwonderland.discord.DiscordMcAccountLinker
@@ -19,13 +20,19 @@ class AppConfig : Config {
 }
 
 fun main() {
-    val jda = JDABuilder.createDefault("token").build()
+    val jda = JDABuilder
+        .createDefault("MTA0NTM2Njk2NDM1NDMwMjA1NA.GQ5XSl.87Qk2W7YVyJXw-yoDxzrpvhBze3JMpmv_DKDJ0")
+        .enableIntents(listOf(GatewayIntent.MESSAGE_CONTENT))
+        .build()
+
+    jda.awaitReady()
+
     val mojangApi = Mojang().connect()
     val mongoClient = MongoClientFactory.createClient("mongodb://localhost:27017")
     val config = AppConfig()
     val userRepository = UserRepositoryImpl(mongoClient, config)
 
-    val channel = jda.getGuildById("guildId")!!.getTextChannelById("channelId")!!
+    val channel = jda.getGuildById("574167124579319809")!!.getTextChannelById("1045370459149054012")!!
 
     jda.addEventListener(
         CommandListener(
@@ -45,4 +52,5 @@ fun main() {
             config
         ),
     )
+
 }
