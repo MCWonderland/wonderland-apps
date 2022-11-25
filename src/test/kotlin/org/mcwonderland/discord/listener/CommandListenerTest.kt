@@ -66,12 +66,27 @@ internal class CommandListenerTest {
         every { messageMock.isFromGuild } returns true
         every { messageMock.author.isBot } returns false
         every { config.commandPrefix } returns "!"
-        every { messageMock.contentStripped } returns "!cw command sub"
+        every { messageMock.contentRaw } returns "!cw command sub"
 
         sendMessage()
 
         verify { commandProcessor.onCommand(commandSender, "cw", listOf("command", "sub")) }
     }
+
+    @Test
+    fun shouldFormatUsers() {
+        val id = "1234567890"
+
+        every { messageMock.isFromGuild } returns true
+        every { messageMock.author.isBot } returns false
+        every { config.commandPrefix } returns "!"
+        every { messageMock.contentRaw } returns "!cw command <@$id>"
+
+        sendMessage()
+
+        verify { commandProcessor.onCommand(commandSender, "cw", listOf("command", id)) }
+    }
+
 
     private fun assertIgnored() {
         verify(exactly = 0) { commandProcessor.onCommand(any(), any(), any()) }

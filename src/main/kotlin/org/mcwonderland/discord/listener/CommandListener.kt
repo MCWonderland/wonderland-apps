@@ -14,7 +14,7 @@ class CommandListener(
     override fun onMessageReceived(event: MessageReceivedEvent) {
 
         val message = event.message
-        val rawMessage = message.contentStripped
+        val rawMessage = message.contentRaw
         val author = message.author
 
         if (!message.isFromGuild
@@ -22,16 +22,17 @@ class CommandListener(
             || !rawMessage.startsWith(config.commandPrefix)
         ) return
 
+        val splits = rawMessage.removePrefix("!").split(" ")
+        val label = splits[0]
+        val args = splits.drop(1).map { formatArgs(it) }
 
-        rawMessage
-            .removePrefix("!")
-            .split(" ")
-            .let {
-                commandProcessor.onCommand(
-                    PlatformUser(author.id),
-                    it[0],
-                    it.drop(1)
-                )
-            }
+        commandProcessor.onCommand(PlatformUser(author.id), label, args)
+    }
+
+    private fun formatArgs(it: String): String {
+        if (it.startsWith("<@") && it.endsWith(">"))
+            return it.removePrefix("<@").removeSuffix(">")
+
+        return it
     }
 }
