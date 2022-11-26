@@ -22,11 +22,15 @@ class CommandListener(
             || !rawMessage.startsWith(config.commandPrefix)
         ) return
 
-        val splits = rawMessage.removePrefix("!").split(" ")
+        val splits = rawMessage.removePrefix("!").removeTrailingSpaces().split(" ")
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
 
         commandProcessor.onCommand(PlatformUser(author.id), label, args)
+    }
+
+    private fun String.removeTrailingSpaces(): String {
+        return this.trim().replace(" +".toRegex(), " ")
     }
 
     private fun formatArgs(it: String): String {
