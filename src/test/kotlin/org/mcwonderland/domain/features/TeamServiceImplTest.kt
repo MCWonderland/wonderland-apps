@@ -1,15 +1,19 @@
 package org.mcwonderland.domain.features
 
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.assertError
+import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.exception.PermissionDeniedException
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
+import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
 import org.mcwonderland.domain.model.toTeam
@@ -23,6 +27,7 @@ internal class TeamServiceImplTest {
     private lateinit var userFinder: UserFinderFake
     private lateinit var teamRepository: TeamRepositoryFake
     private lateinit var userRepository: UserRepositoryFake
+    private lateinit var accountLinker: AccountLinker
 
     private lateinit var user: User
 
@@ -32,9 +37,10 @@ internal class TeamServiceImplTest {
         userFinder = UserFinderFake()
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
-        messages = Messages()
+        messages = MessagesStub()
+        accountLinker = mockk(relaxed = true)
 
-        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository)
+        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository, accountLinker)
     }
 
     @Nested
@@ -44,7 +50,7 @@ internal class TeamServiceImplTest {
 
         @Test
         fun executorWithoutPerm_shouldDenied() {
-            assertThrows<PermissionDeniedException> {
+            assertRuntimeError(messages.noPermission()) {
                 teamService.createTeam(user, listOf())
             }
         }
@@ -71,6 +77,7 @@ internal class TeamServiceImplTest {
             }
         }
 
+
         @Test
         fun membersAlreadyInTeam_shouldCancel() {
             gainAdminPerm()
@@ -85,10 +92,22 @@ internal class TeamServiceImplTest {
 
 
         @Test
+        fun memberNotLinked_shouldCancel() {
+            gainAdminPerm()
+
+            userFinder.add(member)
+
+            assertError<RuntimeException>(messages.membersNotLinked(listOf(member))) {
+                teamService.createTeam(user, listOf(member.id))
+            }
+        }
+
+        @Test
         fun shouldCreateTeam() {
             gainAdminPerm()
 
             userFinder.add(member)
+            every { accountLinker.isLinked(member) } returns true
 
             val team = teamService.createTeam(user, listOf(member.id))
 
@@ -96,9 +115,7 @@ internal class TeamServiceImplTest {
             assertEquals(teamRepository.findUsersTeam(member.id), team.toDBTeam())
         }
 
-        private fun gainAdminPerm() {
-            user.isAdmin = true
-        }
+
     }
 
 
@@ -116,5 +133,56 @@ internal class TeamServiceImplTest {
             assertEquals(listOf(team), teams)
         }
 
+    }
+
+    @Nested
+    inner class RemoveFromTeam {
+
+        private val targetId = "target_id"
+        private val target = User(id = "target_id")
+
+        @Test
+        fun withoutPermission_shouldDenied() {
+            assertRuntimeError(messages.noPermission()) {
+                teamService.removeFromTeam(user, targetId)
+            }
+        }
+
+        @Test
+        fun targetNotExist_shouldCancel() {
+            gainAdminPerm()
+
+            assertRuntimeError(messages.userNotFound(targetId)) {
+                teamService.removeFromTeam(user, targetId)
+            }
+        }
+
+        @Test
+        fun targetNotInTeam_shouldCancel() {
+            gainAdminPerm()
+            userFinder.add(target)
+
+            assertRuntimeError(messages.userNotInTeam(target)) {
+                teamService.removeFromTeam(user, target.id)
+            }
+        }
+
+        @Test
+        fun removeFromTeamAndReturnNewValue() {
+            teamRepository.createTeamWithUsers(target)
+
+            gainAdminPerm()
+            userFinder.add(target)
+
+            val newTeam = teamService.removeFromTeam(user, target.id)
+
+            assertEquals(Team(), newTeam)
+        }
+
+    }
+
+
+    private fun gainAdminPerm() {
+        user.isAdmin = true
     }
 }

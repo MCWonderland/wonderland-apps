@@ -1,5 +1,5 @@
 package org.mcwonderland.domain.model
 
 data class Team(
-    val members: List<User>
+    val members: List<User> = listOf()
 )

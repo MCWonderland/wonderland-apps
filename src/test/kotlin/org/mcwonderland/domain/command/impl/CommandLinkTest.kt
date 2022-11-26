@@ -8,28 +8,33 @@ import org.junit.jupiter.api.Nested
 import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.Dummies
+import org.mcwonderland.domain.fakes.MessengerFake
+import org.mcwonderland.domain.fakes.UserFinderStub
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.features.UserFinder
 import java.util.*
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class CommandLinkTest {
     private lateinit var command: Command
     private lateinit var accountLinker: AccountLinker
     private lateinit var userFinder: UserFinder
-    private lateinit var messenger: Messenger
+    private lateinit var messenger: MessengerFake
     private lateinit var messages: Messages
 
     private val label = "link"
     private val commandSender = Dummies.createCommandSender()
+    private val foundedUser = Dummies.createUserDefault()
 
     @BeforeEach
     fun setUp() {
         accountLinker = mockk(relaxed = true)
-        userFinder = mockk(relaxed = true)
-        messenger = mockk(relaxed = true)
-        messages = Messages()
+        userFinder = UserFinderStub(foundedUser)
+        messenger = MessengerFake()
+        messages = MessagesStub()
 
         command = CommandLink(label, accountLinker, userFinder, messenger, messages)
     }
@@ -37,34 +42,27 @@ class CommandLinkTest {
     @Test
     fun missingArguments() {
         command.execute(commandSender, listOf())
-        verify { messenger.sendMessage(messages.invalidArg("UUID")) }
+        assertEquals(messages.invalidArg("UUID"), messenger.lastMessage)
     }
 
     @Test
     fun invalidUUID() {
         command.execute(commandSender, listOf("invalid_uuid"))
-        verify { messenger.sendMessage(messages.invalidArg("UUID")) }
+        assertEquals(messages.invalidArg("UUID"), messenger.lastMessage)
     }
 
     @Nested
     inner class Executed {
 
         private val uuid = UUID.randomUUID().toString()
-        private val foundedUser = Dummies.createUserDefault()
 
         @Test
-        fun linkFailed_sendMessages() {
-            val message = "message"
-            val exception = Exception(message)
+        fun linked_sendMessage() {
+            command.execute(commandSender, listOf(uuid))
 
-            every { userFinder.findOrCreate(commandSender.id) } returns foundedUser
-            every { accountLinker.link(foundedUser, uuid) } throws exception
+            every { accountLinker.link(foundedUser, uuid) } returns foundedUser
 
-            try {
-                command.execute(commandSender, listOf(uuid))
-            } finally {
-                verify { messenger.sendMessage(message) }
-            }
+            assertEquals(messages.linked(foundedUser), messenger.lastMessage)
         }
     }
 }

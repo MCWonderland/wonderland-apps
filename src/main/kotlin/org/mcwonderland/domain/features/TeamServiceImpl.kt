@@ -1,7 +1,6 @@
 package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.exception.PermissionDeniedException
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
@@ -13,20 +12,30 @@ class TeamServiceImpl(
     private val messages: Messages,
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val accountLinker: AccountLinker
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
         if (!executor.isAdmin)
-            throw PermissionDeniedException()
+            throw RuntimeException(messages.noPermission())
 
         if (ids.isEmpty())
             throw RuntimeException(messages.membersCantBeEmpty())
 
         val members = mapEveryIdToUserOrThrow(ids)
+
         checkEveryMemberIsNotInTeam(members)
+        checkEveryoneIsLinked(members)
 
         return createTeamWith(members)
+    }
+
+    private fun checkEveryoneIsLinked(members: List<User>) {
+        members.filter { !accountLinker.isLinked(it)}.let {
+            if (it.isNotEmpty())
+                throw RuntimeException(messages.membersNotLinked(it))
+        }
     }
 
     override fun listTeams(): List<Team> {
@@ -34,6 +43,16 @@ class TeamServiceImpl(
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())
 
         return dbTeams.map { it.toTeam(users) }
+    }
+
+    override fun removeFromTeam(executor: User, targetId: String): Team {
+        if (!executor.isAdmin)
+            throw RuntimeException(messages.noPermission())
+
+        val target = userFinder.find(targetId) ?: throw RuntimeException(messages.userNotFound(targetId))
+        val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw RuntimeException(messages.userNotInTeam(target))
+
+        return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
 
     private fun createTeamWith(members: List<User>): Team {

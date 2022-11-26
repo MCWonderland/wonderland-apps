@@ -43,4 +43,13 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
         assertEquals(listOf(team), teamRepository.findAll())
     }
+
+    @Test
+    fun removeUserFromTeam() {
+        val team = DBTeam(listOf("member"))
+        collection.insertOne(team)
+
+        assertEquals(DBTeam(), teamRepository.removeUserFromTeam("member"))
+        assertEquals(null, teamRepository.findUsersTeam("member"))
+    }
 }
