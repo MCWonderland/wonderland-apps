@@ -24,25 +24,24 @@ internal class MojangAccountImplTest {
 
 
     @Nested
-    inner class IsAccountExist {
+    inner class GetUUIDByName {
+        private val name = "user_ign"
+
         @Test
         fun apiResponseNull_shouldReturnsFalse() {
-            val uuid = UUID.randomUUID()
+            every { mojang.getUUIDOfUsername(name) } returns null
 
-            every { mojang.getPlayerProfile(uuid.toString()) } returns null
-
-            assertFalse(mojangAccount.isAccountExist(uuid.toString()))
+            assertNull(mojangAccount.getUUIDByName(name))
         }
 
         @Test
-        fun apiThrowsException_shouldReturnsFalse() {
+        fun shouldParseUuidThatWithoutDashes() {
             val uuid = UUID.randomUUID()
 
-            every { mojang.getPlayerProfile(uuid.toString()) } throws Exception()
+            every { mojang.getUUIDOfUsername(name) } returns uuid.toString().replace("-", "")
 
-            assertFalse(mojangAccount.isAccountExist(uuid.toString()))
+            assertEquals(uuid, mojangAccount.getUUIDByName(name))
         }
-
     }
 
     @Nested

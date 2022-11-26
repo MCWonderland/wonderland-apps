@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.access.MongoClientFactory
 import org.mcwonderland.access.TeamRepositoryImpl
 import org.mcwonderland.access.UserRepositoryImpl
-import org.mcwonderland.discord.DiscordMcAccountLinker
+import org.mcwonderland.discord.DiscordMcIgnAccountLinker
 import org.mcwonderland.discord.MessengerDiscordGuild
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.UserFinderByDiscordId
@@ -15,10 +15,7 @@ import org.mcwonderland.domain.command.impl.CommandLink
 import org.mcwonderland.domain.command.impl.CommandListTeams
 import org.mcwonderland.domain.command.impl.CommandRemoveTeam
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl
-import org.mcwonderland.domain.config.MessagesStub
-import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.TeamServiceImpl
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
@@ -46,7 +43,7 @@ fun main() {
     val channel = jda.getGuildById("574167124579319809")!!.getTextChannelById("1046025295578275850")!!
     val messages = MessagesImpl(mojangAccount)
 
-    val accountLinker = DiscordMcAccountLinker(
+    val accountLinker = DiscordMcIgnAccountLinker(
         mojangAccount = mojangAccount,
         userRepository = userRepository,
         messages = messages
