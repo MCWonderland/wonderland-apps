@@ -9,8 +9,10 @@ import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exception.PermissionDeniedException
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
+import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
+import org.mcwonderland.domain.model.toTeam
 import kotlin.test.assertEquals
 
 internal class TeamServiceImplTest {
@@ -20,6 +22,7 @@ internal class TeamServiceImplTest {
     private lateinit var messages: Messages
     private lateinit var userFinder: UserFinderFake
     private lateinit var teamRepository: TeamRepositoryFake
+    private lateinit var userRepository: UserRepositoryFake
 
     private lateinit var user: User
 
@@ -28,9 +31,10 @@ internal class TeamServiceImplTest {
         user = User()
         userFinder = UserFinderFake()
         teamRepository = TeamRepositoryFake()
+        userRepository = UserRepositoryFake()
         messages = Messages()
 
-        teamService = TeamServiceImpl(messages, userFinder, teamRepository)
+        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository)
     }
 
     @Nested
@@ -97,4 +101,20 @@ internal class TeamServiceImplTest {
         }
     }
 
+
+    @Nested
+    inner class ListTeams {
+
+        @Test
+        fun shouldListTeams() {
+            val member = User(id = "member_id")
+            val team = teamRepository.createTeamWithUsers(member).toTeam(listOf(member))
+
+            userRepository.addUser(member)
+            val teams = teamService.listTeams()
+
+            assertEquals(listOf(team), teams)
+        }
+
+    }
 }

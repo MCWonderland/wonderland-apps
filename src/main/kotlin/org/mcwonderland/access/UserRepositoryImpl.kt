@@ -40,4 +40,8 @@ class UserRepositoryImpl(
         return user
     }
 
+    override fun findUsers(userIds: List<String>): List<User> {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -52,7 +52,8 @@ fun main() {
     val teamService = TeamServiceImpl(
         messages = messages,
         userFinder = userFinder,
-        teamRepository = teamRepository
+        teamRepository = teamRepository,
+        userRepository = userRepository
     )
 
     jda.addEventListener(
