@@ -9,5 +9,5 @@ fun Team.toDBTeam(): DBTeam {
 }
 
 fun DBTeam.toTeam(userMapper: List<User>): Team {
-    return Team(members.map { memberId -> userMapper.first { memberId == it.id } })
+    return Team(members.mapNotNull { memberId -> userMapper.find { memberId == it.id } })
 }

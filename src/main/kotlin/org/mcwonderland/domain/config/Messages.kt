@@ -33,4 +33,11 @@ class Messages {
             "隊伍 ${index}, 成員: ${team.members.map { userTag(it.discordId) }.joinToString(", ")}"
         }.joinToString("\n")
     }
+
+    fun noPermission(): String = "你沒有權限執行這個操作"
+    fun userNotFound(targetId: String): String = "找不到使用者的數據: ${userTag(targetId)}"
+
+    fun userNotInTeam(target: User): String {
+        return "使用者 ${userTag(target.discordId)} 不在任何隊伍當中"
+    }
 }

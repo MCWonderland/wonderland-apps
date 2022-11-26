@@ -22,6 +22,12 @@ class TeamRepositoryFake : TeamRepository {
         return teams.toList()
     }
 
+    override fun removeUserFromTeam(id: String): DBTeam? {
+        val team = teams.find { it.members.contains(id) } ?: return null
+        teams.remove(team)
+        return team
+    }
+
     fun createTeamWithUsers(vararg users: User): DBTeam {
         val team = DBTeam(users.toList().map { it.id })
         teams.add(team)
