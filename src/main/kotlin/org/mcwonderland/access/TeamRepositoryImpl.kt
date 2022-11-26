@@ -11,14 +11,16 @@ class TeamRepositoryImpl(
     private val config: Config
 ) : TeamRepository {
 
+    private val collection
+        get() = mongoClient.getDatabase(config.dbName).getTeamCollection()
+
     override fun findUsersTeam(userId: String): DBTeam? {
-        return mongoClient.getDatabase(config.dbName)
-            .getTeamCollection()
+        return collection
             .find(Filters.`in`(DBTeam::members.name, userId))
             .first()
     }
 
     override fun insertTeam(team: DBTeam) {
-        TODO("Not yet implemented")
+        collection.insertOne(team)
     }
 }

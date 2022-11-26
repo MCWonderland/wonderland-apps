@@ -12,6 +12,9 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     private lateinit var teamRepository: TeamRepository
 
+    private val collection
+        get() = getDB().getTeamCollection()
+
     @BeforeEach
     fun setup() {
         teamRepository = TeamRepositoryImpl(mongoClient, config)
@@ -20,12 +23,16 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
     @Test
     fun findUsersTeam() {
         val team = DBTeam(listOf("member"))
-        getDB().getTeamCollection().insertOne(team)
+        collection.insertOne(team)
 
         assertEquals(team, teamRepository.findUsersTeam("member"))
     }
 
     @Test
     fun insertTeam() {
+        val team = DBTeam(listOf("member"))
+        teamRepository.insertTeam(team)
+
+        assertEquals(team, collection.find().first())
     }
 }
