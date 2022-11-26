@@ -17,18 +17,14 @@ class CommandCreateTeam(
 
     override val usage: String = "Usage: /$label <id> <id>...."
 
-    override fun execute(sender: PlatformUser, args: List<String>) {
+    override fun execute(sender: PlatformUser, args: List<String>) = runCommand(messenger) {
         if (args.isEmpty()) {
             messenger.sendMessage(usage)
-            return
+            return@runCommand
         }
 
-        try {
-            val team = teamService.createTeam(userFinder.findOrCreate(sender.id), args)
-            messenger.sendMessage(messages.teamCreated(team))
-        } catch (e: Exception) {
-            messenger.sendMessage(e.message ?: "Unknown error")
-        }
+        val team = teamService.createTeam(userFinder.findOrCreate(sender.id), args)
+        messenger.sendMessage(messages.teamCreated(team))
     }
 
 

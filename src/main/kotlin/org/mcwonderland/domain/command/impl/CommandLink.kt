@@ -17,14 +17,10 @@ class CommandLink(
     private val messages: Messages
 ) : Command {
 
-    override fun execute(sender: PlatformUser, args: List<String>) {
-        try {
-            val uuid = args.getOrNull(0) ?: throw RuntimeException(messages.invalidArg("mcIgn"))
-            val userLinked = accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
-            messenger.sendMessage(messages.linked(userLinked))
-        } catch (e: Exception) {
-            messenger.sendMessage(e.message ?: "Unknown error")
-        }
+    override fun execute(sender: PlatformUser, args: List<String>) = runCommand(messenger) {
+        val uuid = args.getOrNull(0) ?: throw RuntimeException(messages.invalidArg("mcIgn"))
+        val userLinked = accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
+        messenger.sendMessage(messages.linked(userLinked))
     }
 
     private fun fail(message: String) {

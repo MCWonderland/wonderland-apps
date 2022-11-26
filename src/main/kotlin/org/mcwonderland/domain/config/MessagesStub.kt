@@ -53,4 +53,12 @@ class MessagesStub : Messages {
         return "已經連結帳號: ${foundedUser.mcId}"
     }
 
+    override fun registered(): String {
+        return "已經註冊"
+    }
+
+    override fun unRegistered(): String {
+        return "已經取消註冊"
+    }
+
 }

@@ -60,6 +60,14 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return "${discordTag(user.discordId)} 已經綁定帳號: ${mcName(user)}"
     }
 
+    override fun registered(): String {
+        return "已成功報名 Weekly Cup! 感謝你的參與"
+    }
+
+    override fun unRegistered(): String {
+        return "已取消報名"
+    }
+
 
     private fun tagAndName(user: User): String {
         return "${discordTag(user.discordId)}(${mcName(user)})"
