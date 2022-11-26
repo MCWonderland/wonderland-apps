@@ -11,6 +11,7 @@ import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.toDBTeam
 import org.mcwonderland.domain.repository.TeamRepository
 import kotlin.test.assertEquals
 
@@ -46,7 +47,7 @@ internal class TeamServiceDiscordTest {
 
         @Test
         fun membersIsEmpty_shouldCancel() {
-            user.isAdmin = true
+            gainAdminPerm()
 
             assertThrows<RuntimeException> {
                 teamService.createTeam(user, listOf())
@@ -57,7 +58,7 @@ internal class TeamServiceDiscordTest {
 
         @Test
         fun membersCouldNotFound_shouldCancel() {
-            user.isAdmin = true
+            gainAdminPerm()
 
             val ids = listOf("1", "2")
 
@@ -70,7 +71,7 @@ internal class TeamServiceDiscordTest {
 
         @Test
         fun membersAlreadyInTeam_shouldCancel() {
-            user.isAdmin = true
+            gainAdminPerm()
 
             val member = User(id = "1")
             userFinder.add(member)
@@ -81,6 +82,24 @@ internal class TeamServiceDiscordTest {
             }.let {
                 assertEquals(messages.membersAlreadyInTeam(listOf(member.id)), it.message)
             }
+        }
+
+
+        @Test
+        fun shouldCreateTeam() {
+            gainAdminPerm()
+
+            val member = User(id = "1")
+            userFinder.add(member)
+
+            val team = teamService.createTeam(user, listOf(member.id))
+
+            assertEquals(listOf(member), team.members)
+            assertEquals(teamRepository.findUsersTeam(member.id), team.toDBTeam())
+        }
+
+        private fun gainAdminPerm() {
+            user.isAdmin = true
         }
     }
 }

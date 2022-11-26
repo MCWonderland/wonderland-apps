@@ -6,6 +6,7 @@ import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.toDBTeam
 import org.mcwonderland.domain.repository.TeamRepository
 
 class TeamServiceDiscord(
@@ -22,8 +23,19 @@ class TeamServiceDiscord(
             throw RuntimeException(messages.membersCantBeEmpty())
 
         val members = mapEveryIdToUserOrThrow(ids)
+        checkEveryMemberIsNotInTeam(members)
 
-        throw RuntimeException(messages.membersAlreadyInTeam(ids))
+        val team = Team(members)
+        teamRepository.insertTeam(team.toDBTeam())
+
+        return team
+    }
+
+    private fun checkEveryMemberIsNotInTeam(members: List<User>) {
+        val membersHasTeam = members.filter { teamRepository.findUsersTeam(it.id) != null }
+
+        if (membersHasTeam.isNotEmpty())
+            throw RuntimeException(messages.membersAlreadyInTeam(membersHasTeam.map { it.id }))
     }
 
     private fun mapEveryIdToUserOrThrow(ids: List<String>): List<User> {

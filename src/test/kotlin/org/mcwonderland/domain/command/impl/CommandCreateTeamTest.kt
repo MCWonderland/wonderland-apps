@@ -53,7 +53,6 @@ internal class CommandCreateTeamTest {
     fun success_shouldSendMessage() {
         val ids = listOf("id", "id2")
         val team = Team(
-            id = "teamId",
             members = listOf(Dummies.createUserFullFilled())
         )
 
