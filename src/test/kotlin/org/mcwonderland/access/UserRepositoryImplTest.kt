@@ -9,7 +9,6 @@ import kotlin.test.assertEquals
 
 internal class UserRepositoryImplTest : MongoDBTest() {
 
-    private lateinit var config: Config
     private lateinit var userRepository: UserRepositoryImpl
 
     private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id")
@@ -19,7 +18,6 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
     @BeforeEach
     fun setUp() {
-        config = ConfigStub()
         userRepository = UserRepositoryImpl(mongoClient, config)
     }
 

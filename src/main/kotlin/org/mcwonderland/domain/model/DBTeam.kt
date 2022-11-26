@@ -1,7 +1,7 @@
 package org.mcwonderland.domain.model
 
 data class DBTeam(
-    val members: List<String>
+    var members: List<String> = listOf()
 )
 
 fun Team.toDBTeam(): DBTeam {
