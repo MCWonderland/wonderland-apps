@@ -11,6 +11,7 @@ import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.CommandLink
 import org.mcwonderland.domain.config.Config
+import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
 
@@ -33,6 +34,7 @@ fun main() {
     val userRepository = UserRepositoryImpl(mongoClient, config)
 
     val channel = jda.getGuildById("574167124579319809")!!.getTextChannelById("1045370459149054012")!!
+    val messages = Messages()
 
     jda.addEventListener(
         CommandListener(
@@ -42,10 +44,12 @@ fun main() {
                         label = "link",
                         accountLinker = DiscordMcAccountLinker(
                             mojangAccount = MojangAccountImpl(mojang = mojangApi),
-                            userRepository = userRepository
+                            userRepository = userRepository,
+                            messages = messages
                         ),
                         userFinder = UserFinderByDiscordId(userRepository),
-                        messenger = MessengerDiscordGuild(channel)
+                        messenger = MessengerDiscordGuild(channel),
+                        messages
                     )
                 )
             ),

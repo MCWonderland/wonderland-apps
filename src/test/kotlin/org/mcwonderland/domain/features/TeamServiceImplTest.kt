@@ -1,21 +1,19 @@
-package org.mcwonderland.discord
+package org.mcwonderland.domain.features
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mcwonderland.assertError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exception.PermissionDeniedException
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
-import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
-import org.mcwonderland.domain.repository.TeamRepository
 import kotlin.test.assertEquals
 
-internal class TeamServiceDiscordTest {
+internal class TeamServiceImplTest {
 
     private lateinit var teamService: TeamService
 
@@ -32,11 +30,13 @@ internal class TeamServiceDiscordTest {
         teamRepository = TeamRepositoryFake()
         messages = Messages()
 
-        teamService = TeamServiceDiscord(messages, userFinder, teamRepository)
+        teamService = TeamServiceImpl(messages, userFinder, teamRepository)
     }
 
     @Nested
     inner class CreateTeam {
+
+        private val member = User(id = "member_id")
 
         @Test
         fun executorWithoutPerm_shouldDenied() {
@@ -62,10 +62,8 @@ internal class TeamServiceDiscordTest {
 
             val ids = listOf("1", "2")
 
-            assertThrows<RuntimeException> {
+            assertError<RuntimeException>(messages.membersCouldNotFound(ids)) {
                 teamService.createTeam(user, ids)
-            }.let {
-                assertEquals(messages.membersCouldNotFound(ids), it.message)
             }
         }
 
@@ -73,14 +71,11 @@ internal class TeamServiceDiscordTest {
         fun membersAlreadyInTeam_shouldCancel() {
             gainAdminPerm()
 
-            val member = User(id = "1")
             userFinder.add(member)
             teamRepository.createTeamWithUsers(member)
 
-            assertThrows<RuntimeException> {
+            assertError<RuntimeException>(messages.membersAlreadyInTeam(listOf(member.id))) {
                 teamService.createTeam(user, listOf(member.id))
-            }.let {
-                assertEquals(messages.membersAlreadyInTeam(listOf(member.id)), it.message)
             }
         }
 
@@ -89,7 +84,6 @@ internal class TeamServiceDiscordTest {
         fun shouldCreateTeam() {
             gainAdminPerm()
 
-            val member = User(id = "1")
             userFinder.add(member)
 
             val team = teamService.createTeam(user, listOf(member.id))
@@ -102,4 +96,5 @@ internal class TeamServiceDiscordTest {
             user.isAdmin = true
         }
     }
+
 }

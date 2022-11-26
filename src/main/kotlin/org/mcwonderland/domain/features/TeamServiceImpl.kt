@@ -1,15 +1,13 @@
-package org.mcwonderland.discord
+package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exception.PermissionDeniedException
-import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
 import org.mcwonderland.domain.repository.TeamRepository
 
-class TeamServiceDiscord(
+class TeamServiceImpl(
     private val messages: Messages,
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository
@@ -25,6 +23,10 @@ class TeamServiceDiscord(
         val members = mapEveryIdToUserOrThrow(ids)
         checkEveryMemberIsNotInTeam(members)
 
+        return createTeamWith(members)
+    }
+
+    private fun createTeamWith(members: List<User>): Team {
         val team = Team(members)
         teamRepository.insertTeam(team.toDBTeam())
 

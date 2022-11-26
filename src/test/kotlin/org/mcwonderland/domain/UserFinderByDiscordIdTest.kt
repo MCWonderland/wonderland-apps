@@ -3,28 +3,39 @@ package org.mcwonderland.domain
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.fakes.UserRepositoryFake
+import org.mcwonderland.domain.features.UserFinder
 import java.util.UUID
 import kotlin.test.Test
 
 internal class UserFinderByDiscordIdTest {
 
+    private lateinit var userFinder: UserFinder
+    private lateinit var userRepository: UserRepositoryFake
+
+    private val fixedUuid = UUID.randomUUID()
+
+    @BeforeEach
+    fun setup() {
+        userRepository = UserRepositoryFake()
+        userFinder = UserFinderByDiscordId(userRepository)
+    }
+
     @Test
     fun userNotExistInDB_shouldCreate() {
-        val fixedUuid = UUID.randomUUID()
-        mockkStatic(UUID::class)
-        every { UUID.randomUUID() } returns fixedUuid
+        mockUuid()
 
         val discordId = "123456789"
-
-        val db = UserRepositoryFake()
-        val userFinder = UserFinderByDiscordId(db)
-
         val user = userFinder.findOrCreate(discordId)
 
         assertEquals(discordId, user.discordId)
         assertEquals(fixedUuid.toString(), user.id)
-        assertEquals(db.findUserByDiscordId(discordId), user)
+        assertEquals(userRepository.findUserByDiscordId(discordId), user)
     }
 
+    private fun mockUuid() {
+        mockkStatic(UUID::class)
+        every { UUID.randomUUID() } returns fixedUuid
+    }
 }

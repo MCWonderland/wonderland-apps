@@ -2,10 +2,8 @@ package org.mcwonderland.discord
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.domain.exception.AccountAlreadyOwnedException
-import org.mcwonderland.domain.exception.AccountNotExistException
-import org.mcwonderland.domain.exception.AlreadyLinkedException
+import org.mcwonderland.assertRuntimeError
+import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -18,15 +16,17 @@ internal class DiscordMcAccountLinkerTest {
     private lateinit var linker: DiscordMcAccountLinker
     private lateinit var mojangAccount: MojangAccountFake
     private lateinit var userRepository: UserRepositoryFake
+    private lateinit var messages: Messages
 
     private val sender = Dummies.createUserDefault()
     private val target: UUID = UUID.randomUUID()
 
     @BeforeEach
     fun setUp() {
+        messages = Messages()
         userRepository = UserRepositoryFake()
         mojangAccount = MojangAccountFake()
-        linker = DiscordMcAccountLinker(mojangAccount, userRepository)
+        linker = DiscordMcAccountLinker(mojangAccount, userRepository, messages)
     }
 
 
@@ -34,14 +34,14 @@ internal class DiscordMcAccountLinkerTest {
     fun alreadyLinked_shouldThrowException() {
         sender.mcId = "123"
 
-        assertThrows<AlreadyLinkedException> {
+        assertRuntimeError(messages.accountAlreadyLinked()) {
             linker.link(sender, target.toString())
         }
     }
 
     @Test
     fun accountNotExist_shouldThrowException() {
-        assertThrows<AccountNotExistException> { linker.link(sender, target.toString()) }
+        assertRuntimeError(messages.accountNotFound()) { linker.link(sender, target.toString()) }
     }
 
     @Test
@@ -51,7 +51,7 @@ internal class DiscordMcAccountLinkerTest {
         mojangAccount.addAccount(uuid.toString())
         userRepository.addUser(User(mcId = uuid.toString()))
 
-        assertThrows<AccountAlreadyOwnedException> { linker.link(sender, uuid.toString()) }
+        assertRuntimeError(messages.targetAccountAlreadyLink()){ linker.link(sender, uuid.toString()) }
     }
 
     @Test
