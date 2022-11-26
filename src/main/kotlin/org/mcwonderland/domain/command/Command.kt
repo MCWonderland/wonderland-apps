@@ -8,7 +8,4 @@ interface Command {
         get() = "Usage: /$label"
 
     fun execute(sender: PlatformUser, args: List<String>)
-
-
-
 }
