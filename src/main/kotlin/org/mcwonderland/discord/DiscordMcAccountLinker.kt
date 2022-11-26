@@ -12,7 +12,7 @@ class DiscordMcAccountLinker(
     private val messages: Messages
 ) : AccountLinker {
 
-    override fun link(user: User, platformId: String) {
+    override fun link(user: User, platformId: String): User {
         if (user.mcId.isNotEmpty())
             throw RuntimeException(messages.accountAlreadyLinked())
 
@@ -22,7 +22,11 @@ class DiscordMcAccountLinker(
         if (userRepository.findUserByMcId(platformId) != null)
             throw RuntimeException(messages.targetAccountAlreadyLink())
 
-        userRepository.updateMcId(user.id, platformId)
+        return userRepository.updateMcId(user.id, platformId)!!
+    }
+
+    override fun isLinked(user: User): Boolean {
+        return user.mcId.isNotEmpty()
     }
 
 }

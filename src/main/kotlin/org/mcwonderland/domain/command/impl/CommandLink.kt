@@ -20,8 +20,8 @@ class CommandLink(
     override fun execute(sender: PlatformUser, args: List<String>) {
         try {
             val uuid = args.getUuid(0) ?: fail(messages.invalidArg("UUID"))
-            accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
-            messenger.sendMessage("Successfully linked your account to $uuid")
+            val userLinked = accountLinker.link(userFinder.findOrCreate(sender.id), uuid.toString())
+            messenger.sendMessage(messages.linked(userLinked))
         } catch (e: Exception) {
             messenger.sendMessage(e.message ?: "Unknown error")
         }

@@ -44,4 +44,27 @@ internal class MojangAccountImplTest {
         }
 
     }
+
+    @Nested
+    inner class GetNameByUUID {
+        @Test
+        fun apiResponseNull_shouldReturnNull() {
+            val uuid = UUID.randomUUID()
+            every { mojang.getPlayerProfile(uuid.toString()) } returns null
+
+            assertNull(mojangAccount.getNameByUUID(uuid.toString()))
+        }
+
+        @Test
+        fun shouldReturnName() {
+            val uuid = UUID.randomUUID()
+            val name = "test"
+
+            every { mojang.getPlayerProfile(uuid.toString()) } returns mockk(relaxed = true) {
+                every { username } returns name
+            }
+
+            assertEquals(name, mojangAccount.getNameByUUID(uuid.toString()))
+        }
+    }
 }

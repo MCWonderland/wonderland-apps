@@ -38,5 +38,15 @@ class MessagesStub : Messages {
     override fun userNotInTeam(target: User): String = "使用者 ${userTag(target.discordId)} 不在任何隊伍當中"
 
     override fun userRemovedFromTeam(expectTeam: Team): String = "使用者已經從隊伍中移除"
+    override fun membersNotLinked(listOf: List<User>): String {
+        return "以下成員尚未連結帳號: ${
+            listOf.map { userTag(it.discordId) }
+                .joinToString(", ")
+        }"
+    }
+
+    override fun linked(foundedUser: User): String {
+        return "已經連結帳號: ${foundedUser.mcId}"
+    }
 
 }

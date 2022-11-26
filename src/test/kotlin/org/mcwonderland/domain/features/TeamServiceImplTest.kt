@@ -1,5 +1,7 @@
 package org.mcwonderland.domain.features
 
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -25,6 +27,7 @@ internal class TeamServiceImplTest {
     private lateinit var userFinder: UserFinderFake
     private lateinit var teamRepository: TeamRepositoryFake
     private lateinit var userRepository: UserRepositoryFake
+    private lateinit var accountLinker: AccountLinker
 
     private lateinit var user: User
 
@@ -35,8 +38,9 @@ internal class TeamServiceImplTest {
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
         messages = MessagesStub()
+        accountLinker = mockk(relaxed = true)
 
-        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository)
+        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository, accountLinker)
     }
 
     @Nested
@@ -73,6 +77,7 @@ internal class TeamServiceImplTest {
             }
         }
 
+
         @Test
         fun membersAlreadyInTeam_shouldCancel() {
             gainAdminPerm()
@@ -87,16 +92,30 @@ internal class TeamServiceImplTest {
 
 
         @Test
+        fun memberNotLinked_shouldCancel() {
+            gainAdminPerm()
+
+            userFinder.add(member)
+
+            assertError<RuntimeException>(messages.membersNotLinked(listOf(member))) {
+                teamService.createTeam(user, listOf(member.id))
+            }
+        }
+
+        @Test
         fun shouldCreateTeam() {
             gainAdminPerm()
 
             userFinder.add(member)
+            every { accountLinker.isLinked(member) } returns true
 
             val team = teamService.createTeam(user, listOf(member.id))
 
             assertEquals(listOf(member), team.members)
             assertEquals(teamRepository.findUsersTeam(member.id), team.toDBTeam())
         }
+
+
     }
 
 

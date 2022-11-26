@@ -9,6 +9,10 @@ class MojangAccountFake : MojangAccount {
         return accounts.contains(id)
     }
 
+    override fun getNameByUUID(mcId: String): String {
+        return "name_of_$mcId"
+    }
+
     fun addAccount(id: String) {
         this.accounts.add(id)
     }

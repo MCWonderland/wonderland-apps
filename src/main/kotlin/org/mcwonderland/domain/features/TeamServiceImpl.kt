@@ -12,7 +12,8 @@ class TeamServiceImpl(
     private val messages: Messages,
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val accountLinker: AccountLinker
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
@@ -23,9 +24,18 @@ class TeamServiceImpl(
             throw RuntimeException(messages.membersCantBeEmpty())
 
         val members = mapEveryIdToUserOrThrow(ids)
+
         checkEveryMemberIsNotInTeam(members)
+        checkEveryoneIsLinked(members)
 
         return createTeamWith(members)
+    }
+
+    private fun checkEveryoneIsLinked(members: List<User>) {
+        members.filter { !accountLinker.isLinked(it)}.let {
+            if (it.isNotEmpty())
+                throw RuntimeException(messages.membersNotLinked(it))
+        }
     }
 
     override fun listTeams(): List<Team> {
