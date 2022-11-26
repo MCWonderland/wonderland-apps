@@ -1,19 +1,32 @@
 package org.mcwonderland.domain.fakes
 
 import org.mcwonderland.domain.MojangAccount
+import java.util.*
 
 class MojangAccountFake : MojangAccount {
-    private val accounts: MutableList<String> = mutableListOf()
+    private val accounts = mutableSetOf<AccountData>()
 
-    override fun isAccountExist(id: String): Boolean {
-        return accounts.contains(id)
+    override fun getNameByUUID(uuid: String): String {
+        return accounts.find { it.uuid.toString() == uuid }?.name ?: throw NoSuchElementException()
     }
 
-    override fun getNameByUUID(mcId: String): String {
-        return "name_of_$mcId"
+    override fun getUUIDByName(ign: String): UUID? {
+        return accounts.find { it.name == ign }?.uuid
     }
 
-    fun addAccount(id: String) {
-        this.accounts.add(id)
+    fun addRandomAccount(): AccountData {
+        val uuid = UUID.randomUUID()
+        val account = AccountData(
+            uuid = uuid,
+            name = "name of $uuid"
+        )
+        accounts.add(account)
+
+        return account
     }
 }
+
+data class AccountData(
+    val uuid: UUID,
+    val name: String
+)

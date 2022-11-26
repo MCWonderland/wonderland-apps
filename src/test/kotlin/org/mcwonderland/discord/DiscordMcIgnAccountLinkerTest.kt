@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
+import org.mcwonderland.domain.fakes.AccountData
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -13,9 +14,9 @@ import org.mcwonderland.domain.model.User
 import java.util.*
 import kotlin.test.assertEquals
 
-internal class DiscordMcAccountLinkerTest {
+internal class DiscordMcIgnAccountLinkerTest {
 
-    private lateinit var linker: DiscordMcAccountLinker
+    private lateinit var linker: DiscordMcIgnAccountLinker
     private lateinit var mojangAccount: MojangAccountFake
     private lateinit var userRepository: UserRepositoryFake
     private lateinit var messages: Messages
@@ -28,7 +29,7 @@ internal class DiscordMcAccountLinkerTest {
         messages = MessagesStub()
         userRepository = UserRepositoryFake()
         mojangAccount = MojangAccountFake()
-        linker = DiscordMcAccountLinker(mojangAccount, userRepository, messages)
+        linker = DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
     }
 
 
@@ -50,24 +51,22 @@ internal class DiscordMcAccountLinkerTest {
 
         @Test
         fun targetAccountAlreadyLinked_shouldThrowException() {
-            val uuid = UUID.randomUUID()
+            val account = mojangAccount.addRandomAccount()
 
-            mojangAccount.addAccount(uuid.toString())
-            userRepository.addUser(User(mcId = uuid.toString()))
+            userRepository.addUser(User(mcId = account.uuid.toString()))
 
-            assertRuntimeError(messages.targetAccountAlreadyLink()) { linker.link(sender, uuid.toString()) }
+            assertRuntimeError(messages.targetAccountAlreadyLink()) { linker.link(sender, account.name) }
         }
 
         @Test
         fun shouldLink() {
-            val uuid = UUID.randomUUID()
+            val account = mojangAccount.addRandomAccount()
 
-            mojangAccount.addAccount(uuid.toString())
             userRepository.addUser(sender)
 
-            linker.link(sender, uuid.toString())
+            linker.link(sender, account.name)
 
-            assertEquals(uuid.toString(), sender.mcId)
+            assertEquals(account.uuid.toString(), sender.mcId)
         }
     }
 

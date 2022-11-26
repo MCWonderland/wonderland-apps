@@ -42,25 +42,19 @@ class CommandLinkTest {
     @Test
     fun missingArguments() {
         command.execute(commandSender, listOf())
-        assertEquals(messages.invalidArg("UUID"), messenger.lastMessage)
-    }
-
-    @Test
-    fun invalidUUID() {
-        command.execute(commandSender, listOf("invalid_uuid"))
-        assertEquals(messages.invalidArg("UUID"), messenger.lastMessage)
+        assertEquals(messages.invalidArg("mcIgn"), messenger.lastMessage)
     }
 
     @Nested
     inner class Executed {
 
-        private val uuid = UUID.randomUUID().toString()
+        private val targetId: String = "target_id"
 
         @Test
         fun linked_sendMessage() {
-            command.execute(commandSender, listOf(uuid))
+            command.execute(commandSender, listOf(targetId))
 
-            every { accountLinker.link(foundedUser, uuid) } returns foundedUser
+            every { accountLinker.link(foundedUser, targetId) } returns foundedUser
 
             assertEquals(messages.linked(foundedUser), messenger.lastMessage)
         }
