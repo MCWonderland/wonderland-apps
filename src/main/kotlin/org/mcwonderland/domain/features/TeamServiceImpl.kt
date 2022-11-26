@@ -26,6 +26,10 @@ class TeamServiceImpl(
         return createTeamWith(members)
     }
 
+    override fun listTeams(): List<Team> {
+        TODO("Not yet implemented")
+    }
+
     private fun createTeamWith(members: List<User>): Team {
         val team = Team(members)
         teamRepository.insertTeam(team.toDBTeam())
