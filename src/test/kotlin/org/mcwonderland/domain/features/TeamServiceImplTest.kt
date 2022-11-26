@@ -7,6 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.assertError
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -33,7 +34,7 @@ internal class TeamServiceImplTest {
         userFinder = UserFinderFake()
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
-        messages = Messages()
+        messages = MessagesStub()
 
         teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository)
     }

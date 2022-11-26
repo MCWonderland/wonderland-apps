@@ -3,23 +3,7 @@ package org.mcwonderland.domain.config
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 
-interface Messages {
-    fun membersCantBeEmpty(): String
-    fun membersCouldNotFound(ids: List<String>): String
-    fun membersAlreadyInTeam(ids: List<User>): String
-    fun accountAlreadyLinked(): String
-    fun accountNotFound(): String
-    fun targetAccountAlreadyLink(): String
-    fun invalidArg(argName: String): String
-    fun teamCreated(team: Team): String
-    fun teamList(teams: List<Team>): String
-    fun noPermission(): String
-    fun userNotFound(targetId: String): String
-    fun userNotInTeam(target: User): String
-    fun userRemovedFromTeam(expectTeam: Team): String
-}
-
-class MessagesImpl : Messages {
+class MessagesStub : Messages {
 
     override fun membersCantBeEmpty(): String = "請輸入隊伍成員"
     override fun membersCouldNotFound(ids: List<String>): String =
@@ -44,22 +28,15 @@ class MessagesImpl : Messages {
         }"
 
     private fun userTag(id: String): String = "<@${id}>"
-    override fun teamList(teams: List<Team>): String {
-        return teams.mapIndexed { index, team ->
-            "隊伍 ${index}, 成員: ${team.members.map { userTag(it.discordId) }.joinToString(", ")}"
-        }.joinToString("\n")
-    }
+    override fun teamList(teams: List<Team>): String = teams.mapIndexed { index, team ->
+        "隊伍 ${index}, 成員: ${team.members.map { userTag(it.discordId) }.joinToString(", ")}"
+    }.joinToString("\n")
 
     override fun noPermission(): String = "你沒有權限執行這個操作"
     override fun userNotFound(targetId: String): String = "找不到使用者的數據: ${userTag(targetId)}"
 
-    override fun userNotInTeam(target: User): String {
-        return "使用者 ${userTag(target.discordId)} 不在任何隊伍當中"
-    }
+    override fun userNotInTeam(target: User): String = "使用者 ${userTag(target.discordId)} 不在任何隊伍當中"
 
-    override fun userRemovedFromTeam(expectTeam: Team): String {
-        return "使用者已經從隊伍中移除，隊伍成員剩下: ${
-            expectTeam.members.joinToString(", ") { userTag(it.discordId) }
-        }"
-    }
+    override fun userRemovedFromTeam(expectTeam: Team): String = "使用者已經從隊伍中移除"
+
 }

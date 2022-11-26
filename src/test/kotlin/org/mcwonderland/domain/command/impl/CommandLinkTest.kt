@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested
 import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.features.UserFinder
@@ -29,7 +30,7 @@ class CommandLinkTest {
         accountLinker = mockk(relaxed = true)
         userFinder = mockk(relaxed = true)
         messenger = mockk(relaxed = true)
-        messages = Messages()
+        messages = MessagesStub()
 
         command = CommandLink(label, accountLinker, userFinder, messenger, messages)
     }

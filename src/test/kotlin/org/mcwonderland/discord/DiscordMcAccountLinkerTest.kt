@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -23,7 +24,7 @@ internal class DiscordMcAccountLinkerTest {
 
     @BeforeEach
     fun setUp() {
-        messages = Messages()
+        messages = MessagesStub()
         userRepository = UserRepositoryFake()
         mojangAccount = MojangAccountFake()
         linker = DiscordMcAccountLinker(mojangAccount, userRepository, messages)

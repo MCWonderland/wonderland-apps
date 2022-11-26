@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.MessengerFake
 import org.mcwonderland.domain.fakes.UserFinderStub
 import org.mcwonderland.domain.features.TeamService
@@ -32,9 +33,9 @@ internal class CommandRemoveTeamTest {
 
         teamService = mockk(relaxed = true)
         messenger = MessengerFake()
-        messages = Messages()
+        messages = MessagesStub()
         userFinder = UserFinderStub(user)
-        command = CommandRemoveTeam("removeTeam", messenger, userFinder, teamService)
+        command = CommandRemoveTeam("removeTeam", messenger, userFinder, teamService, messages)
     }
 
     @Test
@@ -52,7 +53,7 @@ internal class CommandRemoveTeamTest {
         command.execute(sender, listOf("target"))
         every { teamService.removeFromTeam(user, "target") } returns expectTeam
 
-
+        assertEquals(messages.userRemovedFromTeam(expectTeam), messenger.lastMessage)
     }
 
 }

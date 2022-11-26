@@ -13,8 +13,10 @@ import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.CommandCreateTeam
 import org.mcwonderland.domain.command.impl.CommandLink
 import org.mcwonderland.domain.command.impl.CommandListTeams
+import org.mcwonderland.domain.command.impl.CommandRemoveTeam
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.TeamServiceImpl
 import org.mcwonderland.minecraft.MojangAccountImpl
@@ -40,7 +42,7 @@ fun main() {
     val teamRepository = TeamRepositoryImpl(mongoClient, config)
 
     val channel = jda.getGuildById("574167124579319809")!!.getTextChannelById("1045370459149054012")!!
-    val messages = Messages()
+    val messages = MessagesStub()
 
     val accountLinker = DiscordMcAccountLinker(
         mojangAccount = MojangAccountImpl(mojang = mojangApi),
@@ -79,6 +81,13 @@ fun main() {
                         label = "listteams",
                         messenger = messenger,
                         teamService = teamService,
+                        messages = messages
+                    ),
+                    CommandRemoveTeam(
+                        label = "removeteam",
+                        messenger = messenger,
+                        teamService = teamService,
+                        userFinder = userFinder,
                         messages = messages
                     )
                 )

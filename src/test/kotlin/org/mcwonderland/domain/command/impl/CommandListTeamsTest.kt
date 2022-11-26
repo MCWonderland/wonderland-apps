@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.MessengerFake
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.PlatformUser
@@ -23,7 +24,7 @@ internal class CommandListTeamsTest {
     fun setUp() {
         teamService = mockk(relaxed = true)
         messenger = MessengerFake()
-        messages = Messages()
+        messages = MessagesStub()
         command = CommandListTeams("listteams", teamService, messages, messenger)
     }
 
