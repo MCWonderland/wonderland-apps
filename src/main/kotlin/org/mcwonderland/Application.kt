@@ -12,6 +12,7 @@ import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.CommandCreateTeam
 import org.mcwonderland.domain.command.impl.CommandLink
+import org.mcwonderland.domain.command.impl.CommandListTeams
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.TeamService
@@ -70,6 +71,12 @@ fun main() {
                     CommandCreateTeam(
                         label = "createteam",
                         userFinder = userFinder,
+                        messenger = messenger,
+                        teamService = teamService,
+                        messages = messages
+                    ),
+                    CommandListTeams(
+                        label = "listteams",
                         messenger = messenger,
                         teamService = teamService,
                         messages = messages

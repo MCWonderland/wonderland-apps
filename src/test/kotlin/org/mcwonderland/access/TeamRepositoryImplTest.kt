@@ -35,4 +35,12 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
         assertEquals(team, collection.find().first())
     }
+
+    @Test
+    fun findAll() {
+        val team = DBTeam(listOf("member"))
+        collection.insertOne(team)
+
+        assertEquals(listOf(team), teamRepository.findAll())
+    }
 }

@@ -25,6 +25,6 @@ class TeamRepositoryImpl(
     }
 
     override fun findAll(): List<DBTeam> {
-        TODO("Not yet implemented")
+        return collection.find().toList()
     }
 }

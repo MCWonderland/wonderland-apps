@@ -3,6 +3,7 @@ package org.mcwonderland.access
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Filters.`in`
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
@@ -41,7 +42,7 @@ class UserRepositoryImpl(
     }
 
     override fun findUsers(userIds: List<String>): List<User> {
-        TODO("Not yet implemented")
+        return userCollection.find(`in`("_id", userIds)).toList()
     }
 
 }

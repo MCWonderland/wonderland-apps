@@ -30,7 +30,7 @@ open class MongoDBTest {
 
     @BeforeEach
     fun setupMongo() {
-        val port = 27017
+        val port = 27018
         val config: MongodConfig = MongodConfig.builder()
             .version(Version.Main.V4_0)
             .net(Net(port, Network.localhostIsIPv6()))
