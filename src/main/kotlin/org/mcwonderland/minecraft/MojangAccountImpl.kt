@@ -18,7 +18,10 @@ class MojangAccountImpl(private val mojang: Mojang) : MojangAccount {
     }
 
     override fun getUUIDByName(ign: String): UUID? {
-        return mojang.getUUIDOfUsername(ign)?.let { UUID.fromString(it) }
+        return mojang.getUUIDOfUsername(ign)?.let { parseUuidNoDashed(it) }
     }
 
+    private fun parseUuidNoDashed(uuidStr: String): UUID {
+        return UUID.fromString(uuidStr.replace(Regex("(.{8})(.{4})(.{4})(.{4})(.{12})"), "$1-$2-$3-$4-$5"))
+    }
 }

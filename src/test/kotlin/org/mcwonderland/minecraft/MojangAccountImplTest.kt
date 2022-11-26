@@ -33,6 +33,15 @@ internal class MojangAccountImplTest {
 
             assertNull(mojangAccount.getUUIDByName(name))
         }
+
+        @Test
+        fun shouldParseUuidThatWithoutDashes() {
+            val uuid = UUID.randomUUID()
+
+            every { mojang.getUUIDOfUsername(name) } returns uuid.toString().replace("-", "")
+
+            assertEquals(uuid, mojangAccount.getUUIDByName(name))
+        }
     }
 
     @Nested
