@@ -23,7 +23,8 @@ class TeamServiceImpl(
         if (ids.isEmpty())
             throw RuntimeException(messages.membersCantBeEmpty())
 
-        val members = mapEveryIdToUserOrThrow(ids)
+        val idsWithNoDuplicate = ids.toSet().toList()
+        val members = mapEveryIdToUserOrThrow(idsWithNoDuplicate)
 
         checkEveryMemberIsNotInTeam(members)
         checkEveryoneIsLinked(members)
@@ -32,7 +33,7 @@ class TeamServiceImpl(
     }
 
     private fun checkEveryoneIsLinked(members: List<User>) {
-        members.filter { !accountLinker.isLinked(it)}.let {
+        members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())
                 throw RuntimeException(messages.membersNotLinked(it))
         }
@@ -50,7 +51,8 @@ class TeamServiceImpl(
             throw RuntimeException(messages.noPermission())
 
         val target = userFinder.find(targetId) ?: throw RuntimeException(messages.userNotFound(targetId))
-        val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw RuntimeException(messages.userNotInTeam(target))
+        val newTeam =
+            teamRepository.removeUserFromTeam(target.id) ?: throw RuntimeException(messages.userNotInTeam(target))
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }

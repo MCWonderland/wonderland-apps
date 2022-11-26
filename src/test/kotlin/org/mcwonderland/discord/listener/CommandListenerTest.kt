@@ -63,10 +63,7 @@ internal class CommandListenerTest {
 
     @Test
     fun startWithCmdPrefix_shouldCallCommandService() {
-        every { messageMock.isFromGuild } returns true
-        every { messageMock.author.isBot } returns false
-        every { config.commandPrefix } returns "!"
-        every { messageMock.contentRaw } returns "!cw command sub"
+        mockMessageAndPrefix("!cw command sub")
 
         sendMessage()
 
@@ -75,18 +72,26 @@ internal class CommandListenerTest {
 
     @Test
     fun shouldFormatUsers() {
-        val id = "1234567890"
+        assertMessageToCommand("!cw command <@user_id>", label = "cw", args = listOf("command", "user_id"))
+    }
 
+    @Test
+    fun shouldTrimWhitespace() {
+        assertMessageToCommand("!cw command  sub", label = "cw", args = listOf("command", "sub"))
+    }
+
+    private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {
+        mockMessageAndPrefix(msg)
+        sendMessage()
+        verify { commandProcessor.onCommand(commandSender, label, args) }
+    }
+
+    private fun mockMessageAndPrefix(content: String) {
         every { messageMock.isFromGuild } returns true
         every { messageMock.author.isBot } returns false
         every { config.commandPrefix } returns "!"
-        every { messageMock.contentRaw } returns "!cw command <@$id>"
-
-        sendMessage()
-
-        verify { commandProcessor.onCommand(commandSender, "cw", listOf("command", id)) }
+        every { messageMock.contentRaw } returns content
     }
-
 
     private fun assertIgnored() {
         verify(exactly = 0) { commandProcessor.onCommand(any(), any(), any()) }
