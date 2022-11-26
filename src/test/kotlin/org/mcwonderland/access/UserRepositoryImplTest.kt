@@ -2,8 +2,6 @@ package org.mcwonderland.access
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.fakes.ConfigStub
 import org.mcwonderland.domain.model.User
 import kotlin.test.assertEquals
 

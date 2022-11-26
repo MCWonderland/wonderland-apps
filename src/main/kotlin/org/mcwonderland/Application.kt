@@ -3,6 +3,7 @@ package org.mcwonderland
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.access.MongoClientFactory
+import org.mcwonderland.access.RegistrationRepositoryImpl
 import org.mcwonderland.access.TeamRepositoryImpl
 import org.mcwonderland.access.UserRepositoryImpl
 import org.mcwonderland.discord.DiscordMcIgnAccountLinker
@@ -10,12 +11,10 @@ import org.mcwonderland.discord.MessengerDiscordGuild
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.command.CommandProcessorImpl
-import org.mcwonderland.domain.command.impl.CommandCreateTeam
-import org.mcwonderland.domain.command.impl.CommandLink
-import org.mcwonderland.domain.command.impl.CommandListTeams
-import org.mcwonderland.domain.command.impl.CommandRemoveTeam
+import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.MessagesImpl
+import org.mcwonderland.domain.features.RegistrationServiceImpl
 import org.mcwonderland.domain.features.TeamServiceImpl
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
@@ -39,6 +38,7 @@ fun main() {
     val config = AppConfig()
     val userRepository = UserRepositoryImpl(mongoClient, config)
     val teamRepository = TeamRepositoryImpl(mongoClient, config)
+    val registrationRepository = RegistrationRepositoryImpl(mongoClient, config)
 
     val channel = jda.getGuildById("574167124579319809")!!.getTextChannelById("1046025295578275850")!!
     val messages = MessagesImpl(mojangAccount)
@@ -57,6 +57,12 @@ fun main() {
         teamRepository = teamRepository,
         userRepository = userRepository,
         accountLinker = accountLinker
+    )
+
+    val registrationService = RegistrationServiceImpl(
+        accountLinker = accountLinker,
+        messages = messages,
+        registrationRepository = registrationRepository
     )
 
     jda.addEventListener(
@@ -89,7 +95,14 @@ fun main() {
                         teamService = teamService,
                         userFinder = userFinder,
                         messages = messages
-                    )
+                    ),
+                    CommandRegister(
+                        label = "register",
+                        registrationService = registrationService,
+                        userFinder = userFinder,
+                        messenger = messenger,
+                        messages = messages
+                    ),
                 )
             ),
             config

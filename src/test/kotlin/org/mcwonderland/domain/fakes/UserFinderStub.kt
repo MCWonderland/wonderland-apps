@@ -5,7 +5,7 @@ import org.mcwonderland.domain.model.User
 
 class UserFinderStub(private val user: User) : UserFinder {
     override fun find(platformId: String): User? {
-        return user
+        return null
     }
 
     override fun findOrCreate(platformId: String): User {
