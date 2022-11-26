@@ -104,15 +104,29 @@ internal class TeamServiceImplTest {
 
         @Test
         fun shouldCreateTeam() {
+            assertTeamCreation(listOf(member), listOf(member))
+        }
+
+        @Test
+        fun shouldRemoveDuplicateMembers() {
+            assertTeamCreation(listOf(member, member), listOf(member))
+        }
+
+        private fun assertTeamCreation(inputUsers: List<User>, expectTeamMembers: List<User>) {
             gainAdminPerm()
 
-            userFinder.add(member)
-            every { accountLinker.isLinked(member) } returns true
+            inputUsers.forEach {
+                userFinder.add(it)
+                every { accountLinker.isLinked(it) } returns true
+            }
 
-            val team = teamService.createTeam(user, listOf(member.id))
+            val team = teamService.createTeam(user, inputUsers.map { it.id })
 
-            assertEquals(listOf(member), team.members)
-            assertEquals(teamRepository.findUsersTeam(member.id), team.toDBTeam())
+            assertEquals(expectTeamMembers, team.members)
+
+            expectTeamMembers.forEach {
+                assertEquals(teamRepository.findUsersTeam(it.id), team.toDBTeam())
+            }
         }
 
 
