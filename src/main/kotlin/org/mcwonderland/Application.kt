@@ -48,6 +48,7 @@ fun main() {
     )
     val messenger = MessengerDiscordGuild(channel)
     val userFinder = UserFinderByDiscordId(userRepository)
+
     val teamService = TeamServiceImpl(
         messages = messages,
         userFinder = userFinder,
@@ -66,10 +67,11 @@ fun main() {
                         messages
                     ),
                     CommandCreateTeam(
-                        label = "create",
+                        label = "createteam",
                         userFinder = userFinder,
                         messenger = messenger,
                         teamService = teamService,
+                        messages = messages
                     )
                 )
             ),

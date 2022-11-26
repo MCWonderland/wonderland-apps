@@ -74,7 +74,7 @@ internal class TeamServiceImplTest {
             userFinder.add(member)
             teamRepository.createTeamWithUsers(member)
 
-            assertError<RuntimeException>(messages.membersAlreadyInTeam(listOf(member.id))) {
+            assertError<RuntimeException>(messages.membersAlreadyInTeam(listOf(member))) {
                 teamService.createTeam(user, listOf(member.id))
             }
         }

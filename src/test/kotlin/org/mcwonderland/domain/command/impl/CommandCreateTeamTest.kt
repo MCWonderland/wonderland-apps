@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MessengerFake
 import org.mcwonderland.domain.fakes.UserFinderStub
@@ -20,6 +21,7 @@ internal class CommandCreateTeamTest {
     private lateinit var teamService: TeamService
     private lateinit var userFinder: UserFinder
     private lateinit var sender: PlatformUser
+    private lateinit var messages: Messages
 
     private val user = Dummies.createUserFullFilled()
 
@@ -29,7 +31,9 @@ internal class CommandCreateTeamTest {
         messageSender = MessengerFake()
         userFinder = UserFinderStub(user)
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam", messageSender, userFinder, teamService)
+        messages = Messages()
+
+        command = CommandCreateTeam("createTeam", messageSender, userFinder, teamService, messages)
     }
 
     @Test
@@ -60,6 +64,6 @@ internal class CommandCreateTeamTest {
 
         command.execute(sender, ids)
 
-        assertEquals(messageSender.lastMessage, "Team created with members: ${team.members.joinToString(", ")}")
+        assertEquals(messageSender.lastMessage, messages.teamCreated(team))
     }
 }

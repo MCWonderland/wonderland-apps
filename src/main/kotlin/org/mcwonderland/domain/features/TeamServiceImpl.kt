@@ -37,7 +37,7 @@ class TeamServiceImpl(
         val membersHasTeam = members.filter { teamRepository.findUsersTeam(it.id) != null }
 
         if (membersHasTeam.isNotEmpty())
-            throw RuntimeException(messages.membersAlreadyInTeam(membersHasTeam.map { it.id }))
+            throw RuntimeException(messages.membersAlreadyInTeam(membersHasTeam))
     }
 
     private fun mapEveryIdToUserOrThrow(ids: List<String>): List<User> {
@@ -51,6 +51,7 @@ class TeamServiceImpl(
 
             found
         }
+
 
         if (nullUsers.isNotEmpty())
             throw RuntimeException(messages.membersCouldNotFound(nullUsers))
