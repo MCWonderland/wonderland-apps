@@ -23,4 +23,8 @@ class TeamRepositoryImpl(
     override fun insertTeam(team: DBTeam) {
         collection.insertOne(team)
     }
+
+    override fun findAll(): List<DBTeam> {
+        return collection.find().toList()
+    }
 }

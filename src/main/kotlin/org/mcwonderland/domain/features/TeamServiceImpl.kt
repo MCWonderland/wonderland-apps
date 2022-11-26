@@ -5,12 +5,15 @@ import org.mcwonderland.domain.exception.PermissionDeniedException
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
+import org.mcwonderland.domain.model.toTeam
 import org.mcwonderland.domain.repository.TeamRepository
+import org.mcwonderland.domain.repository.UserRepository
 
 class TeamServiceImpl(
     private val messages: Messages,
     private val userFinder: UserFinder,
-    private val teamRepository: TeamRepository
+    private val teamRepository: TeamRepository,
+    private val userRepository: UserRepository
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
@@ -27,7 +30,10 @@ class TeamServiceImpl(
     }
 
     override fun listTeams(): List<Team> {
-        TODO("Not yet implemented")
+        val dbTeams = teamRepository.findAll()
+        val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())
+
+        return dbTeams.map { it.toTeam(users) }
     }
 
     private fun createTeamWith(members: List<User>): Team {

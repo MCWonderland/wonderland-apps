@@ -18,9 +18,15 @@ class TeamRepositoryFake : TeamRepository {
         teams.add(team)
     }
 
-    fun createTeamWithUsers(vararg users: User) {
+    override fun findAll(): List<DBTeam> {
+        return teams.toList()
+    }
+
+    fun createTeamWithUsers(vararg users: User): DBTeam {
         val team = DBTeam(users.toList().map { it.id })
         teams.add(team)
+
+        return team
     }
 
 }

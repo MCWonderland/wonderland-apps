@@ -29,11 +29,8 @@ class Messages {
 
     private fun userTag(id: String): String = "<@${id}>"
     fun teamList(teams: List<Team>): String {
-        return teams.joinToString("\n") { team ->
-            "隊伍: ${
-                team.members.map { userTag(it.discordId) }
-                    .joinToString(", ")
-            }"
-        }
+        return teams.mapIndexed { index, team ->
+            "隊伍 ${index}, 成員: ${team.members.map { userTag(it.discordId) }.joinToString(", ")}"
+        }.joinToString("\n")
     }
 }

@@ -45,4 +45,18 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
         assertEquals(newMcId, user?.mcId)
     }
+
+    @Test
+    fun insertUser() {
+        userRepository.insertUser(user)
+        assertEquals(user, userCollection.find().first())
+    }
+
+    @Test
+    fun findUsers() {
+        val users = listOf(user, user.copy(id = "456"))
+        userCollection.insertMany(users)
+
+        assertEquals(users, userRepository.findUsers(users.map { it.id }))
+    }
 }

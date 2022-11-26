@@ -2,11 +2,9 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.fakes.MessengerFake
 import org.mcwonderland.domain.features.TeamService
