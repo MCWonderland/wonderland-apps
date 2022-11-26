@@ -1,17 +1,13 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.command.exception.InvalidArgumentException
-import org.mcwonderland.domain.command.exception.MissingArgumentException
-import java.util.UUID
+import java.util.*
 
 private typealias Args = List<String>
 
-fun Args.getUuid(index: Int): UUID {
-    val uuid = this.getOrNull(index) ?: throw MissingArgumentException("UUID")
-
+fun Args.getUuid(index: Int): UUID? {
     return try {
-        UUID.fromString(uuid)
+        return this.getOrNull(index)?.let { UUID.fromString(it) }
     } catch (e: IllegalArgumentException) {
-        throw InvalidArgumentException("UUID")
+        null
     }
 }

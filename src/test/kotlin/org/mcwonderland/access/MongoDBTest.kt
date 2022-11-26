@@ -16,6 +16,7 @@ import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.runtime.Network
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.domain.fakes.ConfigStub
 
 
 open class MongoDBTest {
@@ -24,6 +25,8 @@ open class MongoDBTest {
 
     private lateinit var mongodExecutable: MongodExecutable
     private lateinit var mongoProcess: MongodProcess
+
+    protected val config = ConfigStub()
 
     @BeforeEach
     fun setupMongo() {
@@ -61,5 +64,7 @@ open class MongoDBTest {
             .build()
         return MongodStarter.getInstance(runtimeConfig).prepare(config)
     }
+
+    protected fun getDB() = mongoClient.getDatabase(config.dbName)
 
 }

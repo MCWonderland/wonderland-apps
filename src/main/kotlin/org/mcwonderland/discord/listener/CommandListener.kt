@@ -1,11 +1,10 @@
 package org.mcwonderland.discord.listener
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
-import net.dv8tion.jda.api.hooks.EventListener
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.model.CommandSender
+import org.mcwonderland.domain.model.PlatformUser
 
 class CommandListener(
     private val commandProcessor: CommandProcessor,
@@ -15,18 +14,25 @@ class CommandListener(
     override fun onMessageReceived(event: MessageReceivedEvent) {
 
         val message = event.message
-        val rawMessage = message.contentStripped
-        val userId = message.author.id
+        val rawMessage = message.contentRaw
+        val author = message.author
 
         if (!message.isFromGuild
             || message.author.isBot
             || !rawMessage.startsWith(config.commandPrefix)
         ) return
 
+        val splits = rawMessage.removePrefix("!").split(" ")
+        val label = splits[0]
+        val args = splits.drop(1).map { formatArgs(it) }
 
-        rawMessage.removePrefix("!").split(" ")
-            .let { commandProcessor.onCommand(CommandSender(userId), it[0], it.drop(1)) }
+        commandProcessor.onCommand(PlatformUser(author.id), label, args)
     }
 
+    private fun formatArgs(it: String): String {
+        if (it.startsWith("<@") && it.endsWith(">"))
+            return it.removePrefix("<@").removeSuffix(">")
 
+        return it
+    }
 }

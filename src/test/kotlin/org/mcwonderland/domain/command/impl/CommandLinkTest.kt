@@ -5,16 +5,13 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.domain.AccountLinker
 import org.mcwonderland.domain.Messenger
-import org.mcwonderland.domain.UserFinder
-import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.exception.InvalidArgumentException
-import org.mcwonderland.domain.command.exception.MissingArgumentException
-import java.lang.Exception
-import java.util.UUID
+import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.fakes.Dummies
+import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.features.UserFinder
+import java.util.*
 import kotlin.test.Test
 
 class CommandLinkTest {
@@ -22,6 +19,7 @@ class CommandLinkTest {
     private lateinit var accountLinker: AccountLinker
     private lateinit var userFinder: UserFinder
     private lateinit var messenger: Messenger
+    private lateinit var messages: Messages
 
     private val label = "link"
     private val commandSender = Dummies.createCommandSender()
@@ -31,18 +29,21 @@ class CommandLinkTest {
         accountLinker = mockk(relaxed = true)
         userFinder = mockk(relaxed = true)
         messenger = mockk(relaxed = true)
+        messages = Messages()
 
-        command = CommandLink(label, accountLinker, userFinder, messenger)
+        command = CommandLink(label, accountLinker, userFinder, messenger, messages)
     }
 
     @Test
     fun missingArguments() {
-        assertThrows<MissingArgumentException>("UUID") { command.execute(commandSender, listOf()) }
+        command.execute(commandSender, listOf())
+        verify { messenger.sendMessage(messages.invalidArg("UUID")) }
     }
 
     @Test
     fun invalidUUID() {
-        assertThrows<InvalidArgumentException>("UUID") { command.execute(commandSender, listOf("invalid_uuid")) }
+        command.execute(commandSender, listOf("invalid_uuid"))
+        verify { messenger.sendMessage(messages.invalidArg("UUID")) }
     }
 
     @Nested
