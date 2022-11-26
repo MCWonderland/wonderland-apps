@@ -13,7 +13,7 @@ class CommandRegister(
 
     override fun execute(sender: PlatformUser, args: List<String>) {
         val user = userFinder.findOrCreate(sender.id)
-        registrationService.register(user)
+        registrationService.toggleRegister(user)
     }
 
 }

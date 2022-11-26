@@ -52,6 +52,10 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         }"
     }
 
+    override fun yourAccountNotLinked(): String {
+        return "你的帳號還沒有綁定"
+    }
+
     override fun linked(user: User): String {
         return "${discordTag(user.discordId)} 已經綁定帳號: ${mcName(user)}"
     }

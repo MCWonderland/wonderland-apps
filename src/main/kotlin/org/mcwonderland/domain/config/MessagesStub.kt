@@ -45,6 +45,10 @@ class MessagesStub : Messages {
         }"
     }
 
+    override fun yourAccountNotLinked(): String {
+        return "你的帳號尚未連結"
+    }
+
     override fun linked(foundedUser: User): String {
         return "已經連結帳號: ${foundedUser.mcId}"
     }

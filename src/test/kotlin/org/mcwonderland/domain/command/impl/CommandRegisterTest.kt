@@ -31,6 +31,6 @@ internal class CommandRegisterTest {
         val sender = PlatformUser("sender")
         command.execute(sender, emptyList())
 
-        verify { registerService.register(user) }
+        verify { registerService.toggleRegister(user) }
     }
 }

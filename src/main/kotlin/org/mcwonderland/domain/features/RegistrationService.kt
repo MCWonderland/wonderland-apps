@@ -3,5 +3,5 @@ package org.mcwonderland.domain.features
 import org.mcwonderland.domain.model.User
 
 interface RegistrationService {
-    fun register(user: User)
+    fun toggleRegister(user: User): Boolean
 }
