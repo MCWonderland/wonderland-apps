@@ -28,9 +28,16 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         }"
 
     override fun teamList(teams: List<Team>): String {
-        return teams.mapIndexed { index, team ->
-            "隊伍 ${index}, 成員: ${team.members.map { tagAndName(it) }.joinToString(", ")}"
-        }.joinToString("\n")
+        val messages = mutableListOf<String>()
+        messages.add("隊伍列表:")
+
+        teams.forEachIndexed { index, team ->
+            messages.add(" ")
+            messages.add("隊伍: ${index + 1}")
+            team.members.forEach { messages.add("> " + tagAndName(it)) }
+        }
+
+        return messages.joinToString("\n")
     }
 
     override fun noPermission(): String = "你沒有權限執行這個操作"
