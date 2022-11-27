@@ -17,7 +17,8 @@ repositories {
 dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.github.SparklingComet:java-mojang-api:-SNAPSHOT")
-    implementation("org.mongodb:mongodb-driver-sync:4.7.0")
+    implementation("org.mongodb:mongodb-driver-sync:4.7.1")
+    implementation("com.google.inject:guice:5.1.0")
 
     testImplementation(kotlin("test"))
     testImplementation("io.mockk:mockk:1.13.2")
