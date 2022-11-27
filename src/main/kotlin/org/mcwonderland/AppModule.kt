@@ -121,9 +121,6 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
         val messenger: Messenger
         val messages: Messages
         val commandLabels: CommandLabels
-
-        val label
-            get() = commandLabels.link
     }
 
     @Provides
@@ -150,7 +147,7 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
             messages = providers.messages,
             userFinder = providers.userFinder,
             accountLinker = providers.accountLinker,
-            label = providers.label,
+            label = providers.commandLabels.link,
             messenger = providers.messenger
         )
     }
@@ -160,7 +157,7 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
         return CommandCreateTeam(
             messages = providers.messages,
             userFinder = providers.userFinder,
-            label = providers.label,
+            label = providers.commandLabels.createTeam,
             messenger = providers.messenger,
             teamService = teamService
         )
@@ -171,7 +168,7 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
         return CommandRegister(
             messages = providers.messages,
             userFinder = providers.userFinder,
-            label = providers.label,
+            label = providers.commandLabels.register,
             messenger = providers.messenger,
             registrationService = registrationService
         )
@@ -182,7 +179,7 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
         return CommandRemoveTeam(
             messages = providers.messages,
             userFinder = providers.userFinder,
-            label = providers.label,
+            label = providers.commandLabels.removeTeam,
             messenger = providers.messenger,
             teamService = teamService
         )
@@ -192,7 +189,7 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
     fun commandListTeams(providers: CommandProviders, teamService: TeamService): CommandListTeams {
         return CommandListTeams(
             messages = providers.messages,
-            label = providers.label,
+            label = providers.commandLabels.listTeams,
             messenger = providers.messenger,
             teamService = teamService
         )

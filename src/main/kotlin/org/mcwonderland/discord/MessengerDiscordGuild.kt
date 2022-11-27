@@ -6,7 +6,8 @@ import org.mcwonderland.domain.Messenger
 class MessengerDiscordGuild(private val channel: TextChannel) : Messenger {
 
     override fun sendMessage(message: String) {
-        channel.sendMessage(message).queue()
+        if (message.isNotEmpty())
+            channel.sendMessage(message).queue()
     }
 
 }

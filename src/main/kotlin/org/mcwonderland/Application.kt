@@ -19,6 +19,9 @@ class AppConfig : Config {
     override val commandLabels: CommandLabels = object : CommandLabels {
         override val createTeam: String = "createteam"
         override val link: String = "link"
+        override val register: String = "register"
+        override val removeTeam: String = "removeteam"
+        override val listTeams: String = "listteams"
     }
 }
 

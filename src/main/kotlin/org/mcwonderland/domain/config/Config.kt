@@ -11,4 +11,7 @@ interface Config {
 interface CommandLabels {
     val createTeam: String
     val link: String
+    val register: String
+    val removeTeam: String
+    val listTeams: String
 }
