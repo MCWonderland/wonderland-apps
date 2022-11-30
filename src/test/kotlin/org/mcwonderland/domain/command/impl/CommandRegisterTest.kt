@@ -27,7 +27,6 @@ internal class CommandRegisterTest : CommandTestBase() {
 
     @Test
     fun onException_shouldSendMessage() {
-        val sender = PlatformUser("sender")
         every { registerService.toggleRegister(user) } throws Exception("error")
 
         executeWithNoArgs()
@@ -36,7 +35,6 @@ internal class CommandRegisterTest : CommandTestBase() {
     }
 
     private fun assertToggleStateMessage(state: Boolean, message: String) {
-        val sender = PlatformUser("sender")
         every { registerService.toggleRegister(user) } returns state
 
         executeWithNoArgs()

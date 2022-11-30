@@ -24,7 +24,6 @@ internal class CommandListTeamsTest : CommandTestBase() {
 
     @Test
     fun shouldResponseFromService() {
-        val sender = PlatformUser("sender")
         val members = listOf(User("member"))
         val teams = listOf(Team(members))
 
