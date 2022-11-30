@@ -27,7 +27,7 @@ class AppConfig : Config {
 
 fun main() {
     val jda = JDABuilder
-        .createDefault("MTA0NTM2Njk2NDM1NDMwMjA1NA.GQ5XSl.87Qk2W7YVyJXw-yoDxzrpvhBze3JMpmv_DKDJ0")
+        .createDefault(System.getenv("DISCORD_BOT_TOKEN"))
         .enableIntents(listOf(GatewayIntent.MESSAGE_CONTENT))
         .build()
         .awaitReady()
