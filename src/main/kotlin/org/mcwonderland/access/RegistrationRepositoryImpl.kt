@@ -33,6 +33,12 @@ class RegistrationRepositoryImpl(
         return newState
     }
 
+    override fun listRegistrations(): Collection<String> {
+        return collection.find(
+            Filters.eq(RegistrationContext::registered.name, true)
+        ).map { it.id }.toList()
+    }
+
     private fun updateRegistrationState(userId: String, b: Boolean) {
         collection.findOneAndUpdate(
             Filters.eq("_id", userId),

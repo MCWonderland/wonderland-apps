@@ -61,4 +61,11 @@ class MessagesStub : Messages {
         return "已經取消註冊"
     }
 
+    override fun listRegistrations(users: Collection<User>): String {
+        return "已經註冊的玩家: ${
+            users.map { it.mcId }
+                .joinToString(", ")
+        }"
+    }
+
 }

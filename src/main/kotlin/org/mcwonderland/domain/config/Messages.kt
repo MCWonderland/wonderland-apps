@@ -22,5 +22,6 @@ interface Messages {
     fun linked(foundedUser: User): String
     fun registered(): String
     fun unRegistered(): String
+    fun listRegistrations(users: Collection<User>): String
 }
 

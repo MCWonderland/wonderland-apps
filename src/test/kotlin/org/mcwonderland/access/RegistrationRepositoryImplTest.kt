@@ -55,4 +55,14 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         assertFalse { collection.find(Filters.eq("_id", "test")).first()!!.registered }
     }
 
+    @Test
+    fun listRegistrations() {
+        collection.insertMany(listOf(
+            RegistrationContext("test1", true),
+            RegistrationContext("test2", false)
+        ))
+
+        assertEquals(listOf("test1"), repo.listRegistrations())
+    }
+
 }
