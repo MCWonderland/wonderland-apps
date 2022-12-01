@@ -16,10 +16,12 @@ import org.mcwonderland.domain.features.*
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
+import java.io.File
+import java.util.Properties
 
 class AppModule(
     private val jda: JDA,
-    private val mojangApi: Mojang
+    private val mojangApi: Mojang,
 ) : AbstractModule() {
 
     @Provides
@@ -29,7 +31,9 @@ class AppModule(
 
     @Provides
     fun config(): Config {
-        return AppConfig()
+        val file
+        val property = Properties().apply { load(propertyFile.inputStream()) }
+        return AppConfig(property)
     }
 
     @Provides

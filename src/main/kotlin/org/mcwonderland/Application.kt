@@ -7,26 +7,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
-import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
 import org.shanerx.mojang.Mojang
 
-
-class AppConfig : Config {
-    override val commandChannelId: String = "1046025295578275850"
-    override val commandPrefix: String = "!"
-    override val dbName: String = "mcwonderland"
-    override val mongoConnection: String = "mongodb://localhost:27017"
-
-    override val commandLabels: CommandLabels = object : CommandLabels {
-        override val createTeam: String = "createteam"
-        override val link: String = "link"
-        override val register: String = "register"
-        override val removeTeam: String = "removeteam"
-        override val listTeams: String = "listteams"
-        override val listReg: String = "listreg"
-    }
-}
 
 fun main() {
     val jda = JDABuilder
