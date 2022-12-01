@@ -9,7 +9,7 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
     private lateinit var userRepository: UserRepositoryImpl
 
-    private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id")
+    private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id", isAdmin = true)
 
     private val userCollection
         get() = mongoClient.getDatabase(config.dbName).getUserCollection()
