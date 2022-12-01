@@ -31,8 +31,8 @@ class AppModule(
 
     @Provides
     fun config(): Config {
-        val file
-        val property = Properties().apply { load(propertyFile.inputStream()) }
+        val file = File("config.properties")
+        val property = Properties().apply { load(file.inputStream()) }
         return AppConfig(property)
     }
 
