@@ -19,7 +19,10 @@ class RegistrationServiceImpl(
         return registrationRepository.toggleRegistration(user.id)
     }
 
-    override fun listRegistrations(): Collection<User> {
+    override fun listRegistrations(executor: User): Collection<User> {
+        if (!executor.isAdministrator())
+            throw RuntimeException(messages.noPermission())
+
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 

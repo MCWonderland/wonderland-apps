@@ -89,7 +89,8 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             label = providers.commandLabels.listTeams,
             messenger = providers.messenger,
-            teamService = teamService
+            userFinder = providers.userFinder,
+            teamService = teamService,
         )
     }
 
@@ -99,7 +100,8 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             label = providers.commandLabels.listReg,
             messenger = providers.messenger,
-            registrationService = registrationService
+            registrationService = registrationService,
+            userFinder = providers.userFinder
         )
     }
 

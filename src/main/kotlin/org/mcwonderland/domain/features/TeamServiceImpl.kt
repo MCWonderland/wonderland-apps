@@ -17,7 +17,7 @@ class TeamServiceImpl(
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
-        if (!executor.isAdmin)
+        if (!executor.isAdministrator())
             throw RuntimeException(messages.noPermission())
 
         if (ids.isEmpty())
@@ -32,6 +32,7 @@ class TeamServiceImpl(
         return createTeamWith(members)
     }
 
+
     private fun checkEveryoneIsLinked(members: List<User>) {
         members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())
@@ -39,7 +40,10 @@ class TeamServiceImpl(
         }
     }
 
-    override fun listTeams(): List<Team> {
+    override fun listTeams(executor: User): List<Team> {
+        if (!executor.isAdministrator())
+            throw RuntimeException(messages.noPermission())
+
         val dbTeams = teamRepository.findAll()
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())
 
@@ -47,7 +51,7 @@ class TeamServiceImpl(
     }
 
     override fun removeFromTeam(executor: User, targetId: String): Team {
-        if (!executor.isAdmin)
+        if (!executor.isAdministrator())
             throw RuntimeException(messages.noPermission())
 
         val target = userFinder.find(targetId) ?: throw RuntimeException(messages.userNotFound(targetId))

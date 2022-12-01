@@ -16,13 +16,13 @@ internal class CommandListRegTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         registrationService = mockk(relaxed = true)
-        command = CommandListReg("listreg", registrationService, messages, messenger)
+        command = CommandListReg("listreg", registrationService, messages, messenger, userFinder)
     }
 
     @Test
     fun shouldCallService() {
         val expectUsers = listOf(User(), User())
-        every { registrationService.listRegistrations() } returns expectUsers
+        every { registrationService.listRegistrations(user) } returns expectUsers
 
         executeWithNoArgs()
 

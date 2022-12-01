@@ -4,6 +4,12 @@ data class User(
     var id: String = "",
     var mcId: String = "",
     var discordId: String = "",
-    var isAdmin: Boolean = false
+    private var isAdmin: Boolean = false
 ) {
+
+    fun addAdminPerm() {
+        isAdmin = true
+    }
+
+    fun isAdministrator() = isAdmin
 }
