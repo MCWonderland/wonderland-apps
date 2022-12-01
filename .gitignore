@@ -44,3 +44,4 @@ bin/
 ### Gradle ###
 .gradle/
 /config.properties
+/.idea/
