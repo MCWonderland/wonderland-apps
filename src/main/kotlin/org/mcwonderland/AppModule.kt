@@ -25,7 +25,6 @@ class AppModule(
     private val mojangApi: Mojang,
 ) : AbstractModule() {
 
-    private val channelCache = ChannelCache()
 
     @Provides
     fun mojangAccount(): MojangAccount {
@@ -55,8 +54,13 @@ class AppModule(
     }
 
     @Provides
-    fun messenger(): Messenger {
+    fun messenger(channelCache: ChannelCache): Messenger {
         return MessengerDiscordReplyUser(jda, channelCache)
+    }
+
+    @Provides
+    fun channelCache(): ChannelCache {
+        return SingleObjects.channelCache
     }
 
     @Provides

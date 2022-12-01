@@ -9,7 +9,9 @@ class MessengerDiscordReplyUser(private val jda: JDA, private val channelCache: 
         if (message.isEmpty())
             return
 
-        channelCache.getLastChannel()?.let { jda.getTextChannelById(it)?.sendMessage(message)?.queue() }
+        channelCache.getLastChannel()?.let {
+            jda.getTextChannelById(it)?.sendMessage(message)?.queue()
+        }
     }
 
 }

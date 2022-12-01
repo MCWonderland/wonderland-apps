@@ -6,29 +6,42 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.discord.ChannelCache
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
+import org.mcwonderland.domain.fakes.ConfigStub
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class CommandListenerTest {
 
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
+    private lateinit var channelCache: ChannelCache
     private lateinit var config: Config
 
     private lateinit var messageMock: Message
 
     private val commandSender = Dummies.createCommandSender()
+    private val channelId = "channel_id"
 
     @BeforeEach
     fun setup() {
         commandProcessor = mockk(relaxed = true)
-        config = mockk()
-        commandListener = CommandListener(commandProcessor, config)
+        channelCache = ChannelCache()
+        config = ConfigStub()
+        commandListener = CommandListener(commandProcessor, channelCache, config)
 
         messageMock = mockk(relaxed = true)
         every { messageMock.author.id } returns commandSender.id
+        every { messageMock.channel.id } returns channelId
+    }
+
+    @Test
+    fun shouldCacheChannel() {
+        sendMessage()
+        assertEquals(channelId, channelCache.getLastChannel())
     }
 
     @Test
@@ -53,7 +66,6 @@ internal class CommandListenerTest {
     fun notStartWithCmdPrefix_shouldIgnore() {
         every { messageMock.isFromGuild } returns true
         every { messageMock.author.isBot } returns false
-        every { config.commandPrefix } returns "!"
         every { messageMock.contentRaw } returns "?not start with cmd prefix"
 
         sendMessage()
@@ -89,7 +101,6 @@ internal class CommandListenerTest {
     private fun mockMessageAndPrefix(content: String) {
         every { messageMock.isFromGuild } returns true
         every { messageMock.author.isBot } returns false
-        every { config.commandPrefix } returns "!"
         every { messageMock.contentRaw } returns content
     }
 
