@@ -19,12 +19,15 @@ fun main() {
         .build()
         .awaitReady()
 
+    val channelCache = ChannelCache()
+
     val injector: Injector = Guice.createInjector(
-        AppModule(jda = jda, mojangApi = Mojang().connect()),
+        AppModule(jda = jda, mojangApi = Mojang().connect(), channelCache),
         DatabaseModule(),
         CommandModule(),
         ServiceModule()
     )
+
 
     val commands = listOf(
         injector.getInstance(CommandCreateTeam::class.java),
@@ -38,7 +41,7 @@ fun main() {
     jda.addEventListener(
         CommandListener(
             CommandProcessorImpl(commands),
-            injector.getInstance(ChannelCache::class.java),
+            channelCache,
             injector.getInstance(Config::class.java),
         ),
     )

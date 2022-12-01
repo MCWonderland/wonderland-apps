@@ -23,6 +23,7 @@ import java.util.Properties
 class AppModule(
     private val jda: JDA,
     private val mojangApi: Mojang,
+    private val channelCache: ChannelCache
 ) : AbstractModule() {
 
 
@@ -54,13 +55,8 @@ class AppModule(
     }
 
     @Provides
-    fun messenger(channelCache: ChannelCache): Messenger {
+    fun messenger(): Messenger {
         return MessengerDiscordReplyUser(jda, channelCache)
-    }
-
-    @Provides
-    fun channelCache(): ChannelCache {
-        return SingleObjects.channelCache
     }
 
     @Provides
