@@ -3,8 +3,9 @@ package org.mcwonderland
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
+import org.mcwonderland.discord.ChannelCache
 import org.mcwonderland.discord.DiscordMcIgnAccountLinker
-import org.mcwonderland.discord.MessengerDiscordGuild
+import org.mcwonderland.discord.MessengerDiscordReplyUser
 import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.MojangAccount
 import org.mcwonderland.domain.UserFinderByDiscordId
@@ -23,6 +24,8 @@ class AppModule(
     private val jda: JDA,
     private val mojangApi: Mojang,
 ) : AbstractModule() {
+
+    private val channelCache = ChannelCache()
 
     @Provides
     fun mojangAccount(): MojangAccount {
@@ -52,8 +55,8 @@ class AppModule(
     }
 
     @Provides
-    fun messenger(config: Config): Messenger {
-        return MessengerDiscordGuild(jda.getTextChannelById(config.commandChannelId)!!)
+    fun messenger(): Messenger {
+        return MessengerDiscordReplyUser(jda, channelCache)
     }
 
     @Provides
