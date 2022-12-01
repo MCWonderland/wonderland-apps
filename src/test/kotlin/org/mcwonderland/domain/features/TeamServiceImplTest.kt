@@ -137,12 +137,20 @@ internal class TeamServiceImplTest {
     inner class ListTeams {
 
         @Test
+        fun executorWithoutPerm_shouldDenied() {
+            assertRuntimeError(messages.noPermission()) {
+                teamService.listTeams(user)
+            }
+        }
+
+        @Test
         fun shouldListTeams() {
             val member = User(id = "member_id")
             val team = teamRepository.createTeamWithUsers(member).toTeam(listOf(member))
-
             userRepository.addUser(member)
-            val teams = teamService.listTeams()
+            user.addAdminPerm()
+
+            val teams = teamService.listTeams(user)
 
             assertEquals(listOf(team), teams)
         }
@@ -197,6 +205,6 @@ internal class TeamServiceImplTest {
 
 
     private fun gainAdminPerm() {
-        user.isAdmin = true
+        user.addAdminPerm()
     }
 }

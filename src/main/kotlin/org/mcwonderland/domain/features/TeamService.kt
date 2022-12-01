@@ -5,6 +5,6 @@ import org.mcwonderland.domain.model.User
 
 interface TeamService {
     fun createTeam(executor: User, ids: List<String>): Team
-    fun listTeams(): List<Team>
+    fun listTeams(executor: User): List<Team>
     fun removeFromTeam(executor: User, targetId: String):Team
 }

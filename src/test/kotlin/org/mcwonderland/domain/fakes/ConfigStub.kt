@@ -4,6 +4,7 @@ import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
 
 class ConfigStub : Config {
+    override val commandChannelId: String = "commandChannelId"
 
     override val commandPrefix: String = "!"
     override val dbName: String = "mcwonderland"
@@ -15,6 +16,7 @@ class ConfigStub : Config {
         override val register: String = "register"
         override val removeTeam: String = "removeTeam"
         override val listTeams: String = "listTeams"
+        override val listReg: String = "listReg"
     }
 
 }
