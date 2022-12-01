@@ -26,7 +26,7 @@ class UserRepositoryFake : UserRepository {
         return user
     }
 
-    override fun findUsers(userIds: List<String>): List<User> {
+    override fun findUsers(userIds: Collection<String>): Collection<User> {
         return users.filter { userIds.contains(it.id) }
     }
 

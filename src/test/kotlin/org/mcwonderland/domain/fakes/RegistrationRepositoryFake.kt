@@ -24,4 +24,8 @@ class RegistrationRepositoryFake : RegistrationRepository {
         return isRegistered(userId)
     }
 
+    override fun listRegistrations(): Collection<String> {
+        return this.registeredUsers
+    }
+
 }

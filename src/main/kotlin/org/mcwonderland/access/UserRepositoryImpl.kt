@@ -1,7 +1,6 @@
 package org.mcwonderland.access
 
 import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.`in`
 import com.mongodb.client.model.FindOneAndUpdateOptions
@@ -10,7 +9,6 @@ import com.mongodb.client.model.Updates
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
-import java.lang.reflect.Array.set
 
 class UserRepositoryImpl(
     private val mongoClient: MongoClient,
@@ -41,7 +39,7 @@ class UserRepositoryImpl(
         return user
     }
 
-    override fun findUsers(userIds: List<String>): List<User> {
+    override fun findUsers(userIds: Collection<String>): Collection<User> {
         return userCollection.find(`in`("_id", userIds)).toList()
     }
 

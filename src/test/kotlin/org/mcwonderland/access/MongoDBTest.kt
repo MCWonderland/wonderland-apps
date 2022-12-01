@@ -14,56 +14,68 @@ import de.flapdoodle.embed.process.config.RuntimeConfig
 import de.flapdoodle.embed.process.config.process.ProcessOutput
 import de.flapdoodle.embed.process.io.Processors
 import de.flapdoodle.embed.process.runtime.Network
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.fakes.ConfigStub
 
 
 open class MongoDBTest {
 
-    protected lateinit var mongoClient: MongoClient
+    companion object {
+        lateinit var mongoClient: MongoClient
 
-    private lateinit var mongodExecutable: MongodExecutable
-    private lateinit var mongoProcess: MongodProcess
+        lateinit var mongodExecutable: MongodExecutable
+        lateinit var mongoProcess: MongodProcess
 
-    protected val config = ConfigStub()
+        @JvmStatic
+        @BeforeAll
+        fun setupMongo() {
+            val port = 27018
+            val config: MongodConfig = MongodConfig.builder()
+                .version(Version.Main.V4_0)
+                .net(Net(port, Network.localhostIsIPv6()))
+                .cmdOptions(
+                    MongoCmdOptions.builder()
+                        .useNoJournal(false)
+                        .build()
+                )
+                .build()
 
-    @BeforeEach
-    fun setupMongo() {
-        val port = 27018
-        val config: MongodConfig = MongodConfig.builder()
-            .version(Version.Main.V4_0)
-            .net(Net(port, Network.localhostIsIPv6()))
-            .cmdOptions(
-                MongoCmdOptions.builder()
-                    .useNoJournal(false)
-                    .build()
-            )
-            .build()
+            mongodExecutable = doGetExecutable(config)
+            mongodExecutable.start()
 
-        this.mongodExecutable = doGetExecutable(config)
-        this.mongodExecutable.start()
+            mongoClient = MongoClientFactory.createClient("mongodb://localhost:$port")
+        }
 
-        this.mongoClient = MongoClientFactory.createClient("mongodb://localhost:$port")
+        @JvmStatic
+        @AfterAll
+        fun stopMongo() {
+            mongodExecutable.stop()
+        }
+
+        private fun doGetExecutable(config: MongodConfig): MongodExecutable {
+            val runtimeConfig: RuntimeConfig = Defaults.runtimeConfigFor(Command.MongoD)
+                .processOutput(
+                    ProcessOutput.builder()
+                        .output(Processors.silent())
+                        .error(Processors.silent())
+                        .commands(Processors.silent())
+                        .build()
+                )
+                .build()
+            return MongodStarter.getInstance(runtimeConfig).prepare(config)
+        }
+
     }
 
     @AfterEach
-    fun stopMongo() {
-        mongodExecutable.stop()
+    fun cleanUp() {
+        mongoClient.getDatabase(config.dbName).drop()
     }
 
-    private fun doGetExecutable(config: MongodConfig): MongodExecutable {
-        val runtimeConfig: RuntimeConfig = Defaults.runtimeConfigFor(Command.MongoD)
-            .processOutput(
-                ProcessOutput.builder()
-                    .output(Processors.silent())
-                    .error(Processors.silent())
-                    .commands(Processors.silent())
-                    .build()
-            )
-            .build()
-        return MongodStarter.getInstance(runtimeConfig).prepare(config)
-    }
+    protected val config = ConfigStub()
 
     protected fun getDB() = mongoClient.getDatabase(config.dbName)
 

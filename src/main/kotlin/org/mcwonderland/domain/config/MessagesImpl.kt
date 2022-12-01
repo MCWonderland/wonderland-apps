@@ -75,6 +75,16 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return "已取消報名"
     }
 
+    override fun listRegistrations(users: Collection<User>): String {
+        val messages = mutableListOf<String>()
+
+        messages.add("報名列表:")
+        messages.add(" ")
+        users.forEach { messages.add("> " + tagAndName(it)) }
+
+        return messages.joinToString("\n")
+    }
+
 
     private fun tagAndName(user: User): String {
         return "${discordTag(user.discordId)}(${mcName(user)})"

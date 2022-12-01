@@ -93,4 +93,14 @@ class CommandModule : AbstractModule() {
         )
     }
 
+    @Provides
+    fun commandListReg(providers: CommandProviders, registrationService: RegistrationService): CommandListReg {
+        return CommandListReg(
+            messages = providers.messages,
+            label = providers.commandLabels.listReg,
+            messenger = providers.messenger,
+            registrationService = registrationService
+        )
+    }
+
 }

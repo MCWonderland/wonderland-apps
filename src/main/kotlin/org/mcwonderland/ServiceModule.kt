@@ -29,15 +29,15 @@ class ServiceModule : AbstractModule() {
     @Provides
     fun registrationService(
         messages: Messages,
-        userFinder: UserFinder,
         registrationRepository: RegistrationRepository,
         userRepository: UserRepository,
-        accountLinker: AccountLinker
+        accountLinker: AccountLinker,
     ): RegistrationService {
         return RegistrationServiceImpl(
             messages = messages,
             registrationRepository = registrationRepository,
-            accountLinker = accountLinker
+            userRepository = userRepository,
+            accountLinker = accountLinker,
         )
     }
 
