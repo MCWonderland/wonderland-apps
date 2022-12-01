@@ -9,9 +9,11 @@ import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
+import org.shanerx.mojang.Mojang
 
 
 class AppConfig : Config {
+    override val commandChannelId: String = "1046025295578275850"
     override val commandPrefix: String = "!"
     override val dbName: String = "mcwonderland"
     override val mongoConnection: String = "mongodb://localhost:27017"
@@ -34,7 +36,7 @@ fun main() {
         .awaitReady()
 
     val injector: Injector = Guice.createInjector(
-        AppModule(jda.getTextChannelById("1046025295578275850")!!),
+        AppModule(jda = jda, mojangApi = Mojang().connect()),
         DatabaseModule(),
         CommandModule(),
         ServiceModule()

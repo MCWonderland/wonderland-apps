@@ -1,7 +1,7 @@
 package org.mcwonderland.domain.config
 
 interface Config {
-
+    val commandChannelId: String
     val commandPrefix: String
     val dbName: String
     val mongoConnection: String
