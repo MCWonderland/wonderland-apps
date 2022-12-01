@@ -22,6 +22,7 @@ class AppConfig : Config {
         override val register: String = "register"
         override val removeTeam: String = "removeteam"
         override val listTeams: String = "listteams"
+        override val listReg: String = "listreg"
     }
 }
 
@@ -44,7 +45,8 @@ fun main() {
         injector.getInstance(CommandLink::class.java),
         injector.getInstance(CommandListTeams::class.java),
         injector.getInstance(CommandRegister::class.java),
-        injector.getInstance(CommandRemoveTeam::class.java)
+        injector.getInstance(CommandRemoveTeam::class.java),
+        injector.getInstance(CommandListReg::class.java)
     )
 
     jda.addEventListener(
