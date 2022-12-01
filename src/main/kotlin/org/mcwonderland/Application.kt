@@ -32,7 +32,12 @@ fun main() {
         .build()
         .awaitReady()
 
-    val injector: Injector = Guice.createInjector(AppModule(jda.getTextChannelById("1046025295578275850")!!))
+    val injector: Injector = Guice.createInjector(
+        AppModule(jda.getTextChannelById("1046025295578275850")!!),
+        DatabaseModule(),
+        CommandModule(),
+        ServiceModule()
+    )
 
     val commands = listOf(
         injector.getInstance(CommandCreateTeam::class.java),

@@ -34,11 +34,6 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
     }
 
     @Provides
-    fun mongoClient(config: Config): MongoClient {
-        return MongoClientFactory.createClient(config.mongoConnection)
-    }
-
-    @Provides
     fun config(): Config {
         return AppConfig()
     }
@@ -52,22 +47,6 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
     fun messages(mojangAccount: MojangAccount): Messages {
         return MessagesImpl(mojangAccount)
     }
-
-    @Provides
-    fun userRepository(mongoClient: MongoClient, config: Config): UserRepository {
-        return UserRepositoryImpl(mongoClient, config)
-    }
-
-    @Provides
-    fun teamRepository(mongoClient: MongoClient, config: Config): TeamRepository {
-        return TeamRepositoryImpl(mongoClient, config)
-    }
-
-    @Provides
-    fun registrationRepository(mongoClient: MongoClient, config: Config): RegistrationRepository {
-        return RegistrationRepositoryImpl(mongoClient, config)
-    }
-
     @Provides
     fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository, messages: Messages): AccountLinker {
         return DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
@@ -83,115 +62,4 @@ class AppModule(private val discordChannel: TextChannel) : AbstractModule() {
         return UserFinderByDiscordId(userRepository)
     }
 
-    @Provides
-    fun teamService(
-        messages: Messages,
-        userFinder: UserFinder,
-        teamRepository: TeamRepository,
-        userRepository: UserRepository,
-        accountLinker: AccountLinker
-    ): TeamService {
-        return TeamServiceImpl(
-            messages = messages,
-            userFinder = userFinder,
-            teamRepository = teamRepository,
-            userRepository = userRepository,
-            accountLinker = accountLinker
-        )
-    }
-
-    @Provides
-    fun registrationService(
-        messages: Messages,
-        userFinder: UserFinder,
-        registrationRepository: RegistrationRepository,
-        userRepository: UserRepository,
-        accountLinker: AccountLinker
-    ): RegistrationService {
-        return RegistrationServiceImpl(
-            messages = messages,
-            registrationRepository = registrationRepository,
-            accountLinker = accountLinker
-        )
-    }
-
-    interface CommandProviders {
-        val accountLinker: AccountLinker
-        val userFinder: UserFinder
-        val messenger: Messenger
-        val messages: Messages
-        val commandLabels: CommandLabels
-    }
-
-    @Provides
-    fun commandProviders(
-        accountLinker: AccountLinker,
-        userFinder: UserFinder,
-        messenger: Messenger,
-        messages: Messages,
-        commandLabels: CommandLabels,
-        teamService: TeamService
-    ): CommandProviders {
-        return object : CommandProviders {
-            override val accountLinker: AccountLinker = accountLinker
-            override val userFinder: UserFinder = userFinder
-            override val messenger: Messenger = messenger
-            override val messages: Messages = messages
-            override val commandLabels: CommandLabels = commandLabels
-        }
-    }
-
-    @Provides
-    fun commandLink(providers: CommandProviders): CommandLink {
-        return CommandLink(
-            messages = providers.messages,
-            userFinder = providers.userFinder,
-            accountLinker = providers.accountLinker,
-            label = providers.commandLabels.link,
-            messenger = providers.messenger
-        )
-    }
-
-    @Provides
-    fun commandCreateTeam(providers: CommandProviders, teamService: TeamService): CommandCreateTeam {
-        return CommandCreateTeam(
-            messages = providers.messages,
-            userFinder = providers.userFinder,
-            label = providers.commandLabels.createTeam,
-            messenger = providers.messenger,
-            teamService = teamService
-        )
-    }
-
-    @Provides
-    fun commandRegister(providers: CommandProviders, registrationService: RegistrationService): CommandRegister {
-        return CommandRegister(
-            messages = providers.messages,
-            userFinder = providers.userFinder,
-            label = providers.commandLabels.register,
-            messenger = providers.messenger,
-            registrationService = registrationService
-        )
-    }
-
-    @Provides
-    fun commandRemoveTeam(providers: CommandProviders, teamService: TeamService): CommandRemoveTeam {
-        return CommandRemoveTeam(
-            messages = providers.messages,
-            userFinder = providers.userFinder,
-            label = providers.commandLabels.removeTeam,
-            messenger = providers.messenger,
-            teamService = teamService
-        )
-    }
-
-    @Provides
-    fun commandListTeams(providers: CommandProviders, teamService: TeamService): CommandListTeams {
-        return CommandListTeams(
-            messages = providers.messages,
-            label = providers.commandLabels.listTeams,
-            messenger = providers.messenger,
-            teamService = teamService
-        )
-    }
 }

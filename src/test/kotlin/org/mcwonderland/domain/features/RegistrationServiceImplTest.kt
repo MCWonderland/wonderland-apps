@@ -15,10 +15,12 @@ import kotlin.test.assertTrue
 internal class RegistrationServiceImplTest {
 
     private lateinit var registrationService: RegistrationServiceImpl
+
     private lateinit var accountLinker: AccountLinkerFake
     private lateinit var messages: Messages
-    private lateinit var user: User
     private lateinit var registrationRepository: RegistrationRepository
+
+    private lateinit var user: User
 
     @BeforeEach
     fun setUp() {
