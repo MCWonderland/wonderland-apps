@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
@@ -18,10 +19,10 @@ class TeamServiceImpl(
 
     override fun createTeam(executor: User, ids: List<String>): Team {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
         if (ids.isEmpty())
-            throw RuntimeException(messages.membersCantBeEmpty())
+            throw MemberCantBeEmptyException()
 
         val idsWithNoDuplicate = ids.toSet().toList()
         val members = mapEveryIdToUserOrThrow(idsWithNoDuplicate)
@@ -36,7 +37,7 @@ class TeamServiceImpl(
     private fun checkEveryoneIsLinked(members: List<User>) {
         members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())
-                throw RuntimeException(messages.membersNotLinked(it))
+                throw UsersNotLinkedException(it)
         }
     }
 
@@ -72,7 +73,7 @@ class TeamServiceImpl(
         val membersHasTeam = members.filter { teamRepository.findUsersTeam(it.id) != null }
 
         if (membersHasTeam.isNotEmpty())
-            throw RuntimeException(messages.membersAlreadyInTeam(membersHasTeam))
+            throw UsersAlreadyInTeamException(membersHasTeam)
     }
 
     private fun mapEveryIdToUserOrThrow(ids: List<String>): List<User> {
@@ -89,7 +90,7 @@ class TeamServiceImpl(
 
 
         if (nullUsers.isNotEmpty())
-            throw RuntimeException(messages.membersCouldNotFound(nullUsers))
+            throw UserNotFoundException(nullUsers)
 
         return users
     }

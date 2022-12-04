@@ -5,6 +5,10 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.UserNotFoundException
+import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
@@ -16,7 +20,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam",  teamService, messages)
+        command = CommandCreateTeam("createTeam", teamService, messages)
     }
 
     @Test
@@ -25,11 +29,19 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     }
 
     @Test
-    fun onException_shouldSendMessage() {
-        val ids = listOf("id", "id2")
-        every { teamService.createTeam(sender, ids) } throws RuntimeException("Error")
+    fun testExceptionMessageMappings() {
+        assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
+        assertExceptionMapping(MemberCantBeEmptyException(), messages.membersCantBeEmpty())
+        assertExceptionMapping(UserNotFoundException(listOf("1")), messages.membersCouldNotFound(listOf("1")))
+        assertExceptionMapping(
+            UsersAlreadyInTeamException(listOf(sender)),
+            messages.membersAlreadyInTeam(listOf(sender))
+        )
+    }
 
-        executeCommand(ids).assertFail("Error")
+    private fun assertExceptionMapping(exception: Exception, noPermission: String) {
+        every { teamService.createTeam(any(), any()) } throws exception
+        executeWithNoArgs().assertFail(noPermission)
     }
 
     @Test

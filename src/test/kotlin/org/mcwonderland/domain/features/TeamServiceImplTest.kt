@@ -10,6 +10,7 @@ import org.mcwonderland.assertError
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
+import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -50,20 +51,14 @@ internal class TeamServiceImplTest {
 
         @Test
         fun executorWithoutPerm_shouldDenied() {
-            assertRuntimeError(messages.noPermission()) {
-                teamService.createTeam(user, listOf())
-            }
+            assertThrows<PermissionDeniedException> { teamService.createTeam(user, listOf()) }
         }
 
         @Test
         fun membersIsEmpty_shouldCancel() {
             gainAdminPerm()
 
-            assertThrows<RuntimeException> {
-                teamService.createTeam(user, listOf())
-            }.let {
-                assertEquals(messages.membersCantBeEmpty(), it.message)
-            }
+            assertThrows<MemberCantBeEmptyException> { teamService.createTeam(user, emptyList()) }
         }
 
         @Test
@@ -72,8 +67,10 @@ internal class TeamServiceImplTest {
 
             val ids = listOf("1", "2")
 
-            assertError<RuntimeException>(messages.membersCouldNotFound(ids)) {
+            assertThrows<UserNotFoundException> {
                 teamService.createTeam(user, ids)
+            }.also {
+                assertEquals(ids, it.ids)
             }
         }
 
@@ -85,8 +82,10 @@ internal class TeamServiceImplTest {
             userFinder.add(member)
             teamRepository.createTeamWithUsers(member)
 
-            assertError<RuntimeException>(messages.membersAlreadyInTeam(listOf(member))) {
+            assertThrows<UsersAlreadyInTeamException> {
                 teamService.createTeam(user, listOf(member.id))
+            }.also {
+                assertEquals(listOf(member), it.users)
             }
         }
 
@@ -97,8 +96,10 @@ internal class TeamServiceImplTest {
 
             userFinder.add(member)
 
-            assertError<RuntimeException>(messages.membersNotLinked(listOf(member))) {
+            assertThrows<UsersNotLinkedException> {
                 teamService.createTeam(user, listOf(member.id))
+            }.also {
+                assertEquals(listOf(member), it.users)
             }
         }
 

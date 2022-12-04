@@ -5,7 +5,6 @@ import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 
 class CommandCreateTeam(
@@ -18,11 +17,11 @@ class CommandCreateTeam(
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         if (args.isEmpty())
-            return CommandResponse(CommandStatus.FAILURE, listOf(usage))
+            return failWithUsage()
 
         return try {
             val team = teamService.createTeam(sender, args)
-            CommandResponse(CommandStatus.SUCCESS, listOf(messages.teamCreated(team)))
+            ok(messages.teamCreated(team))
         } catch (e: Exception) {
             CommandResponse(CommandStatus.FAILURE, listOf(e.message ?: "Error"))
         }

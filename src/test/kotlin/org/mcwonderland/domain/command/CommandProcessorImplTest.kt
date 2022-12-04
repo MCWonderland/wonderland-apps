@@ -19,4 +19,5 @@ internal class CommandProcessorImplTest {
         verify(exactly = 1) { command.execute(commandSender, listOf("arg")) }
     }
 
+
 }
