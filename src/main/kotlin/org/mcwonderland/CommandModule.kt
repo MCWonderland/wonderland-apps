@@ -39,7 +39,6 @@ class CommandModule : AbstractModule() {
     fun commandLink(providers: CommandProviders): CommandLink {
         return CommandLink(
             messages = providers.messages,
-            userFinder = providers.userFinder,
             accountLinker = providers.accountLinker,
             label = providers.commandLabels.link,
         )
@@ -49,7 +48,6 @@ class CommandModule : AbstractModule() {
     fun commandCreateTeam(providers: CommandProviders, teamService: TeamService): CommandCreateTeam {
         return CommandCreateTeam(
             messages = providers.messages,
-            userFinder = providers.userFinder,
             label = providers.commandLabels.createTeam,
             teamService = teamService
         )
@@ -59,7 +57,6 @@ class CommandModule : AbstractModule() {
     fun commandRegister(providers: CommandProviders, registrationService: RegistrationService): CommandRegister {
         return CommandRegister(
             messages = providers.messages,
-            userFinder = providers.userFinder,
             label = providers.commandLabels.register,
             registrationService = registrationService
         )
@@ -69,7 +66,6 @@ class CommandModule : AbstractModule() {
     fun commandRemoveTeam(providers: CommandProviders, teamService: TeamService): CommandRemoveTeam {
         return CommandRemoveTeam(
             messages = providers.messages,
-            userFinder = providers.userFinder,
             label = providers.commandLabels.removeTeam,
             teamService = teamService
         )
@@ -80,7 +76,6 @@ class CommandModule : AbstractModule() {
         return CommandListTeams(
             messages = providers.messages,
             label = providers.commandLabels.listTeams,
-            userFinder = providers.userFinder,
             teamService = teamService,
         )
     }
@@ -91,7 +86,6 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             label = providers.commandLabels.listReg,
             registrationService = registrationService,
-            userFinder = providers.userFinder
         )
     }
 

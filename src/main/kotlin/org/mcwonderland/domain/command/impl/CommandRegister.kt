@@ -6,19 +6,17 @@ import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.features.UserFinder
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.model.User
 
 class CommandRegister(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val userFinder: UserFinder,
     private val messages: Messages
 ) : Command {
 
-    override fun execute(sender: PlatformUser, args: List<String>): CommandResponse {
-        val user = userFinder.findOrCreate(sender.id)
+    override fun execute(sender: User, args: List<String>): CommandResponse {
         val newState = try {
-            registrationService.toggleRegister(user)
+            registrationService.toggleRegister(sender)
         } catch (e: Exception) {
             return CommandResponse(CommandStatus.FAILURE, listOf(e.message ?: "Unknown error"))
         }

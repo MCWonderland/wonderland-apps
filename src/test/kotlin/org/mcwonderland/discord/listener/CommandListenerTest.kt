@@ -13,6 +13,8 @@ import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.fakes.ConfigStub
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MessengerFake
+import org.mcwonderland.domain.fakes.UserFinderFake
+import org.mcwonderland.domain.features.UserFinder
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -21,11 +23,12 @@ internal class CommandListenerTest {
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
     private lateinit var config: Config
+    private lateinit var userFinder: UserFinder
 
     private lateinit var messageMock: Message
     private lateinit var messenger: MessengerFake
 
-    private val commandSender = Dummies.createCommandSender()
+    private val user = Dummies.createUserFullFilled()
     private val channelId = "channel_id"
 
     @BeforeEach
@@ -33,11 +36,13 @@ internal class CommandListenerTest {
         commandProcessor = mockk(relaxed = true)
         messenger = MessengerFake()
         config = ConfigStub()
-        commandListener = CommandListener(commandProcessor, config, messenger)
+        userFinder = UserFinderFake().apply { add(user) }
+        commandListener = CommandListener(commandProcessor, config, messenger, userFinder)
 
         messageMock = mockk(relaxed = true)
-        every { messageMock.author.id } returns commandSender.id
+        every { messageMock.author.id } returns user.id
         every { messageMock.channel.id } returns channelId
+
     }
 
     @Test
@@ -75,7 +80,7 @@ internal class CommandListenerTest {
 
         sendMessage()
 
-        verify { commandProcessor.onCommand(commandSender, "cw", listOf("command", "sub")) }
+        verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
     }
 
     @Test
@@ -100,7 +105,7 @@ internal class CommandListenerTest {
             )
         )
 
-        every { commandProcessor.onCommand(commandSender, "cw", listOf("command", "sub")) } returns response
+        every { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) } returns response
 
         sendMessage()
 
@@ -110,7 +115,7 @@ internal class CommandListenerTest {
     private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {
         mockMessageAndPrefix(msg)
         sendMessage()
-        verify { commandProcessor.onCommand(commandSender, label, args) }
+        verify { commandProcessor.onCommand(user, label, args) }
     }
 
     private fun mockMessageAndPrefix(content: String) {

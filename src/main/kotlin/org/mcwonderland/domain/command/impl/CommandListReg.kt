@@ -6,17 +6,15 @@ import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.features.UserFinder
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.model.User
 
 class CommandListReg(
     override val label: String,
     private val registrationService: RegistrationService,
     private val messages: Messages,
-    private val userFinder: UserFinder
 ) : Command {
-    override fun execute(sender: PlatformUser, args: List<String>): CommandResponse {
-        val executor = userFinder.findOrCreate(sender.id)
-        val users = registrationService.listRegistrations(executor)
+    override fun execute(sender: User, args: List<String>): CommandResponse {
+        val users = registrationService.listRegistrations(sender)
 
         return CommandResponse(CommandStatus.SUCCESS, listOf(messages.listRegistrations(users)))
     }

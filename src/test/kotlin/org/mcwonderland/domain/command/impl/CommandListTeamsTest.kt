@@ -16,7 +16,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         teamService = mockk(relaxed = true)
-        command = CommandListTeams("listteams", teamService, messages, userFinder)
+        command = CommandListTeams("listteams", teamService, messages)
     }
 
 
@@ -25,7 +25,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
         val members = listOf(User("member"))
         val teams = listOf(Team(members))
 
-        every { teamService.listTeams(user) } returns teams
+        every { teamService.listTeams(sender) } returns teams
 
         executeWithNoArgs().assertSuccess(messages.teamList(teams))
     }

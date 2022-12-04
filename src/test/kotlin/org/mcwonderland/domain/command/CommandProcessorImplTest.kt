@@ -10,7 +10,7 @@ internal class CommandProcessorImplTest {
 
     @Test
     fun shouldForwardToCorrectCommand() {
-        val commandSender = Dummies.createCommandSender()
+        val commandSender = Dummies.createUserFullFilled()
         val command = mockk<Command>(relaxed = true) { every { label } returns "test" }
         val commandService = CommandProcessorImpl(listOf(command))
 

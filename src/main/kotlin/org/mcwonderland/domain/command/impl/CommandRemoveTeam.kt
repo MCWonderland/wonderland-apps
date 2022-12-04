@@ -6,11 +6,10 @@ import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.UserFinder
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.model.User
 
 class CommandRemoveTeam(
     override val label: String,
-    private val userFinder: UserFinder,
     private val teamService: TeamService,
     private val messages: Messages
 ) : Command {
@@ -18,13 +17,12 @@ class CommandRemoveTeam(
     override val usage: String
         get() = "Usage: <user>"
 
-    override fun execute(sender: PlatformUser, args: List<String>): CommandResponse {
+    override fun execute(sender: User, args: List<String>): CommandResponse {
         if (args.isEmpty())
             return CommandResponse(CommandStatus.FAILURE, listOf(usage))
 
-        val user = userFinder.findOrCreate(sender.id)
         val targetId = args[0]
-        val teamAfterRemoveTarget = teamService.removeFromTeam(user, targetId)
+        val teamAfterRemoveTarget = teamService.removeFromTeam(sender, targetId)
 
         return CommandResponse(CommandStatus.SUCCESS, listOf(messages.userRemovedFromTeam(teamAfterRemoveTarget)))
     }

@@ -17,7 +17,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         teamService = mockk(relaxed = true)
-        command = CommandRemoveTeam("removeTeam", userFinder, teamService, messages)
+        command = CommandRemoveTeam("removeTeam", teamService, messages)
     }
 
     @Test
@@ -30,7 +30,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
         val membersLeftAfterRemoved = listOf(User("member_left"))
         val expectTeam = Team(membersLeftAfterRemoved)
 
-        every { teamService.removeFromTeam(user, "target") } returns expectTeam
+        every { teamService.removeFromTeam(sender, "target") } returns expectTeam
 
         executeCommand(listOf("target")).assertSuccess(messages.userRemovedFromTeam(expectTeam))
     }

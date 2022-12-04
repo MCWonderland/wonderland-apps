@@ -15,7 +15,7 @@ class CommandLinkTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         accountLinker = mockk(relaxed = true)
-        command = CommandLink(label, accountLinker, userFinder, messages)
+        command = CommandLink(label, accountLinker, messages)
     }
 
     @Test
@@ -30,9 +30,9 @@ class CommandLinkTest : CommandTestBase() {
 
         @Test
         fun linked_sendMessage() {
-            every { accountLinker.link(user, targetId) } returns user
+            every { accountLinker.link(sender, targetId) } returns sender
 
-            executeCommand(targetId).assertSuccess(messages.linked(user))
+            executeCommand(targetId).assertSuccess(messages.linked(sender))
         }
     }
 }

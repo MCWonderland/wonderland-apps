@@ -5,12 +5,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.features.UserFinder
 
 class CommandListener(
     private val commandProcessor: CommandProcessor,
     private val config: Config,
-    private val messenger: Messenger
+    private val messenger: Messenger,
+    private val userFinder: UserFinder
 ) : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
@@ -28,7 +29,7 @@ class CommandListener(
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
 
-        commandProcessor.onCommand(PlatformUser(author.id), label, args).let {
+        commandProcessor.onCommand(userFinder.findOrCreate(author.id), label, args).let {
             it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
         }
     }

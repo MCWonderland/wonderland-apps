@@ -16,7 +16,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam", userFinder, teamService, messages)
+        command = CommandCreateTeam("createTeam",  teamService, messages)
     }
 
     @Test
@@ -27,7 +27,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @Test
     fun onException_shouldSendMessage() {
         val ids = listOf("id", "id2")
-        every { teamService.createTeam(user, ids) } throws RuntimeException("Error")
+        every { teamService.createTeam(sender, ids) } throws RuntimeException("Error")
 
         executeCommand(ids).assertFail("Error")
     }
@@ -39,7 +39,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
             members = listOf(Dummies.createUserFullFilled())
         )
 
-        every { teamService.createTeam(user, ids) } returns team
+        every { teamService.createTeam(sender, ids) } returns team
 
         executeCommand(ids).assertSuccess(messages.teamCreated(team))
     }
