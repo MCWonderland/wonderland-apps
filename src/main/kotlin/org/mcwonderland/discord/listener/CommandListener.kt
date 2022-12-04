@@ -29,7 +29,7 @@ class CommandListener(
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
 
-        commandProcessor.onCommand(userFinder.findOrCreate(author.id), label, args).let {
+        commandProcessor.onCommand(userFinder.findOrCreate(author.id), label, args)?.let {
             it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
         }
     }

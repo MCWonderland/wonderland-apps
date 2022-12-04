@@ -17,7 +17,7 @@ class CommandListTeams(
     override fun execute(sender: User, args: List<String>): CommandResponse {
         val teams = this.teamService.listTeams(sender)
 
-        return CommandResponse(CommandStatus.SUCCESS, listOf(messages.teamList(teams)))
+        return ok(messages.teamList(teams))
     }
 
 }

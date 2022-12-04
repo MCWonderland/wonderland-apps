@@ -16,7 +16,7 @@ class CommandListReg(
     override fun execute(sender: User, args: List<String>): CommandResponse {
         val users = registrationService.listRegistrations(sender)
 
-        return CommandResponse(CommandStatus.SUCCESS, listOf(messages.listRegistrations(users)))
+        return ok(messages.listRegistrations(users))
     }
 
 }
