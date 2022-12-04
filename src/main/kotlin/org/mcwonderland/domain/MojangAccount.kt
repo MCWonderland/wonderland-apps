@@ -1,6 +1,6 @@
 package org.mcwonderland.domain
 
-import java.util.UUID
+import java.util.*
 
 interface MojangAccount {
     fun getNameByUUID(uuid: String): String?

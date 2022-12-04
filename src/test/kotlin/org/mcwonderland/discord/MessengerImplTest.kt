@@ -3,8 +3,6 @@ package org.mcwonderland.discord
 import io.mockk.Called
 import io.mockk.mockk
 import io.mockk.verify
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test

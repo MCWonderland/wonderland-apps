@@ -2,13 +2,14 @@ package org.mcwonderland.minecraft
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.MojangAccount
 import org.shanerx.mojang.Mojang
-import java.util.UUID
+import java.util.*
 
 internal class MojangAccountImplTest {
 

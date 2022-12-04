@@ -1,6 +1,5 @@
 package org.mcwonderland.domain.command.impl
 
-import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus

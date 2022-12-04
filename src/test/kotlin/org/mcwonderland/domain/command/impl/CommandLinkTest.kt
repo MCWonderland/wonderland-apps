@@ -2,15 +2,11 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
-import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.features.AccountLinker
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class CommandLinkTest : CommandTestBase() {
     private val label = "link"

@@ -2,7 +2,6 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase

@@ -10,12 +10,13 @@ import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl
-import org.mcwonderland.domain.features.*
+import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
 import java.io.File
-import java.util.Properties
+import java.util.*
 
 class AppModule(
     private val jda: JDA,

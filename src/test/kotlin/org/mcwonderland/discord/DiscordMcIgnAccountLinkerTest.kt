@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
-import org.mcwonderland.domain.fakes.AccountData
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake

@@ -2,11 +2,11 @@ package org.mcwonderland.domain
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.features.UserFinder
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
 
 internal class UserFinderByDiscordIdTest {

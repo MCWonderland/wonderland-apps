@@ -57,10 +57,12 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun listRegistrations() {
-        collection.insertMany(listOf(
-            RegistrationContext("test1", true),
-            RegistrationContext("test2", false)
-        ))
+        collection.insertMany(
+            listOf(
+                RegistrationContext("test1", true),
+                RegistrationContext("test2", false)
+            )
+        )
 
         assertEquals(listOf("test1"), repo.listRegistrations())
     }

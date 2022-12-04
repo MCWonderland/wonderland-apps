@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.model.PlatformUser
-import kotlin.test.assertEquals
 
 internal class CommandRegisterTest : CommandTestBase() {
 

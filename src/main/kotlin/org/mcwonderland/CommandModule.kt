@@ -2,7 +2,6 @@ package org.mcwonderland
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Messages
@@ -16,7 +15,6 @@ class CommandModule : AbstractModule() {
     interface CommandProviders {
         val accountLinker: AccountLinker
         val userFinder: UserFinder
-        val messenger: Messenger
         val messages: Messages
         val commandLabels: CommandLabels
     }
@@ -25,7 +23,6 @@ class CommandModule : AbstractModule() {
     fun commandProviders(
         accountLinker: AccountLinker,
         userFinder: UserFinder,
-        messenger: Messenger,
         messages: Messages,
         commandLabels: CommandLabels,
         teamService: TeamService
@@ -33,7 +30,6 @@ class CommandModule : AbstractModule() {
         return object : CommandProviders {
             override val accountLinker: AccountLinker = accountLinker
             override val userFinder: UserFinder = userFinder
-            override val messenger: Messenger = messenger
             override val messages: Messages = messages
             override val commandLabels: CommandLabels = commandLabels
         }

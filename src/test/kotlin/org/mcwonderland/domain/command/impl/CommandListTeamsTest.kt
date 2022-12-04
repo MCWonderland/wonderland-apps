@@ -2,12 +2,10 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.model.PlatformUser
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 

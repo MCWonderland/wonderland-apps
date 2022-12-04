@@ -8,7 +8,6 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
-import kotlin.test.assertEquals
 
 internal class CommandCreateTeamTest : CommandTestBase() {
 

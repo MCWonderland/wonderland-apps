@@ -3,7 +3,6 @@ package org.mcwonderland.domain.command
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
-import org.mcwonderland.domain.fakes.MessengerFake
 import org.mcwonderland.domain.fakes.UserFinderStub
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.PlatformUser

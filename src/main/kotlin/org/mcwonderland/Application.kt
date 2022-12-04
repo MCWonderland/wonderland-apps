@@ -4,8 +4,8 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
+import org.mcwonderland.discord.MessengerImpl
 import org.mcwonderland.discord.listener.CommandListener
-import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Config
@@ -26,6 +26,8 @@ fun main() {
         ServiceModule()
     )
 
+    val messenger = MessengerImpl()
+
 
     val commands = listOf(
         injector.getInstance(CommandCreateTeam::class.java),
@@ -40,7 +42,7 @@ fun main() {
         CommandListener(
             CommandProcessorImpl(commands),
             injector.getInstance(Config::class.java),
-            injector.getInstance(Messenger::class.java)
+            messenger
         ),
     )
 }

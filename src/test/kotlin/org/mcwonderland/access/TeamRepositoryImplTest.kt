@@ -1,10 +1,8 @@
 package org.mcwonderland.access
 
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.domain.fakes.ConfigStub
+import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.model.DBTeam
 import org.mcwonderland.domain.repository.TeamRepository
 

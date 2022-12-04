@@ -1,10 +1,8 @@
 package org.mcwonderland.domain.fakes
 
 import org.mcwonderland.domain.model.DBTeam
-import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.TeamRepository
-import java.util.UUID
 
 class TeamRepositoryFake : TeamRepository {
 
