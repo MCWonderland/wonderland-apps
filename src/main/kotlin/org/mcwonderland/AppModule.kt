@@ -5,7 +5,7 @@ import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
 import org.mcwonderland.discord.DiscordMcIgnAccountLinker
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.UserFinderByDiscordId
+import org.mcwonderland.discord.UserFinderDiscord
 import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
@@ -53,7 +53,7 @@ class AppModule(
 
     @Provides
     fun userFinder(userRepository: UserRepository): UserFinder {
-        return UserFinderByDiscordId(userRepository)
+        return UserFinderDiscord(userRepository)
     }
 
 }
