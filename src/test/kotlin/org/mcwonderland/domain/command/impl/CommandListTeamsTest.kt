@@ -18,7 +18,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         teamService = mockk(relaxed = true)
-        command = CommandListTeams("listteams", teamService, messages, messenger, userFinder)
+        command = CommandListTeams("listteams", teamService, messages, userFinder)
     }
 
 
@@ -29,9 +29,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
 
         every { teamService.listTeams(user) } returns teams
 
-        executeWithNoArgs()
-
-        assertEquals(messages.teamList(teams), messenger.lastMessage)
+        executeWithNoArgs().assertSuccess(messages.teamList(teams))
     }
 
 

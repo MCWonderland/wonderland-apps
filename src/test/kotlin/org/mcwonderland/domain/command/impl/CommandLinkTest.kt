@@ -2,6 +2,8 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.mcwonderland.domain.command.Command
@@ -17,13 +19,12 @@ class CommandLinkTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         accountLinker = mockk(relaxed = true)
-        command = CommandLink(label, accountLinker, userFinder, messenger, messages)
+        command = CommandLink(label, accountLinker, userFinder, messages)
     }
 
     @Test
     fun missingArguments() {
-        executeWithNoArgs()
-        assertEquals(messages.invalidArg("mcIgn"), messenger.lastMessage)
+        executeWithNoArgs().assertFail(messages.invalidArg("mcIgn"))
     }
 
     @Nested
@@ -33,11 +34,9 @@ class CommandLinkTest : CommandTestBase() {
 
         @Test
         fun linked_sendMessage() {
-            executeCommand(targetId)
-
             every { accountLinker.link(user, targetId) } returns user
 
-            assertEquals(messages.linked(user), messenger.lastMessage)
+            executeCommand(targetId).assertSuccess(messages.linked(user))
         }
     }
 }

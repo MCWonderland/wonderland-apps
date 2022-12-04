@@ -2,7 +2,7 @@ package org.mcwonderland
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import org.mcwonderland.domain.Messenger
+import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Messages
@@ -46,7 +46,6 @@ class CommandModule : AbstractModule() {
             userFinder = providers.userFinder,
             accountLinker = providers.accountLinker,
             label = providers.commandLabels.link,
-            messenger = providers.messenger
         )
     }
 
@@ -56,7 +55,6 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             userFinder = providers.userFinder,
             label = providers.commandLabels.createTeam,
-            messenger = providers.messenger,
             teamService = teamService
         )
     }
@@ -67,7 +65,6 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             userFinder = providers.userFinder,
             label = providers.commandLabels.register,
-            messenger = providers.messenger,
             registrationService = registrationService
         )
     }
@@ -78,7 +75,6 @@ class CommandModule : AbstractModule() {
             messages = providers.messages,
             userFinder = providers.userFinder,
             label = providers.commandLabels.removeTeam,
-            messenger = providers.messenger,
             teamService = teamService
         )
     }
@@ -88,7 +84,6 @@ class CommandModule : AbstractModule() {
         return CommandListTeams(
             messages = providers.messages,
             label = providers.commandLabels.listTeams,
-            messenger = providers.messenger,
             userFinder = providers.userFinder,
             teamService = teamService,
         )
@@ -99,7 +94,6 @@ class CommandModule : AbstractModule() {
         return CommandListReg(
             messages = providers.messages,
             label = providers.commandLabels.listReg,
-            messenger = providers.messenger,
             registrationService = registrationService,
             userFinder = providers.userFinder
         )

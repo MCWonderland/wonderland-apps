@@ -16,7 +16,7 @@ internal class CommandRegisterTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         registerService = mockk(relaxed = true)
-        command = CommandRegister("register", registerService, userFinder, messenger, messages)
+        command = CommandRegister("register", registerService, userFinder, messages)
     }
 
     @Test
@@ -29,16 +29,12 @@ internal class CommandRegisterTest : CommandTestBase() {
     fun onException_shouldSendMessage() {
         every { registerService.toggleRegister(user) } throws Exception("error")
 
-        executeWithNoArgs()
-
-        assertEquals("error", messenger.lastMessage)
+        executeWithNoArgs().assertFail("error")
     }
 
     private fun assertToggleStateMessage(state: Boolean, message: String) {
         every { registerService.toggleRegister(user) } returns state
 
-        executeWithNoArgs()
-
-        assertEquals(message, messenger.lastMessage)
+        executeWithNoArgs().assertSuccess(message)
     }
 }

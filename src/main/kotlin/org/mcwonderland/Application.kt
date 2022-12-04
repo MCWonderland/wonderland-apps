@@ -4,8 +4,8 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
-import org.mcwonderland.discord.ChannelCache
 import org.mcwonderland.discord.listener.CommandListener
+import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Config
@@ -19,10 +19,8 @@ fun main() {
         .build()
         .awaitReady()
 
-    val channelCache = ChannelCache()
-
     val injector: Injector = Guice.createInjector(
-        AppModule(jda = jda, mojangApi = Mojang().connect(), channelCache),
+        AppModule(jda = jda, mojangApi = Mojang().connect()),
         DatabaseModule(),
         CommandModule(),
         ServiceModule()
@@ -41,8 +39,8 @@ fun main() {
     jda.addEventListener(
         CommandListener(
             CommandProcessorImpl(commands),
-            channelCache,
             injector.getInstance(Config::class.java),
+            injector.getInstance(Messenger::class.java)
         ),
     )
 }

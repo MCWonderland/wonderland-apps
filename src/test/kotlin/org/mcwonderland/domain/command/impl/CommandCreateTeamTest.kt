@@ -17,13 +17,12 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam", messenger, userFinder, teamService, messages)
+        command = CommandCreateTeam("createTeam", userFinder, teamService, messages)
     }
 
     @Test
     fun withoutArgs_shouldShowUsage() {
-        executeWithNoArgs()
-        assertEquals(messenger.lastMessage, command.usage)
+        executeWithNoArgs().assertFail(command.usage)
     }
 
     @Test
@@ -31,9 +30,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
         val ids = listOf("id", "id2")
         every { teamService.createTeam(user, ids) } throws RuntimeException("Error")
 
-        executeCommand(ids)
-
-        assertEquals(messenger.lastMessage, "Error")
+        executeCommand(ids).assertFail("Error")
     }
 
     @Test
@@ -45,8 +42,6 @@ internal class CommandCreateTeamTest : CommandTestBase() {
 
         every { teamService.createTeam(user, ids) } returns team
 
-        executeCommand(ids)
-
-        assertEquals(messenger.lastMessage, messages.teamCreated(team))
+        executeCommand(ids).assertSuccess(messages.teamCreated(team))
     }
 }

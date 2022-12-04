@@ -3,10 +3,7 @@ package org.mcwonderland
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
-import org.mcwonderland.discord.ChannelCache
 import org.mcwonderland.discord.DiscordMcIgnAccountLinker
-import org.mcwonderland.discord.MessengerDiscordReplyUser
-import org.mcwonderland.domain.Messenger
 import org.mcwonderland.domain.MojangAccount
 import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.config.CommandLabels
@@ -23,7 +20,6 @@ import java.util.Properties
 class AppModule(
     private val jda: JDA,
     private val mojangApi: Mojang,
-    private val channelCache: ChannelCache
 ) : AbstractModule() {
 
 
@@ -52,11 +48,6 @@ class AppModule(
     @Provides
     fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository, messages: Messages): AccountLinker {
         return DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
-    }
-
-    @Provides
-    fun messenger(): Messenger {
-        return MessengerDiscordReplyUser(jda, channelCache)
     }
 
     @Provides

@@ -16,7 +16,7 @@ internal class CommandListRegTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         registrationService = mockk(relaxed = true)
-        command = CommandListReg("listreg", registrationService, messages, messenger, userFinder)
+        command = CommandListReg("listreg", registrationService, messages, userFinder)
     }
 
     @Test
@@ -24,9 +24,7 @@ internal class CommandListRegTest : CommandTestBase() {
         val expectUsers = listOf(User(), User())
         every { registrationService.listRegistrations(user) } returns expectUsers
 
-        executeWithNoArgs()
-
-        assertEquals(messages.listRegistrations(expectUsers), messenger.lastMessage)
+        executeWithNoArgs().assertSuccess(messages.listRegistrations(expectUsers))
     }
 
 
