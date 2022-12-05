@@ -17,6 +17,9 @@ internal class CommandCreateTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
 
+    private val ids = listOf("id", "id2")
+    private val team = Team(members = listOf(Dummies.createUserFullFilled()))
+
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
@@ -41,18 +44,12 @@ internal class CommandCreateTeamTest : CommandTestBase() {
 
     private fun assertExceptionMapping(exception: Exception, noPermission: String) {
         every { teamService.createTeam(any(), any()) } throws exception
-        executeWithNoArgs().assertFail(noPermission)
+        executeCommand(ids).assertFail(noPermission)
     }
 
     @Test
     fun success_shouldSendMessage() {
-        val ids = listOf("id", "id2")
-        val team = Team(
-            members = listOf(Dummies.createUserFullFilled())
-        )
-
         every { teamService.createTeam(sender, ids) } returns team
-
         executeCommand(ids).assertSuccess(messages.teamCreated(team))
     }
 }

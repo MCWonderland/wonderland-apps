@@ -4,6 +4,10 @@ import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.UserNotFoundException
+import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User
 
@@ -22,8 +26,14 @@ class CommandCreateTeam(
         return try {
             val team = teamService.createTeam(sender, args)
             ok(messages.teamCreated(team))
-        } catch (e: Exception) {
-            CommandResponse(CommandStatus.FAILURE, listOf(e.message ?: "Error"))
+        } catch (e: PermissionDeniedException) {
+            fail(messages.noPermission())
+        } catch (e: MemberCantBeEmptyException) {
+            fail(messages.membersCantBeEmpty())
+        } catch (e: UserNotFoundException) {
+            fail(messages.membersCouldNotFound(e.ids))
+        } catch (e: UsersAlreadyInTeamException) {
+            fail(messages.membersAlreadyInTeam(e.users))
         }
     }
 
