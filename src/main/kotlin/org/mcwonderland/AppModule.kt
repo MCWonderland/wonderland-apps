@@ -47,8 +47,8 @@ class AppModule(
     }
 
     @Provides
-    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository, messages: Messages): AccountLinker {
-        return DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
+    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository): AccountLinker {
+        return DiscordMcIgnAccountLinker(mojangAccount, userRepository)
     }
 
     @Provides

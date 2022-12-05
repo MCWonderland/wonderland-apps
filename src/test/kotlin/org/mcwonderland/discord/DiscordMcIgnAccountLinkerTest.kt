@@ -22,17 +22,14 @@ internal class DiscordMcIgnAccountLinkerTest {
     private lateinit var linker: DiscordMcIgnAccountLinker
     private lateinit var mojangAccount: MojangAccountFake
     private lateinit var userRepository: UserRepositoryFake
-    private lateinit var messages: Messages
 
     private val sender = Dummies.createUserDefault()
-    private val target: UUID = UUID.randomUUID()
 
     @BeforeEach
     fun setUp() {
-        messages = MessagesStub()
         userRepository = UserRepositoryFake()
         mojangAccount = MojangAccountFake()
-        linker = DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
+        linker = DiscordMcIgnAccountLinker(mojangAccount, userRepository)
     }
 
 

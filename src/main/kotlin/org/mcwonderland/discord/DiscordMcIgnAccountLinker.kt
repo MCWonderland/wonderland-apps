@@ -1,7 +1,6 @@
 package org.mcwonderland.discord
 
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
@@ -12,7 +11,6 @@ import org.mcwonderland.domain.repository.UserRepository
 class DiscordMcIgnAccountLinker(
     private val mojangAccount: MojangAccount,
     private val userRepository: UserRepository,
-    private val messages: Messages
 ) : AccountLinker {
 
     override fun link(user: User, userIgn: String): User {
