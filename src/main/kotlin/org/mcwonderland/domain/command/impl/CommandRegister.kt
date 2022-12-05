@@ -3,6 +3,8 @@ package org.mcwonderland.domain.command.impl
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
@@ -13,13 +15,14 @@ class CommandRegister(
 ) : Command {
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
-        val newState = try {
-            registrationService.toggleRegister(sender)
-        } catch (e: Exception) {
-            return fail(e.message ?: "Unknown Error")
+
+        return try {
+            val newState = registrationService.toggleRegister(sender)
+            ok(if (newState) messages.registered() else messages.unRegistered())
+        } catch (e: RequireLinkedAccountException) {
+            return fail(messages.requireLinkedAccount())
         }
 
-        return ok(if (newState) messages.registered() else messages.unRegistered())
     }
 
 }

@@ -18,7 +18,7 @@ interface Messages {
     fun userNotInTeam(target: User): String
     fun userRemovedFromTeam(expectTeam: Team): String
     fun membersNotLinked(listOf: List<User>): String
-    fun yourAccountNotLinked(): String
+    fun requireLinkedAccount(): String
     fun linked(foundedUser: User): String
     fun registered(): String
     fun unRegistered(): String

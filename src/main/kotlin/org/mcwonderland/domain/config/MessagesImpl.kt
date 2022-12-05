@@ -59,8 +59,8 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         }"
     }
 
-    override fun yourAccountNotLinked(): String {
-        return "你的帳號還沒有綁定"
+    override fun requireLinkedAccount(): String {
+        return "請先綁定帳號後，再使用這個功能。"
     }
 
     override fun linked(user: User): String {

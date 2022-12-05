@@ -45,7 +45,7 @@ class MessagesStub : Messages {
         }"
     }
 
-    override fun yourAccountNotLinked(): String {
+    override fun requireLinkedAccount(): String {
         return "你的帳號尚未連結"
     }
 

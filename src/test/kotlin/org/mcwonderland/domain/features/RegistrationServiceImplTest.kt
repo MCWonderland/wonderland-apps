@@ -8,6 +8,7 @@ import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.fakes.AccountLinkerFake
 import org.mcwonderland.domain.fakes.RegistrationRepositoryFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -22,7 +23,6 @@ internal class RegistrationServiceImplTest {
     private lateinit var registrationService: RegistrationServiceImpl
 
     private lateinit var accountLinker: AccountLinkerFake
-    private lateinit var messages: Messages
     private lateinit var registrationRepository: RegistrationRepository
     private lateinit var userRepository: UserRepository
 
@@ -32,20 +32,17 @@ internal class RegistrationServiceImplTest {
     fun setUp() {
         user = User("user_id")
 
-        messages = MessagesStub()
         accountLinker = AccountLinkerFake()
         registrationRepository = RegistrationRepositoryFake()
         userRepository = UserRepositoryFake()
-        registrationService = RegistrationServiceImpl(accountLinker, messages, registrationRepository, userRepository)
+        registrationService = RegistrationServiceImpl(accountLinker, registrationRepository, userRepository)
     }
 
     @Nested
     inner class ToggleRegister {
         @Test
         fun userWithoutLink_shouldCancel() {
-            assertRuntimeError(messages.yourAccountNotLinked()) {
-                registrationService.toggleRegister(user)
-            }
+            assertThrows<RequireLinkedAccountException> { registrationService.toggleRegister(user) }
         }
 
         @Test
