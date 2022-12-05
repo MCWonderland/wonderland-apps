@@ -43,7 +43,7 @@ class TeamServiceImpl(
 
     override fun listTeams(executor: User): List<Team> {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
         val dbTeams = teamRepository.findAll()
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())

@@ -4,6 +4,7 @@ import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
@@ -15,9 +16,12 @@ class CommandListTeams(
 ) : Command {
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
-        val teams = this.teamService.listTeams(sender)
-
-        return ok(messages.teamList(teams))
+        return try {
+            val teams = this.teamService.listTeams(sender)
+            ok(messages.teamList(teams))
+        } catch (e: PermissionDeniedException) {
+            fail(messages.noPermission())
+        }
     }
 
 }

@@ -139,9 +139,7 @@ internal class TeamServiceImplTest {
 
         @Test
         fun executorWithoutPerm_shouldDenied() {
-            assertRuntimeError(messages.noPermission()) {
-                teamService.listTeams(user)
-            }
+            assertThrows<PermissionDeniedException> { teamService.listTeams(user) }
         }
 
         @Test
