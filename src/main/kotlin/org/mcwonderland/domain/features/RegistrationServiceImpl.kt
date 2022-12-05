@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.UserRepository
@@ -21,7 +22,7 @@ class RegistrationServiceImpl(
 
     override fun listRegistrations(executor: User): Collection<User> {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }

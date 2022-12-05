@@ -5,6 +5,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
@@ -24,6 +25,13 @@ internal class CommandListRegTest : CommandTestBase() {
         every { registrationService.listRegistrations(sender) } returns expectUsers
 
         executeWithNoArgs().assertSuccess(messages.listRegistrations(expectUsers))
+    }
+
+    @Test
+    fun testExceptionMapping(){
+        every { registrationService.listRegistrations(sender) } throws PermissionDeniedException()
+
+        executeWithNoArgs().assertFail(messages.noPermission())
     }
 
 
