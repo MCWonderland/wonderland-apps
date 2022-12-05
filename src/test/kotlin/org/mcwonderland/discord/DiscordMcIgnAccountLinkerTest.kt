@@ -38,14 +38,14 @@ internal class DiscordMcIgnAccountLinkerTest {
         fun alreadyLinked_shouldThrowException() {
             sender.mcId = "123"
 
-            assertRuntimeError(messages.accountAlreadyLinked()) {
+            assertRuntimeError(messages.accountAlreadyLinked("mcId")) {
                 linker.link(sender, target.toString())
             }
         }
 
         @Test
         fun accountNotExist_shouldThrowException() {
-            assertRuntimeError(messages.accountNotFound()) { linker.link(sender, target.toString()) }
+            assertRuntimeError(messages.mcAccountWithIgnNotFound("id")) { linker.link(sender, target.toString()) }
         }
 
         @Test
@@ -54,7 +54,7 @@ internal class DiscordMcIgnAccountLinkerTest {
 
             userRepository.addUser(User(mcId = account.uuid.toString()))
 
-            assertRuntimeError(messages.targetAccountAlreadyLink()) { linker.link(sender, account.name) }
+            assertRuntimeError(messages.targetAccountAlreadyLink("ign")) { linker.link(sender, account.name) }
         }
 
         @Test
