@@ -2,7 +2,6 @@ package org.mcwonderland
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.*
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.TeamRepository

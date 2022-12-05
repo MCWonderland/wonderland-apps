@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
-import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team

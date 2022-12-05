@@ -5,8 +5,8 @@ import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
-import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User
 

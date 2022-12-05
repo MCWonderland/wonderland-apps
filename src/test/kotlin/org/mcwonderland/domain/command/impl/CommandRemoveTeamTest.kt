@@ -8,11 +8,9 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException
-import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
-import java.lang.Exception
 
 internal class CommandRemoveTeamTest : CommandTestBase() {
 

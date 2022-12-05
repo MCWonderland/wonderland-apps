@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.model.User
-import java.lang.Exception
 import kotlin.test.assertEquals
 
 abstract class CommandTestBase {

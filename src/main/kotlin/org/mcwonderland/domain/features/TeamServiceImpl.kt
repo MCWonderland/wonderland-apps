@@ -1,6 +1,5 @@
 package org.mcwonderland.domain.features
 
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
