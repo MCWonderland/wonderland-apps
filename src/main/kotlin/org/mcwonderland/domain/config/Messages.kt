@@ -23,5 +23,6 @@ interface Messages {
     fun registered(): String
     fun unRegistered(): String
     fun listRegistrations(users: Collection<User>): String
+    fun unHandledCommandError(exceptionClassName: String): String
 }
 

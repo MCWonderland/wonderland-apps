@@ -85,6 +85,9 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return messages.joinToString("\n")
     }
 
+    override fun unHandledCommandError(exceptionClassName: String): String {
+        return "發生了一個未處理的錯誤: $exceptionClassName, 請聯絡管理員"
+    }
 
     private fun tagAndName(user: User): String {
         return "${discordTag(user.discordId)}(${mcName(user)})"

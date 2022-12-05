@@ -4,7 +4,7 @@ class CommandResponse(
     val status: CommandStatus,
     val messages: List<String>
 ) {
-
+    val firstMessage = messages.firstOrNull() ?: ""
 }
 
 enum class CommandStatus {

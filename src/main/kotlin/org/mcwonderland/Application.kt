@@ -9,6 +9,7 @@ import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Config
+import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.UserFinder
 import org.shanerx.mojang.Mojang
 
@@ -41,7 +42,7 @@ fun main() {
 
     jda.addEventListener(
         CommandListener(
-            CommandProcessorImpl(commands),
+            CommandProcessorImpl(commands, injector.getInstance(Messages::class.java)),
             injector.getInstance(Config::class.java),
             messenger,
             injector.getInstance(UserFinder::class.java)

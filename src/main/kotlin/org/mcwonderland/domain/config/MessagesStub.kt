@@ -68,4 +68,8 @@ class MessagesStub : Messages {
         }"
     }
 
+    override fun unHandledCommandError(exceptionClassName: String): String {
+        return "未處理的錯誤: $exceptionClassName"
+    }
+
 }
