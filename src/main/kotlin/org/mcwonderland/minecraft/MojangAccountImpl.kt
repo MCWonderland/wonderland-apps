@@ -9,7 +9,7 @@ class MojangAccountImpl(private val mojang: Mojang) : MojangAccount {
 
     private val cache = mutableMapOf<String, PlayerProfile>()
     override fun getNameByUUID(uuid: String): String? {
-        val profile = cache[uuid] ?: mojang.getPlayerProfile(uuid)
+        val profile = cache[uuid] ?: getFromMojang(uuid)
 
         if (profile != null)
             cache[uuid] = profile
@@ -17,8 +17,20 @@ class MojangAccountImpl(private val mojang: Mojang) : MojangAccount {
         return profile?.username
     }
 
+    private fun getFromMojang(uuid: String): PlayerProfile? {
+        return try {
+            mojang.getPlayerProfile(uuid)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     override fun getUUIDByName(ign: String): UUID? {
-        return mojang.getUUIDOfUsername(ign)?.let { parseUuidNoDashed(it) }
+        return try {
+            mojang.getUUIDOfUsername(ign)?.let { parseUuidNoDashed(it) }
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun parseUuidNoDashed(uuidStr: String): UUID {

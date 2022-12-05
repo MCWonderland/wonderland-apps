@@ -12,6 +12,7 @@ class CommandProcessorImpl(
         return try {
             commands.find { it.label == label }?.execute(sender, args)
         } catch (e: Exception) {
+            e.printStackTrace()
             CommandResponse(CommandStatus.FAILURE, listOf(messages.unHandledCommandError(e::class.java.simpleName)))
         }
     }

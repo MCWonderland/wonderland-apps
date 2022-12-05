@@ -22,11 +22,11 @@ class CommandLink(
             val userLinked = accountLinker.link(sender, uuid)
             ok(messages.linked(userLinked))
         } catch (e: AccountAlreadyLinkedException) {
-            fail(messages.accountAlreadyLinked("mcId"))
+            fail(messages.accountAlreadyLinked(e.linkedId))
         } catch (e: MCAccountNotFoundException) {
-            fail(messages.mcAccountWithIgnNotFound("id"))
+            fail(messages.mcAccountWithIgnNotFound(e.searchStr))
         } catch (e: MCAccountLinkedByOthersException) {
-            fail(messages.targetAccountAlreadyLink("ign"))
+            fail(messages.targetAccountAlreadyLink(e.ign))
         }
     }
 

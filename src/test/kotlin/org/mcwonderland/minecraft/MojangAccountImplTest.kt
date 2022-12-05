@@ -36,6 +36,13 @@ internal class MojangAccountImplTest {
         }
 
         @Test
+        fun apiThrowsException_shouldNull(){
+            every { mojang.getUUIDOfUsername(name) } throws Exception()
+
+            assertNull(mojangAccount.getUUIDByName(name))
+        }
+
+        @Test
         fun shouldParseUuidThatWithoutDashes() {
             val uuid = UUID.randomUUID()
 
@@ -51,6 +58,14 @@ internal class MojangAccountImplTest {
         fun apiResponseNull_shouldReturnNull() {
             val uuid = UUID.randomUUID()
             every { mojang.getPlayerProfile(uuid.toString()) } returns null
+
+            assertNull(mojangAccount.getNameByUUID(uuid.toString()))
+        }
+
+        @Test
+        fun apiThrowsException_shouldReturnNull(){
+            val uuid = UUID.randomUUID()
+            every { mojang.getPlayerProfile(uuid.toString()) } throws Exception()
 
             assertNull(mojangAccount.getNameByUUID(uuid.toString()))
         }

@@ -18,9 +18,9 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
             ids.map { discordTag(it.discordId) }.joinToString(", ")
         }"
 
-    override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結過了"
-    override fun mcAccountWithIgnNotFound(s: String): String = "找不到這個帳號"
-    override fun targetAccountAlreadyLink(s: String): String = "目標帳號已經連結過了"
+    override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結至 (${mcName(id)})"
+    override fun mcAccountWithIgnNotFound(ign: String): String = "找不到名子為 $ign 的 Minecraft 帳號"
+    override fun targetAccountAlreadyLink(ign: String): String = "已經有使用者連結了 $ign Minecraft 帳號"
     override fun invalidArg(argName: String): String = "缺少或是無效的參數: $argName"
     override fun teamCreated(team: Team): String =
         "隊伍已經建立，成員: ${
@@ -95,4 +95,6 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     private fun discordTag(id: String): String = "<@${id}>"
     private fun mcName(user: User): String = mojangAccount.getNameByUUID(user.mcId) ?: "未知的 ID"
+
+    private fun mcName(uuid: String) = mojangAccount.getNameByUUID(uuid) ?: "未知的 ID"
 }
