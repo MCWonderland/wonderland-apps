@@ -20,7 +20,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結至 (${mcName(id)})"
     override fun mcAccountWithIgnNotFound(ign: String): String = "找不到名子為 $ign 的 Minecraft 帳號"
-    override fun targetAccountAlreadyLink(ign: String): String = "已經有使用者連結了 $ign Minecraft 帳號"
+    override fun targetAccountAlreadyLink(ign: String): String = "已經有使用者連結了 $ign 這隻 Minecraft 帳號"
     override fun invalidArg(argName: String): String = "缺少或是無效的參數: $argName"
     override fun teamCreated(team: Team): String =
         "隊伍已經建立，成員: ${
