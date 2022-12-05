@@ -5,9 +5,14 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.UserNotFoundException
+import org.mcwonderland.domain.exceptions.UserNotInTeamException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
+import java.lang.Exception
 
 internal class CommandRemoveTeamTest : CommandTestBase() {
 
@@ -35,4 +40,17 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
         executeCommand(listOf("target")).assertSuccess(messages.userRemovedFromTeam(expectTeam))
     }
 
+    @Test
+    fun testExceptionMapping() {
+        val target = User()
+
+        assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
+        assertExceptionMapping(UserNotFoundException("target"), messages.userNotFound("target"))
+        assertExceptionMapping(UserNotInTeamException(target), messages.userNotInTeam(target))
+    }
+
+    private fun assertExceptionMapping(exception: Exception, message: String) {
+        every { teamService.removeFromTeam(sender, "target") } throws exception
+        executeCommand(listOf("target")).assertFail(message)
+    }
 }

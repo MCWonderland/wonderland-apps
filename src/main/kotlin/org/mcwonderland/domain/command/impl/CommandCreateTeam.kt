@@ -5,7 +5,7 @@ import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
-import org.mcwonderland.domain.exceptions.UserNotFoundException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User
@@ -29,7 +29,7 @@ class CommandCreateTeam(
             fail(messages.noPermission())
         } catch (e: MemberCantBeEmptyException) {
             fail(messages.membersCantBeEmpty())
-        } catch (e: UserNotFoundException) {
+        } catch (e: UsersNotFoundException) {
             fail(messages.membersCouldNotFound(e.ids))
         } catch (e: UsersAlreadyInTeamException) {
             fail(messages.membersAlreadyInTeam(e.users))

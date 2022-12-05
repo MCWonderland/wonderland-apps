@@ -6,9 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
@@ -23,7 +21,6 @@ internal class TeamServiceImplTest {
 
     private lateinit var teamService: TeamService
 
-    private lateinit var messages: Messages
     private lateinit var userFinder: UserFinderFake
     private lateinit var teamRepository: TeamRepositoryFake
     private lateinit var userRepository: UserRepositoryFake
@@ -37,10 +34,9 @@ internal class TeamServiceImplTest {
         userFinder = UserFinderFake()
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
-        messages = MessagesStub()
         accountLinker = mockk(relaxed = true)
 
-        teamService = TeamServiceImpl(messages, userFinder, teamRepository, userRepository, accountLinker)
+        teamService = TeamServiceImpl(userFinder, teamRepository, userRepository, accountLinker)
     }
 
     @Nested
@@ -66,7 +62,7 @@ internal class TeamServiceImplTest {
 
             val ids = listOf("1", "2")
 
-            assertThrows<UserNotFoundException> {
+            assertThrows<UsersNotFoundException> {
                 teamService.createTeam(user, ids)
             }.also {
                 assertEquals(ids, it.ids)
@@ -163,17 +159,17 @@ internal class TeamServiceImplTest {
 
         @Test
         fun withoutPermission_shouldDenied() {
-            assertRuntimeError(messages.noPermission()) {
-                teamService.removeFromTeam(user, targetId)
-            }
+            assertThrows<PermissionDeniedException> { teamService.removeFromTeam(user, targetId) }
         }
 
         @Test
         fun targetNotExist_shouldCancel() {
             gainAdminPerm()
 
-            assertRuntimeError(messages.userNotFound(targetId)) {
+            assertThrows<UserNotFoundException> {
                 teamService.removeFromTeam(user, targetId)
+            }.also {
+                assertEquals(targetId, it.id)
             }
         }
 
@@ -182,8 +178,10 @@ internal class TeamServiceImplTest {
             gainAdminPerm()
             userFinder.add(target)
 
-            assertRuntimeError(messages.userNotInTeam(target)) {
+            assertThrows<UserNotInTeamException> {
                 teamService.removeFromTeam(user, target.id)
+            }.also {
+                assertEquals(target, it.user)
             }
         }
 

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
-import org.mcwonderland.domain.exceptions.UserNotFoundException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
@@ -35,7 +35,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     fun testExceptionMessageMappings() {
         assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
         assertExceptionMapping(MemberCantBeEmptyException(), messages.membersCantBeEmpty())
-        assertExceptionMapping(UserNotFoundException(listOf("1")), messages.membersCouldNotFound(listOf("1")))
+        assertExceptionMapping(UsersNotFoundException(listOf("1")), messages.membersCouldNotFound(listOf("1")))
         assertExceptionMapping(
             UsersAlreadyInTeamException(listOf(sender)),
             messages.membersAlreadyInTeam(listOf(sender))

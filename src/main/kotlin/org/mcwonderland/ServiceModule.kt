@@ -11,14 +11,12 @@ import org.mcwonderland.domain.repository.UserRepository
 class ServiceModule : AbstractModule() {
     @Provides
     fun teamService(
-        messages: Messages,
         userFinder: UserFinder,
         teamRepository: TeamRepository,
         userRepository: UserRepository,
         accountLinker: AccountLinker
     ): TeamService {
         return TeamServiceImpl(
-            messages = messages,
             userFinder = userFinder,
             teamRepository = teamRepository,
             userRepository = userRepository,

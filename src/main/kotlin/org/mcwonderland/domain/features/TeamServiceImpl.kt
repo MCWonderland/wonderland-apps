@@ -10,7 +10,6 @@ import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 
 class TeamServiceImpl(
-    private val messages: Messages,
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
     private val userRepository: UserRepository,
@@ -53,11 +52,10 @@ class TeamServiceImpl(
 
     override fun removeFromTeam(executor: User, targetId: String): Team {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
-        val target = userFinder.find(targetId) ?: throw RuntimeException(messages.userNotFound(targetId))
-        val newTeam =
-            teamRepository.removeUserFromTeam(target.id) ?: throw RuntimeException(messages.userNotInTeam(target))
+        val target = userFinder.find(targetId) ?: throw UserNotFoundException(targetId)
+        val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
@@ -90,7 +88,7 @@ class TeamServiceImpl(
 
 
         if (nullUsers.isNotEmpty())
-            throw UserNotFoundException(nullUsers)
+            throw UsersNotFoundException(nullUsers)
 
         return users
     }
