@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.assertError
 import org.mcwonderland.assertRuntimeError
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub

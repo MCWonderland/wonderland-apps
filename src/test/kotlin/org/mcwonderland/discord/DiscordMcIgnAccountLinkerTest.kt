@@ -4,9 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.assertRuntimeError
-import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
@@ -14,7 +11,6 @@ import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
-import java.util.*
 import kotlin.test.assertEquals
 
 internal class DiscordMcIgnAccountLinkerTest {

@@ -2,7 +2,6 @@ package org.mcwonderland.domain.command.impl
 
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User

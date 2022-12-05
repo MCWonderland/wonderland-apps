@@ -3,7 +3,6 @@ package org.mcwonderland.domain.command.impl
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
