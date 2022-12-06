@@ -1,10 +1,7 @@
 package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.exceptions.*
-import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
-import org.mcwonderland.domain.model.toDBTeam
-import org.mcwonderland.domain.model.toTeam
+import org.mcwonderland.domain.model.*
 import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 
@@ -57,6 +54,10 @@ class TeamServiceImpl(
         val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
+    }
+
+    override fun addUsersToTeam(executor: User, targetId: String, teamId: String): AddToTeamResult {
+        TODO("Not yet implemented")
     }
 
     private fun createTeamWith(members: List<User>): Team {

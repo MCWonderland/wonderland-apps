@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.config
 
+import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 
@@ -70,6 +71,10 @@ class MessagesStub : Messages {
 
     override fun unHandledCommandError(exceptionClassName: String): String {
         return "未處理的錯誤: $exceptionClassName"
+    }
+
+    override fun addedUserToTeam(result: AddToTeamResult): String {
+        return "已將使用者加入隊伍"
     }
 
 }

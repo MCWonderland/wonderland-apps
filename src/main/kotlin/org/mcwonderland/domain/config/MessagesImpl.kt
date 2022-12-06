@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.config
 
 import org.mcwonderland.domain.MojangAccount
+import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 
@@ -87,6 +88,20 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     override fun unHandledCommandError(exceptionClassName: String): String {
         return "發生了一個未處理的錯誤: $exceptionClassName, 請聯絡管理員"
+    }
+
+    override fun addedUserToTeam(result: AddToTeamResult): String {
+        val messages = mutableListOf<String>()
+
+        messages.add("已經將 ${tagAndName(result.user)} 加入隊伍")
+        messages.add("目前隊伍成員:")
+        messages.addAll(teamMembers(result.team))
+
+        return messages.joinToString("\n")
+    }
+
+    private fun teamMembers(team: Team): List<String> {
+        return team.members.map { "> " + tagAndName(it) }
     }
 
     private fun tagAndName(user: User): String {

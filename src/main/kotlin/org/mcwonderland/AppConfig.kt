@@ -10,6 +10,7 @@ class AppConfig(private val properties: Properties) : Config {
     override val dbName: String = properties.getProperty("db-name")
     override val mongoConnection: String = properties.getProperty("mongo-connection")
 
+
     override val commandLabels: CommandLabels = object : CommandLabels {
         override val createTeam: String = properties.getProperty("command.create-team")
         override val link: String = properties.getProperty("command.link")
