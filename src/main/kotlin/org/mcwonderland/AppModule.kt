@@ -3,27 +3,24 @@ package org.mcwonderland
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
-import org.mcwonderland.discord.ChannelCache
 import org.mcwonderland.discord.DiscordMcIgnAccountLinker
-import org.mcwonderland.discord.MessengerDiscordReplyUser
-import org.mcwonderland.domain.Messenger
+import org.mcwonderland.discord.UserFinderDiscord
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.UserFinderByDiscordId
 import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl
-import org.mcwonderland.domain.features.*
+import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.minecraft.MojangAccountImpl
 import org.shanerx.mojang.Mojang
 import java.io.File
-import java.util.Properties
+import java.util.*
 
 class AppModule(
     private val jda: JDA,
     private val mojangApi: Mojang,
-    private val channelCache: ChannelCache
 ) : AbstractModule() {
 
 
@@ -50,18 +47,13 @@ class AppModule(
     }
 
     @Provides
-    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository, messages: Messages): AccountLinker {
-        return DiscordMcIgnAccountLinker(mojangAccount, userRepository, messages)
-    }
-
-    @Provides
-    fun messenger(): Messenger {
-        return MessengerDiscordReplyUser(jda, channelCache)
+    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository): AccountLinker {
+        return DiscordMcIgnAccountLinker(mojangAccount, userRepository)
     }
 
     @Provides
     fun userFinder(userRepository: UserRepository): UserFinder {
-        return UserFinderByDiscordId(userRepository)
+        return UserFinderDiscord(userRepository)
     }
 
 }

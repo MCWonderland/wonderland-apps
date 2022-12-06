@@ -7,9 +7,9 @@ interface Messages {
     fun membersCantBeEmpty(): String
     fun membersCouldNotFound(ids: List<String>): String
     fun membersAlreadyInTeam(ids: List<User>): String
-    fun accountAlreadyLinked(): String
-    fun accountNotFound(): String
-    fun targetAccountAlreadyLink(): String
+    fun accountAlreadyLinked(id: String): String
+    fun mcAccountWithIgnNotFound(s: String): String
+    fun targetAccountAlreadyLink(s: String): String
     fun invalidArg(argName: String): String
     fun teamCreated(team: Team): String
     fun teamList(teams: List<Team>): String
@@ -18,10 +18,11 @@ interface Messages {
     fun userNotInTeam(target: User): String
     fun userRemovedFromTeam(expectTeam: Team): String
     fun membersNotLinked(listOf: List<User>): String
-    fun yourAccountNotLinked(): String
+    fun requireLinkedAccount(): String
     fun linked(foundedUser: User): String
     fun registered(): String
     fun unRegistered(): String
     fun listRegistrations(users: Collection<User>): String
+    fun unHandledCommandError(exceptionClassName: String): String
 }
 

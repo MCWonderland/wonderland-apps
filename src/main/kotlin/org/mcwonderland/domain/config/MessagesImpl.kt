@@ -18,9 +18,9 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
             ids.map { discordTag(it.discordId) }.joinToString(", ")
         }"
 
-    override fun accountAlreadyLinked(): String = "你的帳號已經連結過了"
-    override fun accountNotFound(): String = "找不到這個帳號"
-    override fun targetAccountAlreadyLink(): String = "目標帳號已經連結過了"
+    override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結至 (${mcName(id)})"
+    override fun mcAccountWithIgnNotFound(ign: String): String = "找不到名子為 $ign 的 Minecraft 帳號"
+    override fun targetAccountAlreadyLink(ign: String): String = "已經有使用者連結了 $ign 這隻 Minecraft 帳號"
     override fun invalidArg(argName: String): String = "缺少或是無效的參數: $argName"
     override fun teamCreated(team: Team): String =
         "隊伍已經建立，成員: ${
@@ -59,8 +59,8 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         }"
     }
 
-    override fun yourAccountNotLinked(): String {
-        return "你的帳號還沒有綁定"
+    override fun requireLinkedAccount(): String {
+        return "請先綁定帳號後，再使用這個功能。"
     }
 
     override fun linked(user: User): String {
@@ -85,6 +85,9 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return messages.joinToString("\n")
     }
 
+    override fun unHandledCommandError(exceptionClassName: String): String {
+        return "發生了一個未處理的錯誤: $exceptionClassName, 請聯絡管理員"
+    }
 
     private fun tagAndName(user: User): String {
         return "${discordTag(user.discordId)}(${mcName(user)})"
@@ -92,4 +95,6 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     private fun discordTag(id: String): String = "<@${id}>"
     private fun mcName(user: User): String = mojangAccount.getNameByUUID(user.mcId) ?: "未知的 ID"
+
+    private fun mcName(uuid: String) = mojangAccount.getNameByUUID(uuid) ?: "未知的 ID"
 }

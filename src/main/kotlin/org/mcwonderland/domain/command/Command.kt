@@ -1,20 +1,23 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.Messenger
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.model.User
 
 interface Command {
     val label: String
     val usage: String
         get() = "Usage: /$label"
 
-    fun execute(sender: PlatformUser, args: List<String>)
+    fun execute(sender: User, args: List<String>): CommandResponse
 
-    fun runCommand(messenger: Messenger, block: () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            messenger.sendMessage(e.message ?: "Unknown error")
-        }
+    fun ok(vararg message: String): CommandResponse {
+        return CommandResponse(CommandStatus.SUCCESS, message.toList())
+    }
+
+    fun fail(vararg message: String): CommandResponse {
+        return CommandResponse(CommandStatus.FAILURE, message.toList())
+    }
+
+    fun failWithUsage(): CommandResponse {
+        return fail(this.usage)
     }
 }

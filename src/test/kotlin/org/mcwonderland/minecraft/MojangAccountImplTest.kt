@@ -2,13 +2,14 @@ package org.mcwonderland.minecraft
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.MojangAccount
 import org.shanerx.mojang.Mojang
-import java.util.UUID
+import java.util.*
 
 internal class MojangAccountImplTest {
 
@@ -35,6 +36,13 @@ internal class MojangAccountImplTest {
         }
 
         @Test
+        fun apiThrowsException_shouldNull(){
+            every { mojang.getUUIDOfUsername(name) } throws Exception()
+
+            assertNull(mojangAccount.getUUIDByName(name))
+        }
+
+        @Test
         fun shouldParseUuidThatWithoutDashes() {
             val uuid = UUID.randomUUID()
 
@@ -50,6 +58,14 @@ internal class MojangAccountImplTest {
         fun apiResponseNull_shouldReturnNull() {
             val uuid = UUID.randomUUID()
             every { mojang.getPlayerProfile(uuid.toString()) } returns null
+
+            assertNull(mojangAccount.getNameByUUID(uuid.toString()))
+        }
+
+        @Test
+        fun apiThrowsException_shouldReturnNull(){
+            val uuid = UUID.randomUUID()
+            every { mojang.getPlayerProfile(uuid.toString()) } throws Exception()
 
             assertNull(mojangAccount.getNameByUUID(uuid.toString()))
         }

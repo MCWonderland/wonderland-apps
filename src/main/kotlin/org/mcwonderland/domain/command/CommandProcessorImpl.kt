@@ -1,11 +1,20 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.model.User
 
-class CommandProcessorImpl(private val commands: List<Command>) : CommandProcessor {
+class CommandProcessorImpl(
+    private val commands: List<Command>,
+    private val messages: Messages
+) : CommandProcessor {
 
-    override fun onCommand(commandSender: PlatformUser, label: String, args: List<String>) {
-        commands.find { it.label == label }?.execute(commandSender, args)
+    override fun onCommand(sender: User, label: String, args: List<String>): CommandResponse? {
+        return try {
+            commands.find { it.label == label }?.execute(sender, args)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            CommandResponse(CommandStatus.FAILURE, listOf(messages.unHandledCommandError(e::class.java.simpleName)))
+        }
     }
 
 }

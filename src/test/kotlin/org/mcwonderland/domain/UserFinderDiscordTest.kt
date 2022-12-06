@@ -2,14 +2,15 @@ package org.mcwonderland.domain
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.discord.UserFinderDiscord
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.features.UserFinder
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
 
-internal class UserFinderByDiscordIdTest {
+internal class UserFinderDiscordTest {
 
     private lateinit var userFinder: UserFinder
     private lateinit var userRepository: UserRepositoryFake
@@ -19,7 +20,7 @@ internal class UserFinderByDiscordIdTest {
     @BeforeEach
     fun setup() {
         userRepository = UserRepositoryFake()
-        userFinder = UserFinderByDiscordId(userRepository)
+        userFinder = UserFinderDiscord(userRepository)
     }
 
     @Test

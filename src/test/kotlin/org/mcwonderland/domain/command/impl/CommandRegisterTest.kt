@@ -5,9 +5,8 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.model.PlatformUser
-import kotlin.test.assertEquals
 
 internal class CommandRegisterTest : CommandTestBase() {
 
@@ -16,7 +15,7 @@ internal class CommandRegisterTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         registerService = mockk(relaxed = true)
-        command = CommandRegister("register", registerService, userFinder, messenger, messages)
+        command = CommandRegister("register", registerService, messages)
     }
 
     @Test
@@ -26,19 +25,15 @@ internal class CommandRegisterTest : CommandTestBase() {
     }
 
     @Test
-    fun onException_shouldSendMessage() {
-        every { registerService.toggleRegister(user) } throws Exception("error")
+    fun testExceptionMapping() {
+        every { registerService.toggleRegister(sender) } throws RequireLinkedAccountException()
 
-        executeWithNoArgs()
-
-        assertEquals("error", messenger.lastMessage)
+        executeWithNoArgs().assertFail(messages.requireLinkedAccount())
     }
 
     private fun assertToggleStateMessage(state: Boolean, message: String) {
-        every { registerService.toggleRegister(user) } returns state
+        every { registerService.toggleRegister(sender) } returns state
 
-        executeWithNoArgs()
-
-        assertEquals(message, messenger.lastMessage)
+        executeWithNoArgs().assertSuccess(message)
     }
 }

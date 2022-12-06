@@ -4,11 +4,12 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
-import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
+import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
+import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.features.AccountLinker
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class CommandLinkTest : CommandTestBase() {
     private val label = "link"
@@ -17,13 +18,12 @@ class CommandLinkTest : CommandTestBase() {
     @BeforeEach
     fun setUp() {
         accountLinker = mockk(relaxed = true)
-        command = CommandLink(label, accountLinker, userFinder, messenger, messages)
+        command = CommandLink(label, accountLinker, messages)
     }
 
     @Test
     fun missingArguments() {
-        executeWithNoArgs()
-        assertEquals(messages.invalidArg("mcIgn"), messenger.lastMessage)
+        executeWithNoArgs().assertFail(messages.invalidArg("mcIgn"))
     }
 
     @Nested
@@ -33,11 +33,22 @@ class CommandLinkTest : CommandTestBase() {
 
         @Test
         fun linked_sendMessage() {
-            executeCommand(targetId)
+            every { accountLinker.link(sender, targetId) } returns sender
 
-            every { accountLinker.link(user, targetId) } returns user
+            executeCommand(targetId).assertSuccess(messages.linked(sender))
+        }
 
-            assertEquals(messages.linked(user), messenger.lastMessage)
+        @Test
+        fun testExceptionMappings() {
+            assertException(AccountAlreadyLinkedException(linkedId = "mcId"), messages.accountAlreadyLinked("mcId"))
+            assertException(MCAccountNotFoundException(searchStr = "id"), messages.mcAccountWithIgnNotFound("id"))
+            assertException(MCAccountLinkedByOthersException(ign = "ign"), messages.targetAccountAlreadyLink("ign"))
+        }
+
+
+        private fun assertException(exception: Exception, message: String) {
+            every { accountLinker.link(sender, targetId) } throws exception
+            executeCommand(targetId).assertFail(message)
         }
     }
 }

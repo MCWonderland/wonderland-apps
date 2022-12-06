@@ -1,11 +1,11 @@
-package org.mcwonderland.domain
+package org.mcwonderland.discord
 
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
-import java.util.UUID
+import java.util.*
 
-class UserFinderByDiscordId(
+class UserFinderDiscord(
     private val userRepository: UserRepository,
 ) : UserFinder {
     override fun find(platformId: String): User? {
@@ -13,7 +13,12 @@ class UserFinderByDiscordId(
     }
 
     override fun findOrCreate(platformId: String): User {
-        return find(platformId) ?: userRepository.insertUser(User(id = UUID.randomUUID().toString(), discordId = platformId))
+        return find(platformId) ?: userRepository.insertUser(
+            User(
+                id = UUID.randomUUID().toString(),
+                discordId = platformId
+            )
+        )
     }
 
 }

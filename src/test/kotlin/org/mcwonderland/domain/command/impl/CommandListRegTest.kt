@@ -2,10 +2,10 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
@@ -16,17 +16,22 @@ internal class CommandListRegTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         registrationService = mockk(relaxed = true)
-        command = CommandListReg("listreg", registrationService, messages, messenger, userFinder)
+        command = CommandListReg("listreg", registrationService, messages)
     }
 
     @Test
     fun shouldCallService() {
         val expectUsers = listOf(User(), User())
-        every { registrationService.listRegistrations(user) } returns expectUsers
+        every { registrationService.listRegistrations(sender) } returns expectUsers
 
-        executeWithNoArgs()
+        executeWithNoArgs().assertSuccess(messages.listRegistrations(expectUsers))
+    }
 
-        assertEquals(messages.listRegistrations(expectUsers), messenger.lastMessage)
+    @Test
+    fun testExceptionMapping(){
+        every { registrationService.listRegistrations(sender) } throws PermissionDeniedException()
+
+        executeWithNoArgs().assertFail(messages.noPermission())
     }
 
 

@@ -5,48 +5,51 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
+import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
-import kotlin.test.assertEquals
 
 internal class CommandCreateTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
 
+    private val ids = listOf("id", "id2")
+    private val team = Team(members = listOf(Dummies.createUserFullFilled()))
+
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam", messenger, userFinder, teamService, messages)
+        command = CommandCreateTeam("createTeam", teamService, messages)
     }
 
     @Test
     fun withoutArgs_shouldShowUsage() {
-        executeWithNoArgs()
-        assertEquals(messenger.lastMessage, command.usage)
+        executeWithNoArgs().assertFail(command.usage)
     }
 
     @Test
-    fun onException_shouldSendMessage() {
-        val ids = listOf("id", "id2")
-        every { teamService.createTeam(user, ids) } throws RuntimeException("Error")
+    fun testExceptionMessageMappings() {
+        assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
+        assertExceptionMapping(MemberCantBeEmptyException(), messages.membersCantBeEmpty())
+        assertExceptionMapping(UsersNotFoundException(listOf("1")), messages.membersCouldNotFound(listOf("1")))
+        assertExceptionMapping(
+            UsersAlreadyInTeamException(listOf(sender)),
+            messages.membersAlreadyInTeam(listOf(sender))
+        )
+    }
 
-        executeCommand(ids)
-
-        assertEquals(messenger.lastMessage, "Error")
+    private fun assertExceptionMapping(exception: Exception, noPermission: String) {
+        every { teamService.createTeam(any(), any()) } throws exception
+        executeCommand(ids).assertFail(noPermission)
     }
 
     @Test
     fun success_shouldSendMessage() {
-        val ids = listOf("id", "id2")
-        val team = Team(
-            members = listOf(Dummies.createUserFullFilled())
-        )
-
-        every { teamService.createTeam(user, ids) } returns team
-
-        executeCommand(ids)
-
-        assertEquals(messenger.lastMessage, messages.teamCreated(team))
+        every { teamService.createTeam(sender, ids) } returns team
+        executeCommand(ids).assertSuccess(messages.teamCreated(team))
     }
 }

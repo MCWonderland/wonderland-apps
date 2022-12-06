@@ -1,7 +1,7 @@
 package org.mcwonderland.domain.command
 
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.model.User
 
 interface CommandProcessor {
-    fun onCommand(sender: PlatformUser, label: String, args: List<String>)
+    fun onCommand(sender: User, label: String, args: List<String>): CommandResponse?
 }

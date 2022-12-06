@@ -1,6 +1,6 @@
 package org.mcwonderland.domain.features
 
-import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.toDBTeam
@@ -9,7 +9,6 @@ import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 
 class TeamServiceImpl(
-    private val messages: Messages,
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
     private val userRepository: UserRepository,
@@ -18,10 +17,10 @@ class TeamServiceImpl(
 
     override fun createTeam(executor: User, ids: List<String>): Team {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
         if (ids.isEmpty())
-            throw RuntimeException(messages.membersCantBeEmpty())
+            throw MemberCantBeEmptyException()
 
         val idsWithNoDuplicate = ids.toSet().toList()
         val members = mapEveryIdToUserOrThrow(idsWithNoDuplicate)
@@ -36,13 +35,13 @@ class TeamServiceImpl(
     private fun checkEveryoneIsLinked(members: List<User>) {
         members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())
-                throw RuntimeException(messages.membersNotLinked(it))
+                throw UsersNotLinkedException(it)
         }
     }
 
     override fun listTeams(executor: User): List<Team> {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
         val dbTeams = teamRepository.findAll()
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())
@@ -52,11 +51,10 @@ class TeamServiceImpl(
 
     override fun removeFromTeam(executor: User, targetId: String): Team {
         if (!executor.isAdministrator())
-            throw RuntimeException(messages.noPermission())
+            throw PermissionDeniedException()
 
-        val target = userFinder.find(targetId) ?: throw RuntimeException(messages.userNotFound(targetId))
-        val newTeam =
-            teamRepository.removeUserFromTeam(target.id) ?: throw RuntimeException(messages.userNotInTeam(target))
+        val target = userFinder.find(targetId) ?: throw UserNotFoundException(targetId)
+        val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
@@ -72,7 +70,7 @@ class TeamServiceImpl(
         val membersHasTeam = members.filter { teamRepository.findUsersTeam(it.id) != null }
 
         if (membersHasTeam.isNotEmpty())
-            throw RuntimeException(messages.membersAlreadyInTeam(membersHasTeam))
+            throw UsersAlreadyInTeamException(membersHasTeam)
     }
 
     private fun mapEveryIdToUserOrThrow(ids: List<String>): List<User> {
@@ -89,7 +87,7 @@ class TeamServiceImpl(
 
 
         if (nullUsers.isNotEmpty())
-            throw RuntimeException(messages.membersCouldNotFound(nullUsers))
+            throw UsersNotFoundException(nullUsers)
 
         return users
     }

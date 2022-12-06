@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.fakes
 
-import org.mcwonderland.domain.Messenger
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion
+import org.mcwonderland.discord.Messenger
 
 class MessengerFake : Messenger {
 
@@ -8,7 +9,7 @@ class MessengerFake : Messenger {
     var lastMessage: String = ""
         private set
 
-    override fun sendMessage(message: String) {
+    override fun sendMessage(textChannel: MessageChannelUnion, message: String) {
         messages.add(message)
         lastMessage = message
     }

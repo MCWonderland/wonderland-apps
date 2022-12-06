@@ -2,15 +2,16 @@ package org.mcwonderland.discord.listener
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.mcwonderland.discord.ChannelCache
+import org.mcwonderland.discord.Messenger
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.model.PlatformUser
+import org.mcwonderland.domain.features.UserFinder
 
 class CommandListener(
     private val commandProcessor: CommandProcessor,
-    private val channelCache: ChannelCache,
     private val config: Config,
+    private val messenger: Messenger,
+    private val userFinder: UserFinder
 ) : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
@@ -18,7 +19,6 @@ class CommandListener(
         val rawMessage = message.contentRaw
         val author = message.author
 
-        channelCache.cache(message.channel.id)
 
         if (!message.isFromGuild
             || message.author.isBot
@@ -29,7 +29,9 @@ class CommandListener(
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
 
-        commandProcessor.onCommand(PlatformUser(author.id), label, args)
+        commandProcessor.onCommand(userFinder.findOrCreate(author.id), label, args)?.let {
+            it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
+        }
     }
 
     private fun String.removeTrailingSpaces(): String {
