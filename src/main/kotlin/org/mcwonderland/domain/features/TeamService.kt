@@ -9,5 +9,5 @@ interface TeamService {
     fun createTeam(executor: User, ids: List<String>): Team
     fun listTeams(executor: User): List<Team>
     fun removeFromTeam(modification: UserModification): Team
-    fun addUsersToTeam(modification: UserModification, teamId: String): AddToTeamResult
+    fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult
 }

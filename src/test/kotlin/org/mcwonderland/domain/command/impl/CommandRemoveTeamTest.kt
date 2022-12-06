@@ -32,7 +32,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
     @Test
     fun shouldCallService() {
         val membersLeftAfterRemoved = listOf(User("member_left"))
-        val expectTeam = Team(membersLeftAfterRemoved)
+        val expectTeam = Team(members = membersLeftAfterRemoved)
 
         every { teamService.removeFromTeam(UserModification(sender, "target")) } returns expectTeam
 

@@ -24,7 +24,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
     @Test
     fun shouldResponseFromService() {
         val members = listOf(User("member"))
-        val teams = listOf(Team(members))
+        val teams = listOf(Team(members = members))
 
         every { teamService.listTeams(sender) } returns teams
 
@@ -32,7 +32,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
     }
 
     @Test
-    fun testExceptionMapping(){
+    fun testExceptionMapping() {
         every { teamService.listTeams(sender) } throws PermissionDeniedException()
 
         executeWithNoArgs().assertFail(messages.noPermission())

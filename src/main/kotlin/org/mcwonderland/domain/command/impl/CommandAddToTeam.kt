@@ -19,7 +19,7 @@ class CommandAddToTeam(
         val teamId = args.getOrNull(0) ?: return fail(usage)
         val userId = args.getOrNull(1) ?: return fail(usage)
 
-        val result = teamService.addUsersToTeam(UserModification(sender, userId), teamId)
+        val result = teamService.addUserToTeam(UserModification(sender, userId), teamId)
 
         return ok(messages.addedUserToTeam(result))
     }

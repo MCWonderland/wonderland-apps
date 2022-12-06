@@ -8,7 +8,6 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.AddToTeamResult
-import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.UserModification
 
 class CommandAddToTeamTest : CommandTestBase() {
@@ -34,7 +33,7 @@ class CommandAddToTeamTest : CommandTestBase() {
             team = Dummies.createTeam()
         )
 
-        every { teamService.addUsersToTeam(UserModification(sender, "targetId"), "teamId") } returns result
+        every { teamService.addUserToTeam(UserModification(sender, "targetId"), "teamId") } returns result
 
         executeCommand("teamId id1").assertSuccess(messages.addedUserToTeam(result))
     }

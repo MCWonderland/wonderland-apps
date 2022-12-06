@@ -13,6 +13,8 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
     private val collection
         get() = getDB().getTeamCollection()
 
+    private val team = DBTeam("id", listOf("member"))
+
     @BeforeEach
     fun setup() {
         teamRepository = TeamRepositoryImpl(mongoClient, config)
@@ -20,7 +22,6 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun findUsersTeam() {
-        val team = DBTeam(listOf("member"))
         collection.insertOne(team)
 
         assertEquals(team, teamRepository.findUsersTeam("member"))
@@ -28,7 +29,6 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun insertTeam() {
-        val team = DBTeam(listOf("member"))
         teamRepository.insertTeam(team)
 
         assertEquals(team, collection.find().first())
@@ -36,7 +36,6 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun findAll() {
-        val team = DBTeam(listOf("member"))
         collection.insertOne(team)
 
         assertEquals(listOf(team), teamRepository.findAll())
@@ -44,10 +43,18 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun removeUserFromTeam() {
-        val team = DBTeam(listOf("member"))
         collection.insertOne(team)
 
-        assertEquals(DBTeam(), teamRepository.removeUserFromTeam("member"))
+        assertEquals(team.apply { members = emptyList() }, teamRepository.removeUserFromTeam("member"))
         assertEquals(null, teamRepository.findUsersTeam("member"))
+    }
+
+    @Test
+    fun addUserToTeam() {
+        val expected = team.apply { members = listOf("member", "newMember") }
+
+        collection.insertOne(team)
+
+        assertEquals(expected, teamRepository.addUserToTeam("newMember", team.id))
     }
 }

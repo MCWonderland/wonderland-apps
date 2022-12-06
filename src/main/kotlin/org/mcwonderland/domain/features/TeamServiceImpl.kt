@@ -56,12 +56,27 @@ class TeamServiceImpl(
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
 
-    override fun addUsersToTeam(modification: UserModification, teamId: String): AddToTeamResult {
-        TODO("Not yet implemented")
+    override fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult {
+        if (!modification.isExecutorAdministrator())
+            throw PermissionDeniedException()
+
+        val target = modification.findTargetForce(userFinder)
+        checkAlreadyInTeam(target)
+
+        val newTeam = teamRepository.addUserToTeam(target.id, teamId) ?: throw TeamNotFoundException(teamId)
+
+        return AddToTeamResult(target, newTeam.toTeam(userRepository.findUsers(newTeam.members)))
+    }
+
+    private fun checkAlreadyInTeam(target: User) {
+        val team = teamRepository.findUsersTeam(target.id)
+
+        if (team != null)
+            throw UserAlreadyInTeamException(target)
     }
 
     private fun createTeamWith(members: List<User>): Team {
-        val team = Team(members)
+        val team = Team(members = members)
         teamRepository.insertTeam(team.toDBTeam())
 
         return team

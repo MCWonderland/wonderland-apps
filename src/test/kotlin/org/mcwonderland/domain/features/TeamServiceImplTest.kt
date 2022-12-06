@@ -11,6 +11,7 @@ import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.*
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 internal class TeamServiceImplTest {
@@ -69,8 +70,8 @@ internal class TeamServiceImplTest {
         @Test
         fun membersAlreadyInTeam_shouldCancel() {
             gainAdminPerm()
-
             userFinder.add(member)
+
             teamRepository.createTeamWithUsers(member)
 
             assertThrows<UsersAlreadyInTeamException> {
@@ -120,8 +121,6 @@ internal class TeamServiceImplTest {
                 assertEquals(teamRepository.findUsersTeam(it.id), team.toDBTeam())
             }
         }
-
-
     }
 
 
@@ -183,14 +182,14 @@ internal class TeamServiceImplTest {
 
         @Test
         fun removeFromTeamAndReturnNewValue() {
-            teamRepository.createTeamWithUsers(target)
+            val dbTeam = teamRepository.createTeamWithUsers(target)
 
             gainAdminPerm()
             userFinder.add(target)
 
             val newTeam = removeFromTeam()
 
-            assertEquals(Team(), newTeam)
+            assertEquals(dbTeam.toTeam(emptyList()), newTeam)
         }
 
 
@@ -199,6 +198,74 @@ internal class TeamServiceImplTest {
         }
     }
 
+
+    @Nested
+    inner class AddUserToTeam {
+
+        private val teamId = "team_id"
+        private val target = User(id = "target_id")
+
+        @Test
+        fun withoutPermission_shouldDenied() {
+            assertThrows<PermissionDeniedException> { addToTeam() }
+        }
+
+        @Test
+        fun targetNotExist_shouldCancel() {
+            gainAdminPerm()
+
+            assertThrows<UserNotFoundException> {
+                addToTeam()
+            }.also {
+                assertEquals(target.id, it.id)
+            }
+        }
+
+        @Test
+        fun targetAlreadyInTeam_shouldCancel() {
+            gainAdminPerm()
+            userFinder.add(target)
+            teamRepository.createTeamWithUsers(target)
+
+            assertThrows<UserAlreadyInTeamException> {
+                addToTeam()
+            }.also {
+                assertEquals(target, it.user)
+            }
+        }
+
+        @Test
+        fun teamNotExist_shouldCancel() {
+            gainAdminPerm()
+            userFinder.add(target)
+
+            assertThrows<TeamNotFoundException> {
+                addToTeam()
+            }.also {
+                assertEquals(teamId, it.teamId)
+            }
+        }
+
+
+        @Test
+        fun shouldAddUserToTeam() {
+            gainAdminPerm()
+            userFinder.add(target)
+
+            val dbTeam = teamRepository.createEmptyTeam(teamId)
+            val result = addToTeam()
+
+            assertContains(teamRepository.findUsersTeam(target.id)!!.members, target.id)
+            assertEquals(result.user, target)
+            assertEquals(result.team, dbTeam.toTeam(listOf(target)))
+        }
+
+
+        private fun addToTeam(): AddToTeamResult {
+            return teamService.addUserToTeam(UserModification(user, target.id), teamId)
+        }
+
+    }
 
     private fun gainAdminPerm() {
         user.addAdminPerm()
