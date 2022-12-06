@@ -10,10 +10,7 @@ import org.mcwonderland.domain.exceptions.*
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
-import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
-import org.mcwonderland.domain.model.toDBTeam
-import org.mcwonderland.domain.model.toTeam
+import org.mcwonderland.domain.model.*
 import kotlin.test.assertEquals
 
 internal class TeamServiceImplTest {
@@ -158,7 +155,7 @@ internal class TeamServiceImplTest {
 
         @Test
         fun withoutPermission_shouldDenied() {
-            assertThrows<PermissionDeniedException> { teamService.removeFromTeam(user, targetId) }
+            assertThrows<PermissionDeniedException> { teamService.removeFromTeam(UserModification(user, targetId)) }
         }
 
         @Test
@@ -166,7 +163,7 @@ internal class TeamServiceImplTest {
             gainAdminPerm()
 
             assertThrows<UserNotFoundException> {
-                teamService.removeFromTeam(user, targetId)
+                removeFromTeam()
             }.also {
                 assertEquals(targetId, it.id)
             }
@@ -178,7 +175,7 @@ internal class TeamServiceImplTest {
             userFinder.add(target)
 
             assertThrows<UserNotInTeamException> {
-                teamService.removeFromTeam(user, target.id)
+                removeFromTeam()
             }.also {
                 assertEquals(target, it.user)
             }
@@ -191,11 +188,15 @@ internal class TeamServiceImplTest {
             gainAdminPerm()
             userFinder.add(target)
 
-            val newTeam = teamService.removeFromTeam(user, target.id)
+            val newTeam = removeFromTeam()
 
             assertEquals(Team(), newTeam)
         }
 
+
+        private fun removeFromTeam(): Team {
+            return teamService.removeFromTeam(UserModification(user, targetId))
+        }
     }
 
 

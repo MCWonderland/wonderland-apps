@@ -46,17 +46,17 @@ class TeamServiceImpl(
         return dbTeams.map { it.toTeam(users) }
     }
 
-    override fun removeFromTeam(executor: User, targetId: String): Team {
-        if (!executor.isAdministrator())
+    override fun removeFromTeam(modification: UserModification): Team {
+        if (!modification.isExecutorAdministrator())
             throw PermissionDeniedException()
 
-        val target = userFinder.find(targetId) ?: throw UserNotFoundException(targetId)
+        val target = modification.findTargetForce(userFinder)
         val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
 
-    override fun addUsersToTeam(executor: User, targetId: String, teamId: String): AddToTeamResult {
+    override fun addUsersToTeam(modification: UserModification, teamId: String): AddToTeamResult {
         TODO("Not yet implemented")
     }
 

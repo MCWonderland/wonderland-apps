@@ -8,6 +8,7 @@ import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.UserModification
 
 class CommandRemoveTeam(
     override val label: String,
@@ -26,7 +27,7 @@ class CommandRemoveTeam(
 
 
         return try {
-            val teamAfterRemoveTarget = teamService.removeFromTeam(sender, targetId)
+            val teamAfterRemoveTarget = teamService.removeFromTeam(UserModification(sender, targetId))
             ok(messages.userRemovedFromTeam(teamAfterRemoveTarget))
         } catch (e: PermissionDeniedException) {
             fail(messages.noPermission())
