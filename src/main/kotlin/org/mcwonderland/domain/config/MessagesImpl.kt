@@ -108,6 +108,10 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return "找不到隊伍: $teamId"
     }
 
+    override fun teamDeleted(teamId: String): String {
+        return "已經刪除隊伍: $teamId"
+    }
+
     private fun teamMembers(team: Team): List<String> {
         return team.members.map { "> " + tagAndName(it) }
     }

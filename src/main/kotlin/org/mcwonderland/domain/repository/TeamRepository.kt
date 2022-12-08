@@ -8,4 +8,5 @@ interface TeamRepository {
     fun findAll(): List<DBTeam>
     fun removeUserFromTeam(id: String): DBTeam?
     fun addUserToTeam(userId: String, teamId: String): DBTeam?
+    fun deleteTeam(teamId: String): DBTeam?
 }

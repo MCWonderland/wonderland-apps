@@ -85,4 +85,8 @@ class MessagesStub : Messages {
         return "找不到隊伍: $teamId"
     }
 
+    override fun teamDeleted(teamId: String): String {
+        return "已經刪除隊伍: $teamId"
+    }
+
 }

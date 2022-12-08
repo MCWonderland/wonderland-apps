@@ -19,5 +19,6 @@ class AppConfig(private val properties: Properties) : Config {
         override val listTeams: String = properties.getProperty("command.list-teams")
         override val listReg: String = properties.getProperty("command.list-reg")
         override val addToTeam: String = properties.getProperty("command.add-to-team")
+        override val deleteTeam: String = properties.getProperty("command.delete-team")
     }
 }

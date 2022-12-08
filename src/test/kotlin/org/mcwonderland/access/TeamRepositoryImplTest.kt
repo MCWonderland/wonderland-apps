@@ -57,4 +57,12 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
         assertEquals(expected, teamRepository.addUserToTeam("newMember", team.id))
     }
+
+    @Test
+    fun deleteTeam() {
+        collection.insertOne(team)
+
+        assertEquals(team, teamRepository.deleteTeam(team.id))
+        assertEquals(null, teamRepository.findUsersTeam("member"))
+    }
 }

@@ -14,6 +14,7 @@ import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.*
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class TeamServiceImplTest {
 
@@ -276,6 +277,38 @@ internal class TeamServiceImplTest {
 
         private fun addToTeam(): AddToTeamResult {
             return teamService.addUserToTeam(UserModification(user, target.id), teamId)
+        }
+
+    }
+
+
+    @Nested
+    inner class DeleteTeam {
+
+        @Test
+        fun withoutPermission_shouldDenied() {
+            assertThrows<PermissionDeniedException> { teamService.deleteTeam(user, "team_id") }
+        }
+
+        @Test
+        fun teamNotExist_shouldCancel() {
+            gainAdminPerm()
+
+            assertThrows<TeamNotFoundException> {
+                teamService.deleteTeam(user, "team_id")
+            }.also {
+                assertEquals("team_id", it.teamId)
+            }
+        }
+
+        @Test
+        fun shouldDeleteTeam() {
+            gainAdminPerm()
+
+            val team = teamRepository.createEmptyTeam("team_id")
+            teamService.deleteTeam(user, team.id)
+
+            assertTrue(teamRepository.findAll().isEmpty())
         }
 
     }

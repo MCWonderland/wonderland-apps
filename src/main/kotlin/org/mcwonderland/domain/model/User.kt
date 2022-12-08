@@ -1,5 +1,7 @@
 package org.mcwonderland.domain.model
 
+import org.mcwonderland.domain.exceptions.PermissionDeniedException
+
 data class User(
     var id: String = "",
     var mcId: String = "",
@@ -12,4 +14,9 @@ data class User(
     }
 
     fun isAdministrator() = isAdmin
+
+    fun checkAdminPermission() {
+        if (!isAdmin)
+            throw PermissionDeniedException()
+    }
 }
