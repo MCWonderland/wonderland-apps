@@ -98,4 +98,13 @@ class CommandModule : AbstractModule() {
         )
     }
 
+    @Provides
+    fun commandDeleteTeam(providers: CommandProviders, teamService: TeamService): CommandDeleteTeam {
+        return CommandDeleteTeam(
+            messages = providers.messages,
+            label = providers.commandLabels.deleteTeam,
+            teamService = teamService,
+        )
+    }
+
 }

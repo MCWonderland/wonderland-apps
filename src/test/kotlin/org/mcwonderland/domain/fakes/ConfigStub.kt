@@ -18,6 +18,7 @@ class ConfigStub : Config {
         override val removeTeam: String = "removeTeam"
         override val listTeams: String = "listTeams"
         override val listReg: String = "listReg"
+        override val deleteTeam: String = "deleteTeam"
     }
 
 }

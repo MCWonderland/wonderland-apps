@@ -16,4 +16,5 @@ interface CommandLabels {
     val removeTeam: String
     val listTeams: String
     val listReg: String
+    val deleteTeam: String
 }
