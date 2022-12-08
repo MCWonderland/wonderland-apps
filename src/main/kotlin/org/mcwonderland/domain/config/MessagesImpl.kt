@@ -16,7 +16,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     override fun membersAlreadyInTeam(ids: List<User>): String =
         "以下成員已經在隊伍當中了: ${
-            ids.map { discordTag(it.discordId) }.joinToString(", ")
+            ids.map { discordTag(it) }.joinToString(", ")
         }"
 
     override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結至 (${mcName(id)})"
@@ -34,7 +34,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
         teams.forEachIndexed { index, team ->
             messages.add(" ")
-            messages.add("隊伍: ${index + 1}")
+            messages.add("隊伍: ${team.id}")
             team.members.forEach { messages.add("> " + tagAndName(it)) }
         }
 
@@ -45,7 +45,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
     override fun userNotFound(targetId: String): String = "找不到使用者的數據: ${discordTag(targetId)}"
 
     override fun userNotInTeam(target: User): String {
-        return "使用者 ${discordTag(target.discordId)} 不在任何隊伍當中"
+        return "使用者 ${discordTag(target)} 不在任何隊伍當中"
     }
 
     override fun userRemovedFromTeam(expectTeam: Team): String {
@@ -56,7 +56,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     override fun membersNotLinked(listOf: List<User>): String {
         return "以下成員沒有綁定帳號: ${
-            listOf.map { discordTag(it.discordId) }.joinToString(", ")
+            listOf.map { discordTag(it) }.joinToString(", ")
         }"
     }
 
@@ -65,7 +65,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
     }
 
     override fun linked(user: User): String {
-        return "${discordTag(user.discordId)} 已經綁定帳號: ${mcName(user)}"
+        return "${discordTag(user)} 已經綁定帳號: ${mcName(user)}"
     }
 
     override fun registered(): String {
@@ -100,14 +100,23 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return messages.joinToString("\n")
     }
 
+    override fun userAlreadyInTeam(user: User): String {
+        return "使用者 ${discordTag(user)} 已經在隊伍當中了"
+    }
+
+    override fun teamNotFound(teamId: String): String {
+        return "找不到隊伍: $teamId"
+    }
+
     private fun teamMembers(team: Team): List<String> {
         return team.members.map { "> " + tagAndName(it) }
     }
 
     private fun tagAndName(user: User): String {
-        return "${discordTag(user.discordId)}(${mcName(user)})"
+        return "${discordTag(user)}(${mcName(user)})"
     }
 
+    private fun discordTag(user: User) = discordTag(user.discordId)
     private fun discordTag(id: String): String = "<@${id}>"
     private fun mcName(user: User): String = mojangAccount.getNameByUUID(user.mcId) ?: "未知的 ID"
 

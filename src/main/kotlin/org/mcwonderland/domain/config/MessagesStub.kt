@@ -77,4 +77,12 @@ class MessagesStub : Messages {
         return "已將使用者加入隊伍"
     }
 
+    override fun userAlreadyInTeam(user: User): String {
+        return "使用者已經在隊伍當中"
+    }
+
+    override fun teamNotFound(teamId: String): String {
+        return "找不到隊伍: $teamId"
+    }
+
 }

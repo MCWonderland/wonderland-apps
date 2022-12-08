@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.domain.exceptions.*
+import org.mcwonderland.domain.fakes.IdGeneratorFixed
 import org.mcwonderland.domain.fakes.TeamRepositoryFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
@@ -22,6 +23,7 @@ internal class TeamServiceImplTest {
     private lateinit var teamRepository: TeamRepositoryFake
     private lateinit var userRepository: UserRepositoryFake
     private lateinit var accountLinker: AccountLinker
+    private lateinit var idGenerator: IdGenerator
 
     private lateinit var user: User
 
@@ -32,8 +34,9 @@ internal class TeamServiceImplTest {
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
         accountLinker = mockk(relaxed = true)
+        idGenerator = IdGeneratorFixed()
 
-        teamService = TeamServiceImpl(userFinder, teamRepository, userRepository, accountLinker)
+        teamService = TeamServiceImpl(userFinder, teamRepository, userRepository, accountLinker, idGenerator)
     }
 
     @Nested
@@ -105,21 +108,31 @@ internal class TeamServiceImplTest {
             assertTeamCreation(listOf(member, member), listOf(member))
         }
 
+        @Test
+        fun shouldAssignRandomId() {
+            val team = successCreateTeam(listOf(member))
+            assertEquals(team.id, idGenerator.generate())
+        }
+
         private fun assertTeamCreation(inputUsers: List<User>, expectTeamMembers: List<User>) {
-            gainAdminPerm()
-
-            inputUsers.forEach {
-                userFinder.add(it)
-                every { accountLinker.isLinked(it) } returns true
-            }
-
-            val team = teamService.createTeam(user, inputUsers.map { it.id })
+            val team = successCreateTeam(inputUsers)
 
             assertEquals(expectTeamMembers, team.members)
 
             expectTeamMembers.forEach {
                 assertEquals(teamRepository.findUsersTeam(it.id), team.toDBTeam())
             }
+        }
+
+        private fun successCreateTeam(users: List<User>): Team {
+            gainAdminPerm()
+
+            users.forEach {
+                userFinder.add(it)
+                every { accountLinker.isLinked(it) } returns true
+            }
+
+            return teamService.createTeam(user, users.map { it.id })
         }
     }
 

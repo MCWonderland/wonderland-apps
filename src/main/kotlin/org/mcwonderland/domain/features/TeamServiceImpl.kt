@@ -9,7 +9,8 @@ class TeamServiceImpl(
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
     private val userRepository: UserRepository,
-    private val accountLinker: AccountLinker
+    private val accountLinker: AccountLinker,
+    private val idGenerator: IdGenerator
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
@@ -29,13 +30,6 @@ class TeamServiceImpl(
     }
 
 
-    private fun checkEveryoneIsLinked(members: List<User>) {
-        members.filter { !accountLinker.isLinked(it) }.let {
-            if (it.isNotEmpty())
-                throw UsersNotLinkedException(it)
-        }
-    }
-
     override fun listTeams(executor: User): List<Team> {
         if (!executor.isAdministrator())
             throw PermissionDeniedException()
@@ -47,8 +41,7 @@ class TeamServiceImpl(
     }
 
     override fun removeFromTeam(modification: UserModification): Team {
-        if (!modification.isExecutorAdministrator())
-            throw PermissionDeniedException()
+        modification.checkAdminPermission()
 
         val target = modification.findTargetForce(userFinder)
         val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
@@ -57,8 +50,7 @@ class TeamServiceImpl(
     }
 
     override fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult {
-        if (!modification.isExecutorAdministrator())
-            throw PermissionDeniedException()
+        modification.checkAdminPermission()
 
         val target = modification.findTargetForce(userFinder)
         checkAlreadyInTeam(target)
@@ -66,6 +58,13 @@ class TeamServiceImpl(
         val newTeam = teamRepository.addUserToTeam(target.id, teamId) ?: throw TeamNotFoundException(teamId)
 
         return AddToTeamResult(target, newTeam.toTeam(userRepository.findUsers(newTeam.members)))
+    }
+
+    private fun checkEveryoneIsLinked(members: List<User>) {
+        members.filter { !accountLinker.isLinked(it) }.let {
+            if (it.isNotEmpty())
+                throw UsersNotLinkedException(it)
+        }
     }
 
     private fun checkAlreadyInTeam(target: User) {
@@ -76,7 +75,7 @@ class TeamServiceImpl(
     }
 
     private fun createTeamWith(members: List<User>): Team {
-        val team = Team(members = members)
+        val team = Team(id = idGenerator.generate(), members = members)
         teamRepository.insertTeam(team.toDBTeam())
 
         return team

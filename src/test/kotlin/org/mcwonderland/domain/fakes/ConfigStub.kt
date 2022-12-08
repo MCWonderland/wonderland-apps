@@ -11,6 +11,7 @@ class ConfigStub : Config {
     override val mongoConnection: String = "mongodb://localhost:27017"
 
     override val commandLabels: CommandLabels = object : CommandLabels {
+        override val addToTeam: String = "addtoteam"
         override val createTeam: String = "createTeam"
         override val link: String = "link"
         override val register: String = "register"

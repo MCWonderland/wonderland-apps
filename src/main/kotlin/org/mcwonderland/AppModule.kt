@@ -11,6 +11,8 @@ import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl
 import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.features.IdGenerator
+import org.mcwonderland.domain.features.IdGeneratorImpl
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.minecraft.MojangAccountImpl
@@ -23,10 +25,11 @@ class AppModule(
     private val mojangApi: Mojang,
 ) : AbstractModule() {
 
+    private val mojangAccount = MojangAccountImpl(mojangApi)
 
     @Provides
     fun mojangAccount(): MojangAccount {
-        return MojangAccountImpl(mojang = mojangApi)
+        return mojangAccount
     }
 
     @Provides
@@ -54,6 +57,11 @@ class AppModule(
     @Provides
     fun userFinder(userRepository: UserRepository): UserFinder {
         return UserFinderDiscord(userRepository)
+    }
+
+    @Provides
+    fun idGenerator(): IdGenerator {
+        return IdGeneratorImpl()
     }
 
 }

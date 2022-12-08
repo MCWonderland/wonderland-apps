@@ -26,5 +26,7 @@ interface Messages {
     fun listRegistrations(users: Collection<User>): String
     fun unHandledCommandError(exceptionClassName: String): String
     fun addedUserToTeam(result: AddToTeamResult): String
+    fun userAlreadyInTeam(user: User): String
+    fun teamNotFound(teamId: String): String
 }
 
