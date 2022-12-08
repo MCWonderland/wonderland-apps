@@ -11,6 +11,7 @@ import org.mcwonderland.domain.exceptions.UserNotInTeamException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.UserModification
 
 internal class CommandRemoveTeamTest : CommandTestBase() {
 
@@ -31,9 +32,9 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
     @Test
     fun shouldCallService() {
         val membersLeftAfterRemoved = listOf(User("member_left"))
-        val expectTeam = Team(membersLeftAfterRemoved)
+        val expectTeam = Team(members = membersLeftAfterRemoved)
 
-        every { teamService.removeFromTeam(sender, "target") } returns expectTeam
+        every { teamService.removeFromTeam(UserModification(sender, "target")) } returns expectTeam
 
         executeCommand(listOf("target")).assertSuccess(messages.userRemovedFromTeam(expectTeam))
     }
@@ -48,7 +49,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
     }
 
     private fun assertExceptionMapping(exception: Exception, message: String) {
-        every { teamService.removeFromTeam(sender, "target") } throws exception
+        every { teamService.removeFromTeam(UserModification(sender, "target")) } throws exception
         executeCommand(listOf("target")).assertFail(message)
     }
 }

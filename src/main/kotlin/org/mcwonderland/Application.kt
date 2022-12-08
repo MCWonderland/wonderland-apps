@@ -37,7 +37,8 @@ fun main() {
         injector.getInstance(CommandListTeams::class.java),
         injector.getInstance(CommandRegister::class.java),
         injector.getInstance(CommandRemoveTeam::class.java),
-        injector.getInstance(CommandListReg::class.java)
+        injector.getInstance(CommandListReg::class.java),
+        injector.getInstance(CommandAddToTeam::class.java),
     )
 
     jda.addEventListener(

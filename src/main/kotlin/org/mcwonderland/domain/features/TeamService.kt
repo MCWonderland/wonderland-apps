@@ -1,10 +1,13 @@
 package org.mcwonderland.domain.features
 
+import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.model.UserModification
 
 interface TeamService {
     fun createTeam(executor: User, ids: List<String>): Team
     fun listTeams(executor: User): List<Team>
-    fun removeFromTeam(executor: User, targetId: String): Team
+    fun removeFromTeam(modification: UserModification): Team
+    fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult
 }

@@ -38,4 +38,12 @@ class TeamRepositoryImpl(
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
     }
+
+    override fun addUserToTeam(userId: String, teamId: String): DBTeam? {
+        return collection.findOneAndUpdate(
+            Filters.eq("_id", teamId),
+            Updates.addToSet(DBTeam::members.name, userId),
+            FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        )
+    }
 }

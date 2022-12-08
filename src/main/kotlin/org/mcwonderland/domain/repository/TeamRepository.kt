@@ -7,5 +7,5 @@ interface TeamRepository {
     fun insertTeam(team: DBTeam)
     fun findAll(): List<DBTeam>
     fun removeUserFromTeam(id: String): DBTeam?
-
+    fun addUserToTeam(userId: String, teamId: String): DBTeam?
 }

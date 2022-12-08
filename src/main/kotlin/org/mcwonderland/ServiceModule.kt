@@ -13,13 +13,15 @@ class ServiceModule : AbstractModule() {
         userFinder: UserFinder,
         teamRepository: TeamRepository,
         userRepository: UserRepository,
-        accountLinker: AccountLinker
+        accountLinker: AccountLinker,
+        idGenerator: IdGenerator
     ): TeamService {
         return TeamServiceImpl(
             userFinder = userFinder,
             teamRepository = teamRepository,
             userRepository = userRepository,
-            accountLinker = accountLinker
+            accountLinker = accountLinker,
+            idGenerator = idGenerator
         )
     }
 

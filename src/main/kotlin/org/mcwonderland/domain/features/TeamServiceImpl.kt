@@ -1,10 +1,7 @@
 package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.exceptions.*
-import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
-import org.mcwonderland.domain.model.toDBTeam
-import org.mcwonderland.domain.model.toTeam
+import org.mcwonderland.domain.model.*
 import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 
@@ -12,7 +9,8 @@ class TeamServiceImpl(
     private val userFinder: UserFinder,
     private val teamRepository: TeamRepository,
     private val userRepository: UserRepository,
-    private val accountLinker: AccountLinker
+    private val accountLinker: AccountLinker,
+    private val idGenerator: IdGenerator
 ) : TeamService {
 
     override fun createTeam(executor: User, ids: List<String>): Team {
@@ -32,13 +30,6 @@ class TeamServiceImpl(
     }
 
 
-    private fun checkEveryoneIsLinked(members: List<User>) {
-        members.filter { !accountLinker.isLinked(it) }.let {
-            if (it.isNotEmpty())
-                throw UsersNotLinkedException(it)
-        }
-    }
-
     override fun listTeams(executor: User): List<Team> {
         if (!executor.isAdministrator())
             throw PermissionDeniedException()
@@ -49,18 +40,42 @@ class TeamServiceImpl(
         return dbTeams.map { it.toTeam(users) }
     }
 
-    override fun removeFromTeam(executor: User, targetId: String): Team {
-        if (!executor.isAdministrator())
-            throw PermissionDeniedException()
+    override fun removeFromTeam(modification: UserModification): Team {
+        modification.checkAdminPermission()
 
-        val target = userFinder.find(targetId) ?: throw UserNotFoundException(targetId)
+        val target = modification.findTargetForce(userFinder)
         val newTeam = teamRepository.removeUserFromTeam(target.id) ?: throw UserNotInTeamException(target)
 
         return newTeam.toTeam(userRepository.findUsers(newTeam.members))
     }
 
+    override fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult {
+        modification.checkAdminPermission()
+
+        val target = modification.findTargetForce(userFinder)
+        checkAlreadyInTeam(target)
+
+        val newTeam = teamRepository.addUserToTeam(target.id, teamId) ?: throw TeamNotFoundException(teamId)
+
+        return AddToTeamResult(target, newTeam.toTeam(userRepository.findUsers(newTeam.members)))
+    }
+
+    private fun checkEveryoneIsLinked(members: List<User>) {
+        members.filter { !accountLinker.isLinked(it) }.let {
+            if (it.isNotEmpty())
+                throw UsersNotLinkedException(it)
+        }
+    }
+
+    private fun checkAlreadyInTeam(target: User) {
+        val team = teamRepository.findUsersTeam(target.id)
+
+        if (team != null)
+            throw UserAlreadyInTeamException(target)
+    }
+
     private fun createTeamWith(members: List<User>): Team {
-        val team = Team(members)
+        val team = Team(id = idGenerator.generate(), members = members)
         teamRepository.insertTeam(team.toDBTeam())
 
         return team

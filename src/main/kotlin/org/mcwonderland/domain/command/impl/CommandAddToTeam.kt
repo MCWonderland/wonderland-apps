@@ -4,37 +4,36 @@ import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.TeamNotFoundException
+import org.mcwonderland.domain.exceptions.UserAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
-import org.mcwonderland.domain.exceptions.UserNotInTeamException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.UserModification
 
-class CommandRemoveTeam(
+class CommandAddToTeam(
     override val label: String,
     private val teamService: TeamService,
     private val messages: Messages
 ) : Command {
 
-    override val usage: String
-        get() = "Usage: <user>"
+    override val usage: String = "Usage: /$label <team> <id>"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
-        if (args.isEmpty())
-            return failWithUsage()
-
-        val targetId = args[0]
-
+        val teamId = args.getOrNull(0) ?: return fail(usage)
+        val userId = args.getOrNull(1) ?: return fail(usage)
 
         return try {
-            val teamAfterRemoveTarget = teamService.removeFromTeam(UserModification(sender, targetId))
-            ok(messages.userRemovedFromTeam(teamAfterRemoveTarget))
+            val result = teamService.addUserToTeam(UserModification(sender, userId), teamId)
+            ok(messages.addedUserToTeam(result))
         } catch (e: PermissionDeniedException) {
             fail(messages.noPermission())
         } catch (e: UserNotFoundException) {
-            fail(messages.userNotFound(targetId))
-        } catch (e: UserNotInTeamException) {
-            fail(messages.userNotInTeam(e.user))
+            fail(messages.userNotFound(e.id))
+        } catch (e: UserAlreadyInTeamException) {
+            fail(messages.userAlreadyInTeam(sender))
+        } catch (e: TeamNotFoundException) {
+            fail(messages.teamNotFound(e.teamId))
         }
     }
 

@@ -89,4 +89,13 @@ class CommandModule : AbstractModule() {
         )
     }
 
+    @Provides
+    fun commandAddToTeam(providers: CommandProviders, teamService: TeamService): CommandAddToTeam {
+        return CommandAddToTeam(
+            messages = providers.messages,
+            label = providers.commandLabels.addToTeam,
+            teamService = teamService,
+        )
+    }
+
 }

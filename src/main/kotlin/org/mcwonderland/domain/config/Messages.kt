@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.config
 
+import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 
@@ -24,5 +25,8 @@ interface Messages {
     fun unRegistered(): String
     fun listRegistrations(users: Collection<User>): String
     fun unHandledCommandError(exceptionClassName: String): String
+    fun addedUserToTeam(result: AddToTeamResult): String
+    fun userAlreadyInTeam(user: User): String
+    fun teamNotFound(teamId: String): String
 }
 

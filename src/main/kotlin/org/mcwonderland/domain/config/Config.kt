@@ -9,6 +9,7 @@ interface Config {
 }
 
 interface CommandLabels {
+    val addToTeam: String
     val createTeam: String
     val link: String
     val register: String
