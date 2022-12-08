@@ -60,6 +60,10 @@ class TeamServiceImpl(
         return AddToTeamResult(target, newTeam.toTeam(userRepository.findUsers(newTeam.members)))
     }
 
+    override fun deleteTeam(sender: User, teamId: String) {
+        TODO("Not yet implemented")
+    }
+
     private fun checkEveryoneIsLinked(members: List<User>) {
         members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())

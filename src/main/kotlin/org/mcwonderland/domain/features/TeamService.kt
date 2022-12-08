@@ -10,4 +10,5 @@ interface TeamService {
     fun listTeams(executor: User): List<Team>
     fun removeFromTeam(modification: UserModification): Team
     fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult
+    fun deleteTeam(sender: User, teamId: String)
 }

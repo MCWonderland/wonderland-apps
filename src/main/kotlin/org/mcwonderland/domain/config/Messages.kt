@@ -28,5 +28,6 @@ interface Messages {
     fun addedUserToTeam(result: AddToTeamResult): String
     fun userAlreadyInTeam(user: User): String
     fun teamNotFound(teamId: String): String
+    fun teamDeleted(teamId: String): String
 }
 
