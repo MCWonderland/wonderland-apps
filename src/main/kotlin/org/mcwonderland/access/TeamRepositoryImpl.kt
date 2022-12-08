@@ -46,4 +46,8 @@ class TeamRepositoryImpl(
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
     }
+
+    override fun deleteTeam(teamId: String): DBTeam? {
+        return collection.findOneAndDelete(Filters.eq("_id", teamId))
+    }
 }

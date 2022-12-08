@@ -31,8 +31,7 @@ class TeamServiceImpl(
 
 
     override fun listTeams(executor: User): List<Team> {
-        if (!executor.isAdministrator())
-            throw PermissionDeniedException()
+        executor.checkAdminPermission()
 
         val dbTeams = teamRepository.findAll()
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())
@@ -61,7 +60,8 @@ class TeamServiceImpl(
     }
 
     override fun deleteTeam(sender: User, teamId: String) {
-        TODO("Not yet implemented")
+        sender.checkAdminPermission()
+        teamRepository.deleteTeam(teamId) ?: throw TeamNotFoundException(teamId)
     }
 
     private fun checkEveryoneIsLinked(members: List<User>) {

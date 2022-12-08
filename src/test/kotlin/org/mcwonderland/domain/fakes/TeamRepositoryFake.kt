@@ -33,6 +33,12 @@ class TeamRepositoryFake : TeamRepository {
         return team
     }
 
+    override fun deleteTeam(teamId: String): DBTeam? {
+        val team = teams.find { it.id == teamId } ?: return null
+        teams.remove(team)
+        return team
+    }
+
     fun createTeamWithUsers(vararg users: User): DBTeam {
         return createEmptyTeam(UUID.randomUUID().toString()).apply { members = users.map { it.id } }
     }
