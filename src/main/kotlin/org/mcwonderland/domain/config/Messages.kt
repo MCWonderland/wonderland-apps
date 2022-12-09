@@ -31,5 +31,6 @@ interface Messages {
     fun teamDeleted(teamId: String): String
     fun nowAcceptRegistrations(): String
     fun noLongerAcceptRegistrations(): String
+    fun notAllowRegistrations(): String
 }
 

@@ -5,6 +5,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
 
@@ -26,9 +27,13 @@ internal class CommandRegisterTest : CommandTestBase() {
 
     @Test
     fun testExceptionMapping() {
-        every { registerService.toggleRegister(sender) } throws RequireLinkedAccountException()
+        assertExceptionMapping(RequireLinkedAccountException(), messages.requireLinkedAccount())
+        assertExceptionMapping(NotAllowRegistrationsException(), messages.notAllowRegistrations())
+    }
 
-        executeWithNoArgs().assertFail(messages.requireLinkedAccount())
+    private fun assertExceptionMapping(exception: Exception, message: String) {
+        every { registerService.toggleRegister(sender) } throws exception
+        executeWithNoArgs().assertFail(message)
     }
 
     private fun assertToggleStateMessage(state: Boolean, message: String) {

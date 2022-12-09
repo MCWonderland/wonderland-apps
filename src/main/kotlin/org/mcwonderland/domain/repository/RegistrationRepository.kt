@@ -8,5 +8,7 @@ interface RegistrationRepository {
 
     fun toggleRegistration(userId: String): Boolean
     fun listRegistrations(): Collection<String>
+    fun isAllowRegistrations(): Boolean
+    fun setAllowRegistrations(state: Boolean): Boolean
 
 }

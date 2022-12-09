@@ -97,4 +97,8 @@ class MessagesStub : Messages {
         return "現在不開放註冊"
     }
 
+    override fun notAllowRegistrations(): String {
+        return "目前暫不開放報名"
+    }
+
 }

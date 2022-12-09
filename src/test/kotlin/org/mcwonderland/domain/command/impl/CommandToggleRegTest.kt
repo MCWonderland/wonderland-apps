@@ -24,7 +24,7 @@ class CommandToggleRegTest : CommandTestBase() {
     }
 
     private fun assertToggleMessage(state: Boolean, msg: String) {
-        every { service.toggleAllowRegistrations() } returns state
+        every { service.toggleAllowRegistrations(sender) } returns state
         executeWithNoArgs().assertSuccess(msg)
     }
 

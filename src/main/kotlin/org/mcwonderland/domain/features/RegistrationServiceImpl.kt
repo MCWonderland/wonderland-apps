@@ -1,6 +1,6 @@
 package org.mcwonderland.domain.features
 
-import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.RegistrationRepository
@@ -16,18 +16,23 @@ class RegistrationServiceImpl(
         if (!accountLinker.isLinked(user))
             throw RequireLinkedAccountException()
 
+        if (!registrationRepository.isAllowRegistrations())
+            throw NotAllowRegistrationsException()
+
         return registrationRepository.toggleRegistration(user.id)
     }
 
     override fun listRegistrations(executor: User): Collection<User> {
-        if (!executor.isAdministrator())
-            throw PermissionDeniedException()
+        executor.checkAdminPermission()
 
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 
-    override fun toggleAllowRegistrations(): Boolean {
-        TODO("Not yet implemented")
+    override fun toggleAllowRegistrations(user: User): Boolean {
+        user.checkAdminPermission()
+        val current = registrationRepository.isAllowRegistrations()
+
+        return registrationRepository.setAllowRegistrations(!current)
     }
 
 }

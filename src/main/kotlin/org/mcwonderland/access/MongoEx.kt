@@ -3,6 +3,7 @@ package org.mcwonderland.access
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import org.mcwonderland.domain.model.DBTeam
+import org.mcwonderland.domain.model.Settings
 import org.mcwonderland.domain.model.User
 
 fun MongoDatabase.getUserCollection(): MongoCollection<User> = getCollection("user", User::class.java)
@@ -10,3 +11,6 @@ fun MongoDatabase.getTeamCollection(): MongoCollection<DBTeam> = getCollection("
 
 fun MongoDatabase.getRegistrationCollection(): MongoCollection<RegistrationContext> =
     getCollection("registration", RegistrationContext::class.java)
+
+fun MongoDatabase.getSettingsCollection(): MongoCollection<Settings> =
+    getCollection("settings", Settings::class.java)

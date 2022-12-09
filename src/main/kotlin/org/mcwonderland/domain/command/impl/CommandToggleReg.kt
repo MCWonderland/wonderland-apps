@@ -13,7 +13,7 @@ class CommandToggleReg(
 ) : Command {
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
-        val state = service.toggleAllowRegistrations()
+        val state = service.toggleAllowRegistrations(sender)
 
         return ok(
             if (state) messages.nowAcceptRegistrations()
