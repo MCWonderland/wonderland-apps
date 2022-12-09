@@ -26,4 +26,8 @@ class RegistrationServiceImpl(
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 
+    override fun toggleAllowRegistrations(): Boolean {
+        TODO("Not yet implemented")
+    }
+
 }

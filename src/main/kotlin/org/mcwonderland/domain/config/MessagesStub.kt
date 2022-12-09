@@ -89,4 +89,12 @@ class MessagesStub : Messages {
         return "已經刪除隊伍: $teamId"
     }
 
+    override fun nowAcceptRegistrations(): String {
+        return "現在開放註冊"
+    }
+
+    override fun noLongerAcceptRegistrations(): String {
+        return "現在不開放註冊"
+    }
+
 }

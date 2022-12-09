@@ -29,5 +29,7 @@ interface Messages {
     fun userAlreadyInTeam(user: User): String
     fun teamNotFound(teamId: String): String
     fun teamDeleted(teamId: String): String
+    fun nowAcceptRegistrations(): String
+    fun noLongerAcceptRegistrations(): String
 }
 
