@@ -1,5 +1,6 @@
 package org.mcwonderland.access
 
+import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -13,10 +14,8 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     private lateinit var repo: RegistrationRepository
 
-    private val collection
-        get() = mongoClient
-            .getDatabase(config.dbName)
-            .getRegistrationCollection()
+    private val registrationCol: MongoCollection<RegistrationContext>
+        get() = getDB().getRegistrationCollection()
 
     @BeforeEach
     fun setup() {
@@ -33,7 +32,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
         @Test
         fun withData_shouldReturnState() {
-            collection.insertOne(RegistrationContext("test", true))
+            registrationCol.insertOne(RegistrationContext("test", true))
 
             assertTrue { repo.isRegistered("test") }
         }
@@ -44,7 +43,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
     fun addRegistration() {
         repo.addRegistration("test")
 
-        assertTrue { collection.find(Filters.eq("_id", "test")).first()!!.registered }
+        assertTrue { registrationCol.find(Filters.eq("_id", "test")).first()!!.registered }
     }
 
     @Test
@@ -52,12 +51,12 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         repo.addRegistration("test")
 
         assertEquals(false, repo.toggleRegistration("test"))
-        assertFalse { collection.find(Filters.eq("_id", "test")).first()!!.registered }
+        assertFalse { registrationCol.find(Filters.eq("_id", "test")).first()!!.registered }
     }
 
     @Test
     fun listRegistrations() {
-        collection.insertMany(
+        registrationCol.insertMany(
             listOf(
                 RegistrationContext("test1", true),
                 RegistrationContext("test2", false)
