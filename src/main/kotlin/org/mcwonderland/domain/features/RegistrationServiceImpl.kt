@@ -26,4 +26,9 @@ class RegistrationServiceImpl(
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 
+    override fun clearRegistrations(executor: User) {
+        executor.checkAdminPermission()
+        registrationRepository.clearRegistrations()
+    }
+
 }

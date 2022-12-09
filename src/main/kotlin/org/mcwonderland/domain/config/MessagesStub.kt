@@ -89,4 +89,8 @@ class MessagesStub : Messages {
         return "已經刪除隊伍: $teamId"
     }
 
+    override fun registrationsCleared(): String {
+        return "已經清除所有註冊"
+    }
+
 }

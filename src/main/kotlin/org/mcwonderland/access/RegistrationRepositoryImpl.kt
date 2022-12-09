@@ -39,6 +39,10 @@ class RegistrationRepositoryImpl(
         ).map { it.id }.toList()
     }
 
+    override fun clearRegistrations() {
+        collection.drop()
+    }
+
     private fun updateRegistrationState(userId: String, b: Boolean) {
         collection.findOneAndUpdate(
             Filters.eq("_id", userId),

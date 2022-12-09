@@ -8,5 +8,6 @@ interface RegistrationRepository {
 
     fun toggleRegistration(userId: String): Boolean
     fun listRegistrations(): Collection<String>
+    fun clearRegistrations()
 
 }

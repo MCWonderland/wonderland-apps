@@ -112,6 +112,10 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return "已經刪除隊伍: $teamId"
     }
 
+    override fun registrationsCleared(): String {
+        return "已經清除報名列表"
+    }
+
     private fun teamMembers(team: Team): List<String> {
         return team.members.map { "> " + tagAndName(it) }
     }

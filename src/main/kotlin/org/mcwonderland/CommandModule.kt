@@ -107,4 +107,13 @@ class CommandModule : AbstractModule() {
         )
     }
 
+    @Provides
+    fun commandClearReg(providers: CommandProviders, registrationService: RegistrationService): CommandClearReg {
+        return CommandClearReg(
+            messages = providers.messages,
+            label = providers.commandLabels.clearReg,
+            registrationService = registrationService,
+        )
+    }
+
 }
