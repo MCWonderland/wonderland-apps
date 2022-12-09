@@ -9,6 +9,7 @@ class AppConfig(private val properties: Properties) : Config {
     override val commandPrefix: String = properties.getProperty("command-prefix")
     override val dbName: String = properties.getProperty("db-name")
     override val mongoConnection: String = properties.getProperty("mongo-connection")
+    override val settingsMongoId: String = properties.getProperty("settings-mongo-id")
 
     override val commandLabels: CommandLabels = CommandLabelsDefault()
 }

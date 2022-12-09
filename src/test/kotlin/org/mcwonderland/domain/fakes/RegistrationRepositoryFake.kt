@@ -6,6 +6,7 @@ class RegistrationRepositoryFake : RegistrationRepository {
 
     private val registeredUsers = mutableSetOf<String>()
 
+
     override fun isRegistered(userId: String): Boolean {
         return registeredUsers.contains(userId)
     }
