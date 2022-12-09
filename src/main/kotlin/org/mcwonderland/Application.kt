@@ -31,7 +31,7 @@ fun main() {
     val messenger = MessengerImpl()
 
 
-    val commands = listOf(
+    val commands = mutableListOf(
         injector.getInstance(CommandAddToTeam::class.java),
         injector.getInstance(CommandClearReg::class.java),
         injector.getInstance(CommandCreateTeam::class.java),
@@ -43,6 +43,8 @@ fun main() {
         injector.getInstance(CommandRemoveTeam::class.java),
         injector.getInstance(CommandToggleReg::class.java)
     )
+
+    commands.add(CommandHelp("help", commands, injector.getInstance(Messages::class.java)))
 
     jda.addEventListener(
         CommandListener(

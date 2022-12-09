@@ -16,8 +16,7 @@ class CommandRemoveTeam(
     private val messages: Messages
 ) : Command {
 
-    override val usage: String
-        get() = "Usage: <user>"
+    override val usage: String = "/$label <user>"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         if (args.isEmpty())

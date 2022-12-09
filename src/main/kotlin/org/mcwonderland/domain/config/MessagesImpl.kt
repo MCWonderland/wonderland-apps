@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.config
 
 import org.mcwonderland.domain.MojangAccount
+import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
@@ -114,6 +115,16 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
     override fun registrationsCleared(): String {
         return "已經清除報名列表"
+    }
+
+    override fun commandHelp(commands: List<Command>): String {
+        val messages = mutableListOf<String>()
+
+        messages.add("指令列表:")
+        messages.add(" ")
+        messages += commands.map { "> ${it.usage}" }
+
+        return messages.joinToString("\n")
     }
 
     override fun nowAcceptRegistrations(): String {

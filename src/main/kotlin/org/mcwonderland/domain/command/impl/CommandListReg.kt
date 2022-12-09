@@ -12,6 +12,8 @@ class CommandListReg(
     private val registrationService: RegistrationService,
     private val messages: Messages,
 ) : Command {
+    override val usage: String = "/$label"
+
     override fun execute(sender: User, args: List<String>): CommandResponse {
 
         return try {
