@@ -46,23 +46,6 @@ class RegistrationRepositoryImpl(
         ).map { it.id }.toList()
     }
 
-    override fun isAllowRegistrations(): Boolean {
-        return settingsCol.findOneAndUpdate(
-            eq("_id", config.settingsMongoId),
-            setOnInsert(Settings::allowRegistrations.name, true),
-            upsertAndReturn()
-        )!!.allowRegistrations
-
-    }
-
-    override fun setAllowRegistrations(state: Boolean): Boolean {
-        return settingsCol.findOneAndUpdate(
-            eq("_id", config.settingsMongoId),
-            set(Settings::allowRegistrations.name, state),
-            upsertAndReturn()
-        )!!.allowRegistrations
-    }
-
     private fun updateRegistrationState(userId: String, b: Boolean) {
         regCol.findOneAndUpdate(
             eq("_id", userId),
@@ -71,7 +54,4 @@ class RegistrationRepositoryImpl(
         )
     }
 
-    private fun upsertAndReturn(): FindOneAndUpdateOptions {
-        return FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)
-    }
 }

@@ -1,5 +1,3 @@
 package org.mcwonderland.domain.exceptions
 
-class NotAllowRegistrationsException : RuntimeException() {
-
-}
+class NotAllowRegistrationsException : RuntimeException()

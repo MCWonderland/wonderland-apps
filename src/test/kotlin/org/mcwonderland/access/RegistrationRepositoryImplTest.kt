@@ -5,7 +5,6 @@ import com.mongodb.client.model.Filters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mcwonderland.domain.model.Settings
 import org.mcwonderland.domain.repository.RegistrationRepository
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -15,14 +14,8 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     private lateinit var repo: RegistrationRepository
 
-    private val database
-        get() = mongoClient.getDatabase(config.dbName)
-
     private val registrationCol: MongoCollection<RegistrationContext>
-        get() = database.getRegistrationCollection()
-
-    private val settingsCol
-        get() = database.getSettingsCollection()
+        get() = getDB().getRegistrationCollection()
 
     @BeforeEach
     fun setup() {
@@ -73,28 +66,4 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         assertEquals(listOf("test1"), repo.listRegistrations())
     }
 
-
-    @Nested
-    inner class IsAllowRegistrations {
-
-        @Test
-        fun default_shouldBeTrue() {
-            assertTrue { repo.isAllowRegistrations() }
-        }
-
-        @Test
-        fun withData_shouldReturnState() {
-            settingsCol.insertOne(Settings(id = config.settingsMongoId, allowRegistrations = false))
-
-            assertFalse { repo.isAllowRegistrations() }
-        }
-
-    }
-
-    @Test
-    fun setAllowRegistrations() {
-        repo.setAllowRegistrations(false)
-
-        assertFalse { settingsCol.find().first()!!.allowRegistrations }
-    }
 }

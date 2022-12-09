@@ -5,7 +5,6 @@ import org.mcwonderland.domain.repository.RegistrationRepository
 class RegistrationRepositoryFake : RegistrationRepository {
 
     private val registeredUsers = mutableSetOf<String>()
-    private var allowRegistrations = false
 
 
     override fun isRegistered(userId: String): Boolean {
@@ -28,15 +27,6 @@ class RegistrationRepositoryFake : RegistrationRepository {
 
     override fun listRegistrations(): Collection<String> {
         return this.registeredUsers
-    }
-
-    override fun isAllowRegistrations(): Boolean {
-        return allowRegistrations
-    }
-
-    override fun setAllowRegistrations(state: Boolean): Boolean {
-        allowRegistrations = state
-        return allowRegistrations
     }
 
 }

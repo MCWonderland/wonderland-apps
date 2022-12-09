@@ -2,13 +2,16 @@ package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
+import org.mcwonderland.domain.model.Settings
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.RegistrationRepository
+import org.mcwonderland.domain.repository.SettingsRepository
 import org.mcwonderland.domain.repository.UserRepository
 
 class RegistrationServiceImpl(
     private val accountLinker: AccountLinker,
     private val registrationRepository: RegistrationRepository,
+    private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository
 ) : RegistrationService {
 
@@ -16,7 +19,7 @@ class RegistrationServiceImpl(
         if (!accountLinker.isLinked(user))
             throw RequireLinkedAccountException()
 
-        if (!registrationRepository.isAllowRegistrations())
+        if (!settingsRepository.isAllowRegistrations())
             throw NotAllowRegistrationsException()
 
         return registrationRepository.toggleRegistration(user.id)
@@ -30,9 +33,9 @@ class RegistrationServiceImpl(
 
     override fun toggleAllowRegistrations(user: User): Boolean {
         user.checkAdminPermission()
-        val current = registrationRepository.isAllowRegistrations()
+        val current = settingsRepository.isAllowRegistrations()
 
-        return registrationRepository.setAllowRegistrations(!current)
+        return settingsRepository.setAllowRegistrations(!current)
     }
 
 }

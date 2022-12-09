@@ -9,8 +9,10 @@ import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.fakes.AccountLinkerFake
 import org.mcwonderland.domain.fakes.RegistrationRepositoryFake
+import org.mcwonderland.domain.fakes.SettingsRepositoryFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.repository.SettingsRepository
 import org.mcwonderland.domain.repository.UserRepository
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -22,6 +24,7 @@ internal class RegistrationServiceImplTest {
     private lateinit var accountLinker: AccountLinkerFake
     private lateinit var registrationRepository: RegistrationRepositoryFake
     private lateinit var userRepository: UserRepository
+    private lateinit var settingsRepository: SettingsRepository
 
     private lateinit var user: User
 
@@ -32,7 +35,9 @@ internal class RegistrationServiceImplTest {
         accountLinker = AccountLinkerFake()
         registrationRepository = RegistrationRepositoryFake()
         userRepository = UserRepositoryFake()
-        registrationService = RegistrationServiceImpl(accountLinker, registrationRepository, userRepository)
+        settingsRepository = SettingsRepositoryFake()
+        registrationService =
+            RegistrationServiceImpl(accountLinker, registrationRepository, settingsRepository, userRepository)
     }
 
     @Nested
@@ -45,7 +50,7 @@ internal class RegistrationServiceImplTest {
         @Test
         fun notAllowRegistrations_shouldCancel() {
             doLink()
-            registrationRepository.setAllowRegistrations(false)
+            settingsRepository.setAllowRegistrations(false)
 
             assertThrows<NotAllowRegistrationsException> { registrationService.toggleRegister(user) }
         }
@@ -54,7 +59,7 @@ internal class RegistrationServiceImplTest {
         fun shouldRegister() {
             doLink()
 
-            registrationRepository.setAllowRegistrations(true)
+            setAllowRegistrations(true)
             registrationService.toggleRegister(user)
 
             assertTrue { registrationRepository.isRegistered(user.id) }
@@ -64,7 +69,7 @@ internal class RegistrationServiceImplTest {
         fun alreadyRegistered_shouldRemoveRegistration() {
             doLink()
             registrationRepository.addRegistration(user.id)
-            registrationRepository.setAllowRegistrations(true)
+            setAllowRegistrations(true)
 
             val result = registrationService.toggleRegister(user)
 
@@ -109,11 +114,17 @@ internal class RegistrationServiceImplTest {
         @Test
         fun shouldToggle() {
             user.addAdminPerm()
-            registrationRepository.setAllowRegistrations(false)
+            setAllowRegistrations(false)
 
             registrationService.toggleAllowRegistrations(user)
 
-            assertTrue { registrationRepository.isAllowRegistrations() }
+            assertTrue { settingsRepository.isAllowRegistrations() }
         }
+
+    }
+
+
+    private fun setAllowRegistrations(state: Boolean) {
+        settingsRepository.setAllowRegistrations(state)
     }
 }
