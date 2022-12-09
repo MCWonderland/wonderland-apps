@@ -11,6 +11,7 @@ class CommandToggleReg(
     private val service: RegistrationService,
     private val messages: Messages
 ) : Command {
+    override val usage: String = "/$label"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         val state = service.toggleAllowRegistrations(sender)

@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.config
 
+import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
@@ -33,5 +34,6 @@ interface Messages {
     fun noLongerAcceptRegistrations(): String
     fun notAllowRegistrations(): String
     fun registrationsCleared(): String
+    fun commandHelp(commands: List<Command>): String
 }
 

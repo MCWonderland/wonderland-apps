@@ -14,6 +14,7 @@ class CommandLink(
     private val accountLinker: AccountLinker,
     private val messages: Messages
 ) : Command {
+    override val usage: String = "/$label <minecraft username>"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         val uuid = args.getOrNull(0) ?: return fail(messages.invalidArg("mcIgn"))

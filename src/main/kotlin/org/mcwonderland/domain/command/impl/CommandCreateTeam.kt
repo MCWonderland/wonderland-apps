@@ -16,7 +16,7 @@ class CommandCreateTeam(
     private val messages: Messages
 ) : Command {
 
-    override val usage: String = "Usage: /$label <id> <id>...."
+    override val usage: String = "/$label <id> <id>...."
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         if (args.isEmpty())
