@@ -122,7 +122,7 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
 
         messages.add("指令列表:")
         messages.add(" ")
-        commands.forEach { messages.add("> " + it.usage) }
+        messages += commands.map { "> ${it.usage}" }
 
         return messages.joinToString("\n")
     }
