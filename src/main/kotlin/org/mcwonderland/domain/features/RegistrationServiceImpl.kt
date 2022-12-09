@@ -31,6 +31,11 @@ class RegistrationServiceImpl(
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 
+    override fun clearRegistrations(executor: User) {
+        executor.checkAdminPermission()
+        registrationRepository.clearRegistrations()
+    }
+
     override fun toggleAllowRegistrations(user: User): Boolean {
         user.checkAdminPermission()
         val current = settingsRepository.isAllowRegistrations()

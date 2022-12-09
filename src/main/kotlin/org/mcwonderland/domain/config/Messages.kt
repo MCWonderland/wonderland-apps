@@ -32,5 +32,6 @@ interface Messages {
     fun nowAcceptRegistrations(): String
     fun noLongerAcceptRegistrations(): String
     fun notAllowRegistrations(): String
+    fun registrationsCleared(): String
 }
 

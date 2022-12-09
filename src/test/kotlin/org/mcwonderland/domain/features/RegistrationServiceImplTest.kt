@@ -104,6 +104,24 @@ internal class RegistrationServiceImplTest {
     }
 
     @Nested
+    inner class ClearRegistrations {
+        @Test
+        fun withoutPermission_shouldDenied() {
+            assertThrows<PermissionDeniedException> { registrationService.clearRegistrations(user) }
+        }
+
+        @Test
+        fun shouldClearRegistrations() {
+            user.addAdminPerm()
+            registrationRepository.addRegistration(user.id)
+
+            registrationService.clearRegistrations(user)
+
+            assertFalse { registrationRepository.isRegistered(user.id) }
+        }
+    }
+
+    @Nested
     inner class ToggleAllowRegistrations {
 
         @Test

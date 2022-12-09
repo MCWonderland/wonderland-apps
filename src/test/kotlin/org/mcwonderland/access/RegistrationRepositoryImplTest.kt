@@ -14,7 +14,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     private lateinit var repo: RegistrationRepository
 
-    private val registrationCol: MongoCollection<RegistrationContext>
+    private val collection: MongoCollection<RegistrationContext>
         get() = getDB().getRegistrationCollection()
 
     @BeforeEach
@@ -32,7 +32,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
         @Test
         fun withData_shouldReturnState() {
-            registrationCol.insertOne(RegistrationContext("test", true))
+            collection.insertOne(RegistrationContext("test", true))
 
             assertTrue { repo.isRegistered("test") }
         }
@@ -43,7 +43,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
     fun addRegistration() {
         repo.addRegistration("test")
 
-        assertTrue { registrationCol.find(Filters.eq("_id", "test")).first()!!.registered }
+        assertTrue { collection.find(Filters.eq("_id", "test")).first()!!.registered }
     }
 
     @Test
@@ -51,12 +51,12 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         repo.addRegistration("test")
 
         assertEquals(false, repo.toggleRegistration("test"))
-        assertFalse { registrationCol.find(Filters.eq("_id", "test")).first()!!.registered }
+        assertFalse { collection.find(Filters.eq("_id", "test")).first()!!.registered }
     }
 
     @Test
     fun listRegistrations() {
-        registrationCol.insertMany(
+        collection.insertMany(
             listOf(
                 RegistrationContext("test1", true),
                 RegistrationContext("test2", false)
@@ -64,6 +64,20 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         )
 
         assertEquals(listOf("test1"), repo.listRegistrations())
+    }
+
+    @Test
+    fun clearRegistrations() {
+        collection.insertMany(
+            listOf(
+                RegistrationContext("test1", true),
+                RegistrationContext("test2", false)
+            )
+        )
+
+        repo.clearRegistrations()
+
+        assertEquals(emptyList(), collection.find().toList())
     }
 
 }
