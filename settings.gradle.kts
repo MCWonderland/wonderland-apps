@@ -1,4 +1,4 @@
-rootProject.name = "wl-discord-bot"
+rootProject.name = "wonderland-apps"
 include("domain")
 include("mongo")
 include("mojang")
