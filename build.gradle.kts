@@ -11,6 +11,7 @@ version = "1.1-SNAPSHOT"
 allprojects {
     repositories {
         mavenCentral()
+        gradlePluginPortal()
         maven("https://jitpack.io")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
