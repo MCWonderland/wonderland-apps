@@ -12,10 +12,11 @@ abstract class CommandTestBase {
     protected lateinit var messages: Messages
         private set
 
-    protected val sender = User("user")
+    protected lateinit var sender: User
 
     @BeforeEach
     fun setupCommandTestBase() {
+        sender = User("sender")
         messages = MessagesStub()
     }
 

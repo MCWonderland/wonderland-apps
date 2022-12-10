@@ -3,8 +3,8 @@ package org.mcwonderland.discord
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
-import org.mcwonderland.discord.impl.DiscordMcIgnAccountLinker
-import org.mcwonderland.discord.impl.UserFinderDiscord
+import org.mcwonderland.domain.features.DiscordMcIgnAccountLinker
+import org.mcwonderland.domain.features.UserFinderDiscord
 import org.mcwonderland.domain.MojangAccount
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl

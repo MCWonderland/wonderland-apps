@@ -1,10 +1,10 @@
-package org.mcwonderland.discord
+package org.mcwonderland.domain.features
 
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.discord.impl.UserFinderDiscord
+import org.mcwonderland.domain.features.UserFinderDiscord
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.features.UserFinder
 import java.util.*

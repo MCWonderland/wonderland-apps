@@ -1,4 +1,4 @@
-package org.mcwonderland.discord.impl
+package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User

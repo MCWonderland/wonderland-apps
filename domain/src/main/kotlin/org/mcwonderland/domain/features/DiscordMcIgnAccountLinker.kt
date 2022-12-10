@@ -1,10 +1,9 @@
-package org.mcwonderland.discord.impl
+package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.MojangAccount
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
-import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 
