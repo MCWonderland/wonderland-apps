@@ -1,10 +1,8 @@
 package org.mcwonderland.access
 
 import com.mongodb.client.MongoClient
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.ReturnDocument
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Updates.set
 import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.repository.RegistrationRepository
 
@@ -13,13 +11,15 @@ class RegistrationRepositoryImpl(
     private val config: Config
 ) : RegistrationRepository {
 
-    private val collection = mongoClient
-        .getDatabase(config.dbName)
-        .getRegistrationCollection()
+    private val database
+        get() = mongoClient.getDatabase(config.dbName)
+
+    private val collection
+        get() = database.getRegistrationCollection()
 
     override fun isRegistered(userId: String): Boolean {
         return collection
-            .find(Filters.eq("_id", userId))
+            .find(eq("_id", userId))
             .first()?.registered ?: false
     }
 
@@ -35,15 +35,20 @@ class RegistrationRepositoryImpl(
 
     override fun listRegistrations(): Collection<String> {
         return collection.find(
-            Filters.eq(RegistrationContext::registered.name, true)
+            eq(RegistrationContext::registered.name, true)
         ).map { it.id }.toList()
+    }
+
+    override fun clearRegistrations() {
+        collection.drop()
     }
 
     private fun updateRegistrationState(userId: String, b: Boolean) {
         collection.findOneAndUpdate(
-            Filters.eq("_id", userId),
-            Updates.set(RegistrationContext::registered.name, b),
-            FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)
+            eq("_id", userId),
+            set(RegistrationContext::registered.name, b),
+            upsertAndReturn()
         )
     }
+
 }

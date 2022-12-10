@@ -7,18 +7,18 @@ import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
-class CommandListReg(
+class CommandClearReg(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val messages: Messages,
+    private val messages: Messages
 ) : Command {
+
     override val usage: String = "/$label"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
-
         return try {
-            val users = registrationService.listRegistrations(sender)
-            ok(messages.listRegistrations(users))
+            registrationService.clearRegistrations(sender)
+            ok(messages.registrationsCleared())
         } catch (e: PermissionDeniedException) {
             fail(messages.noPermission())
         }

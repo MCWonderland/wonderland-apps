@@ -1,5 +1,6 @@
 package org.mcwonderland.access
 
+import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -13,10 +14,8 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     private lateinit var repo: RegistrationRepository
 
-    private val collection
-        get() = mongoClient
-            .getDatabase(config.dbName)
-            .getRegistrationCollection()
+    private val collection: MongoCollection<RegistrationContext>
+        get() = getDB().getRegistrationCollection()
 
     @BeforeEach
     fun setup() {
@@ -65,6 +64,20 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         )
 
         assertEquals(listOf("test1"), repo.listRegistrations())
+    }
+
+    @Test
+    fun clearRegistrations() {
+        collection.insertMany(
+            listOf(
+                RegistrationContext("test1", true),
+                RegistrationContext("test2", false)
+            )
+        )
+
+        repo.clearRegistrations()
+
+        assertEquals(emptyList(), collection.find().toList())
     }
 
 }

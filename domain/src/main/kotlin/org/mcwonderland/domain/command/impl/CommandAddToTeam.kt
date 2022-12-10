@@ -17,7 +17,7 @@ class CommandAddToTeam(
     private val messages: Messages
 ) : Command {
 
-    override val usage: String = "Usage: /$label <team> <id>"
+    override val usage: String = "/$label <team> <id>"
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         val teamId = args.getOrNull(0) ?: return fail(usage)

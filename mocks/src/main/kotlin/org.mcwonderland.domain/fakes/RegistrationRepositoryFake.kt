@@ -6,6 +6,7 @@ class RegistrationRepositoryFake : RegistrationRepository {
 
     private val registeredUsers = mutableSetOf<String>()
 
+
     override fun isRegistered(userId: String): Boolean {
         return registeredUsers.contains(userId)
     }
@@ -26,6 +27,10 @@ class RegistrationRepositoryFake : RegistrationRepository {
 
     override fun listRegistrations(): Collection<String> {
         return this.registeredUsers
+    }
+
+    override fun clearRegistrations() {
+        this.registeredUsers.clear()
     }
 
 }

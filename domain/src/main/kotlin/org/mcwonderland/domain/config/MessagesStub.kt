@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.config
 
+import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
@@ -87,6 +88,26 @@ class MessagesStub : Messages {
 
     override fun teamDeleted(teamId: String): String {
         return "已經刪除隊伍: $teamId"
+    }
+
+    override fun registrationsCleared(): String {
+        return "已經清除所有註冊"
+    }
+
+    override fun commandHelp(commands: List<Command>): String {
+        return commands.joinToString(", ")
+    }
+
+    override fun nowAcceptRegistrations(): String {
+        return "現在開放註冊"
+    }
+
+    override fun noLongerAcceptRegistrations(): String {
+        return "現在不開放註冊"
+    }
+
+    override fun notAllowRegistrations(): String {
+        return "目前暫不開放報名"
     }
 
 }
