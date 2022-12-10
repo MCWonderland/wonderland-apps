@@ -17,7 +17,7 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
 
     @BeforeEach
     fun setup() {
-        teamRepository = TeamRepositoryImpl(mongoClient, config)
+        teamRepository = TeamRepositoryImpl(mongoClient, dbName)
     }
 
     @Test

@@ -12,11 +12,11 @@ internal class UserRepositoryImplTest : MongoDBTest() {
     private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id", isAdmin = true)
 
     private val userCollection
-        get() = mongoClient.getDatabase(config.dbName).getUserCollection()
+        get() = getDB().getUserCollection()
 
     @BeforeEach
     fun setUp() {
-        userRepository = UserRepositoryImpl(mongoClient, config)
+        userRepository = UserRepositoryImpl(mongoClient, dbName)
     }
 
 

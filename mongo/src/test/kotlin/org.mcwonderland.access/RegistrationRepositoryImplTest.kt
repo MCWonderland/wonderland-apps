@@ -19,7 +19,7 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
 
     @BeforeEach
     fun setup() {
-        repo = RegistrationRepositoryImpl(mongoClient, config)
+        repo = RegistrationRepositoryImpl(mongoClient, dbName)
     }
 
     @Nested

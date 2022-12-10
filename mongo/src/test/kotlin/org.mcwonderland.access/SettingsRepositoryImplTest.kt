@@ -15,9 +15,11 @@ class SettingsRepositoryImplTest : MongoDBTest() {
 
     private lateinit var repository: SettingsRepository
 
+    private val settingsId = "settingsId"
+
     @BeforeEach
     fun setUp() {
-        repository = SettingsRepositoryImpl(mongoClient, config)
+        repository = SettingsRepositoryImpl(mongoClient, dbName, settingsId)
     }
 
     @Nested
@@ -30,7 +32,7 @@ class SettingsRepositoryImplTest : MongoDBTest() {
 
         @Test
         fun withData_shouldReturnState() {
-            settingsCol.insertOne(Settings(id = config.settingsMongoId, allowRegistrations = false))
+            settingsCol.insertOne(Settings(id = settingsId, allowRegistrations = false))
 
             assertFalse { repository.isAllowRegistrations() }
         }

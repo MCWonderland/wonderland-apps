@@ -6,8 +6,6 @@ import net.dv8tion.jda.api.JDA
 import org.mcwonderland.discord.impl.DiscordMcIgnAccountLinker
 import org.mcwonderland.discord.impl.UserFinderDiscord
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.config.CommandLabels
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesImpl
 import org.mcwonderland.domain.features.AccountLinker

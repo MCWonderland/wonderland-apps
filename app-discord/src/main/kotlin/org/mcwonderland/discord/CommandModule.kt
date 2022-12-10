@@ -3,7 +3,6 @@ package org.mcwonderland.discord
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import org.mcwonderland.domain.command.impl.*
-import org.mcwonderland.domain.config.CommandLabels
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.features.RegistrationService

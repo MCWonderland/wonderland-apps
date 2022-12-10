@@ -6,16 +6,15 @@ import com.mongodb.client.model.Filters.`in`
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 
 class UserRepositoryImpl(
     private val mongoClient: MongoClient,
-    private val config: Config
+    private val dbName: String,
 ) : UserRepository {
 
-    private val db = mongoClient.getDatabase(config.dbName)
+    private val db = mongoClient.getDatabase(dbName)
     private val userCollection = db.getUserCollection()
 
     override fun findUserByMcId(mcUUID: String): User? {

@@ -8,7 +8,6 @@ import org.mcwonderland.discord.impl.MessengerImpl
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.UserFinder
 import org.shanerx.mojang.Mojang
@@ -29,6 +28,8 @@ fun main() {
     )
 
     val messenger = MessengerImpl()
+    val messages = injector.getInstance(Messages::class.java)
+    val config = injector.getInstance(Config::class.java)
 
 
     val commands = mutableListOf(
@@ -44,12 +45,12 @@ fun main() {
         injector.getInstance(CommandToggleReg::class.java)
     )
 
-    commands.add(CommandHelp("help", commands, injector.getInstance(Messages::class.java)))
+    commands.add(CommandHelp("help", commands, messages))
 
     jda.addEventListener(
         CommandListener(
-            CommandProcessorImpl(commands, injector.getInstance(Messages::class.java)),
-            injector.getInstance(Config::class.java),
+            CommandProcessorImpl(commands, messages),
+            config.commandPrefix,
             messenger,
             injector.getInstance(UserFinder::class.java)
         ),

@@ -17,12 +17,13 @@ import de.flapdoodle.embed.process.runtime.Network
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
-import org.mcwonderland.domain.fakes.ConfigStub
 
 
 open class MongoDBTest {
 
     companion object {
+        internal val dbName = "database"
+
         lateinit var mongoClient: MongoClient
 
         lateinit var mongodExecutable: MongodExecutable
@@ -71,11 +72,10 @@ open class MongoDBTest {
 
     @AfterEach
     fun cleanUp() {
-        mongoClient.getDatabase(config.dbName).drop()
+        mongoClient.getDatabase(dbName).drop()
     }
 
-    protected val config = ConfigStub()
 
-    protected fun getDB() = mongoClient.getDatabase(config.dbName)
+    protected fun getDB() = mongoClient.getDatabase(dbName)
 
 }

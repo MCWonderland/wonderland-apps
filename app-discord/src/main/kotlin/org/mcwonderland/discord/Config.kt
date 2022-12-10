@@ -1,10 +1,9 @@
-package org.mcwonderland.domain.config
+package org.mcwonderland.discord
 
 interface Config {
     val commandPrefix: String
     val dbName: String
-    val mongoConnection: String
-    val settingsMongoId: String
+    val mongoConnectionEnv: String
     val commandLabels: CommandLabels
 }
 

@@ -28,4 +28,8 @@ class RegistrationRepositoryFake : RegistrationRepository {
         return this.registeredUsers
     }
 
+    override fun clearRegistrations() {
+        this.registeredUsers.clear()
+    }
+
 }

@@ -3,16 +3,15 @@ package org.mcwonderland.access
 import com.mongodb.client.MongoClient
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Updates.set
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.repository.RegistrationRepository
 
 class RegistrationRepositoryImpl(
     private val mongoClient: MongoClient,
-    private val config: Config
+    private val dbName: String,
 ) : RegistrationRepository {
 
     private val database
-        get() = mongoClient.getDatabase(config.dbName)
+        get() = mongoClient.getDatabase(dbName)
 
     private val collection
         get() = database.getRegistrationCollection()

@@ -4,12 +4,11 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.mcwonderland.discord.impl.Messenger
 import org.mcwonderland.domain.command.CommandProcessor
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.features.UserFinder
 
 class CommandListener(
     private val commandProcessor: CommandProcessor,
-    private val config: Config,
+    private val prefix: String,
     private val messenger: Messenger,
     private val userFinder: UserFinder
 ) : ListenerAdapter() {
@@ -22,7 +21,7 @@ class CommandListener(
 
         if (!message.isFromGuild
             || message.author.isBot
-            || !rawMessage.startsWith(config.commandPrefix)
+            || !rawMessage.startsWith(prefix)
         ) return
 
         val splits = rawMessage.removePrefix("!").removeTrailingSpaces().split(" ")

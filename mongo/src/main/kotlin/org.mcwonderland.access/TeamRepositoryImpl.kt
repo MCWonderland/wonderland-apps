@@ -5,17 +5,16 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
-import org.mcwonderland.domain.config.Config
 import org.mcwonderland.domain.model.DBTeam
 import org.mcwonderland.domain.repository.TeamRepository
 
 class TeamRepositoryImpl(
     private val mongoClient: MongoClient,
-    private val config: Config
+    private val dbName: String,
 ) : TeamRepository {
 
     private val collection
-        get() = mongoClient.getDatabase(config.dbName).getTeamCollection()
+        get() = mongoClient.getDatabase(dbName).getTeamCollection()
 
     override fun findUsersTeam(userId: String): DBTeam? {
         return collection

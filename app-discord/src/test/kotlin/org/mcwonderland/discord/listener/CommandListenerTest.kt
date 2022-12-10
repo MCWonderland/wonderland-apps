@@ -6,13 +6,11 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.discord.MessengerFake
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus
-import org.mcwonderland.domain.config.Config
-import org.mcwonderland.domain.fakes.ConfigStub
 import org.mcwonderland.domain.fakes.Dummies
-import org.mcwonderland.discord.MessengerFake
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.features.UserFinder
 import kotlin.test.Test
@@ -22,12 +20,12 @@ internal class CommandListenerTest {
 
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
-    private lateinit var config: Config
     private lateinit var userFinder: UserFinder
 
     private lateinit var messageMock: Message
     private lateinit var messenger: MessengerFake
 
+    private val prefix = "!"
     private val user = Dummies.createUserFullFilled()
     private val channelId = "channel_id"
 
@@ -35,9 +33,8 @@ internal class CommandListenerTest {
     fun setup() {
         commandProcessor = mockk(relaxed = true)
         messenger = MessengerFake()
-        config = ConfigStub()
         userFinder = UserFinderFake().apply { add(user) }
-        commandListener = CommandListener(commandProcessor, config, messenger, userFinder)
+        commandListener = CommandListener(commandProcessor, prefix, messenger, userFinder)
 
         messageMock = mockk(relaxed = true)
         every { messageMock.author.id } returns user.id
