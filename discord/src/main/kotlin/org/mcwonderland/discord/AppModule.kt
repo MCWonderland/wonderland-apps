@@ -50,13 +50,13 @@ class AppModule(
     }
 
     @Provides
-    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository): AccountLinker {
-        return DiscordMcIgnAccountLinker(mojangAccount, userRepository)
+    fun userFinder(userRepository: UserRepository): UserFinder {
+        return UserFinderDiscord(userRepository)
     }
 
     @Provides
-    fun userFinder(userRepository: UserRepository): UserFinder {
-        return UserFinderDiscord(userRepository)
+    fun accountLinker(mojangAccount: MojangAccount, userRepository: UserRepository): AccountLinker {
+        return DiscordMcIgnAccountLinker(mojangAccount, userRepository)
     }
 
     @Provides
