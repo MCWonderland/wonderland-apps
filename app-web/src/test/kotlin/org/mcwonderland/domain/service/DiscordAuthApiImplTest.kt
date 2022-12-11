@@ -4,11 +4,14 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mokulu.discord.oauth.DiscordOAuth
 import io.mokulu.discord.oauth.model.TokensResponse
+import org.jsoup.HttpStatusException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.access.DiscordApiCreator
 import org.mcwonderland.access.DiscordAuthApiImpl
 import org.mcwonderland.domain.DiscordAuthApi
+import org.mcwonderland.domain.exceptions.InvalidOAuthException
 import org.mcwonderland.domain.model.DiscordUser
 import kotlin.test.assertEquals
 
@@ -24,6 +27,8 @@ class DiscordAuthApiImplTest {
         email = "jerry@gmail.com",
         username = "jerry"
     )
+
+    private val code = "code"
 
     @BeforeEach
     fun setUp() {
@@ -42,8 +47,16 @@ class DiscordAuthApiImplTest {
     }
 
     @Test
+    fun oAuthException_shouldRemap() {
+        every { discordOAuth.getTokens(code) } throws HttpStatusException("error", 400, "url")
+
+        assertThrows<InvalidOAuthException> {
+            authApi.findUserByCode("code")
+        }
+    }
+
+    @Test
     fun shouldExtractUser() {
-        val code = "code"
         val token: TokensResponse = mockk(relaxed = true) { every { accessToken } returns this@DiscordAuthApiImplTest.accessToken }
         every { discordOAuth.getTokens(code) } returns token
 
