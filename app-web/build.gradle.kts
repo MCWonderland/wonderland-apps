@@ -13,6 +13,7 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("io.quarkus:quarkus-mongodb-client")
     implementation(project(":mongo"))
     implementation(project(":mojang"))

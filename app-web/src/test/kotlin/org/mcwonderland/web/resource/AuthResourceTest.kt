@@ -15,6 +15,7 @@ import org.mcwonderland.domain.service.AuthService
 import org.mcwonderland.domain.service.UserTokenService
 import org.mcwonderland.domain.testdoubles.UserTokenServiceFake
 import org.mcwonderland.web.Config
+import org.mcwonderland.web.logic.LoginProcess
 import org.mcwonderland.web.request.LoginRequest
 import javax.inject.Inject
 import javax.ws.rs.core.MediaType
@@ -23,18 +24,12 @@ import javax.ws.rs.core.NewCookie
 @QuarkusTest
 class AuthResourceTest {
 
-    @InjectMock(relaxed = true)
-    private lateinit var authService: AuthService
-
-    @Inject
-    lateinit var config: Config
-
-    private val userTokenService: UserTokenService = UserTokenServiceFake()
+    @InjectMock
+    private lateinit var loginProcess: LoginProcess
 
     @BeforeEach
     fun setup() {
-        QuarkusMock.installMockForType(authService, AuthService::class.java)
-        QuarkusMock.installMockForType(userTokenService, UserTokenService::class.java)
+        QuarkusMock.installMockForType(loginProcess, LoginProcess::class.java)
     }
 
 
@@ -51,27 +46,15 @@ class AuthResourceTest {
         @Test
         fun shouldCallService() {
             val request = LoginRequest("code")
-            val user = User("id")
+            val cookie = NewCookie("key", "value")
 
-            every { authService.login(request.code) } returns user
+            every { loginProcess.login(request) } returns cookie
 
             jsonReq()
                 .body(request)
                 .sendRequest()
                 .statusCode(200)
-                .header(
-                    "Set-Cookie",
-                    NewCookie(
-                        config.tokenCookieKey,
-                        userTokenService.encodeToken(user),
-                        "/",
-                        config.websiteDomain.replace("www", ""),
-                        null,
-                        -1,
-                        false,
-                        false,
-                    ).toString().plus(";SameSite=Strict")
-                )
+                .header("Set-Cookie", cookie.toString().plus(";SameSite=Strict"))
         }
 
         private fun jsonReq(): RequestSpecification {

@@ -13,6 +13,7 @@ import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.service.UserTokenService
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.mcwonderland.web.Config
+import org.mcwonderland.web.logic.LoginProcess
 import org.shanerx.mojang.Mojang
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.context.Dependent
@@ -24,6 +25,11 @@ class AppDepends {
     @ApplicationScoped
     fun authService(discordAuthApi: DiscordAuthApi, userFinder: UserFinder): AuthService {
         return AuthService(discordAuthApi, userFinder)
+    }
+
+    @ApplicationScoped
+    fun loginProcess(authService: AuthService, userTokenService: UserTokenService, config: Config): LoginProcess {
+        return LoginProcess(authService, userTokenService, config)
     }
 
     @ApplicationScoped
@@ -94,6 +100,5 @@ class AppDepends {
     fun mojangAccount(): MojangAccount {
         return MojangAccountImpl(mojangApi)
     }
-
 
 }
