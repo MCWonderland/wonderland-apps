@@ -4,13 +4,14 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.mcwonderland.discord.impl.Messenger
 import org.mcwonderland.domain.command.CommandProcessor
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.model.DiscordProfile
+import org.mcwonderland.domain.repository.UserRepository
 
 class CommandListener(
     private val commandProcessor: CommandProcessor,
     private val prefix: String,
     private val messenger: Messenger,
-    private val userFinder: UserFinder
+    private val userRepository: UserRepository,
 ) : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
@@ -28,7 +29,9 @@ class CommandListener(
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
 
-        commandProcessor.onCommand(userFinder.findOrCreate(author.id), label, args)?.let {
+        val user = userRepository.findUpdated(DiscordProfile(author.id, author.name))
+
+        commandProcessor.onCommand(user, label, args)?.let {
             it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
         }
     }

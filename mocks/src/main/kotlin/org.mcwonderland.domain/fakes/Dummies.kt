@@ -11,9 +11,10 @@ object Dummies {
 
     fun createUserFullFilled(): User {
         return User(
-            id = "123",
-            mcId = "123",
-            discordId = "123",
+            id = "id",
+            mcId = "mc_id",
+            discordId = "discord_id",
+            discordUsername = "discord_username",
             isAdmin = false
         )
     }

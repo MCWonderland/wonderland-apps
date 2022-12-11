@@ -6,21 +6,23 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.fakes.UserFinderFake
+import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.DiscordUser
+import org.mcwonderland.domain.repository.UserRepository
 import kotlin.test.assertEquals
 
 class AuthServiceTest {
 
     private lateinit var authService: AuthService
     private lateinit var discordOAuth: DiscordAuthApi
-    private lateinit var userFinder: UserFinder
+    private lateinit var userRepository: UserRepositoryFake
 
     @BeforeEach
     fun setup() {
         discordOAuth = mockk(relaxed = true)
-        userFinder = UserFinderFake()
-        authService = AuthService(discordOAuth, userFinder)
+        userRepository = UserRepositoryFake()
+        authService = AuthService(discordOAuth, userRepository)
     }
 
 
@@ -36,7 +38,7 @@ class AuthServiceTest {
 
         val user = authService.login("code")
 
-        assertEquals(user, userFinder.find(discordUser.id))
+        assertEquals(user, userRepository.findUserByDiscordId(discordUser.id))
     }
 
 

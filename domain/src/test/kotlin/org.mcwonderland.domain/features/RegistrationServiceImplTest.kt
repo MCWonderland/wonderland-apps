@@ -23,7 +23,7 @@ internal class RegistrationServiceImplTest {
 
     private lateinit var accountLinker: AccountLinkerFake
     private lateinit var registrationRepository: RegistrationRepositoryFake
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserRepositoryFake
     private lateinit var settingsRepository: SettingsRepository
 
     private lateinit var user: User

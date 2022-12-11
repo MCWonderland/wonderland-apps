@@ -1,15 +1,18 @@
 package org.mcwonderland.access
 
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.fakes.Dummies
+import org.mcwonderland.domain.model.DiscordProfile
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 internal class UserRepositoryImplTest : MongoDBTest() {
 
     private lateinit var userRepository: UserRepositoryImpl
 
-    private val user = User(id = "123", mcId = "mc_id", discordId = "discord_id", isAdmin = true)
+    private val user = Dummies.createUserFullFilled()
 
     private val userCollection
         get() = getDB().getUserCollection()
@@ -45,16 +48,39 @@ internal class UserRepositoryImplTest : MongoDBTest() {
     }
 
     @Test
-    fun insertUser() {
-        userRepository.insertUser(user)
-        assertEquals(user, userCollection.find().first())
-    }
-
-    @Test
     fun findUsers() {
         val users = listOf(user, user.copy(id = "456"))
         userCollection.insertMany(users)
 
-        assertEquals(users, userRepository.findUsers(users.map { it.id }))
+        userRepository.findUsers(users.map { it.id }).let { result ->
+            assertEquals(result.size, users.size)
+            users.forEach {
+                assertContains(result, it)
+            }
+        }
+    }
+
+
+    @Nested
+    inner class FindUpdated {
+        private val profile = DiscordProfile(user.discordId, "newName")
+
+        @Test
+        fun shouldCreateIfNotExist() {
+            val user = userRepository.findUpdated(profile)
+
+            assertEquals(profile.id, user.discordId)
+            assertEquals(profile.username, user.discordUsername)
+            assertEquals(user, userRepository.findUserByDiscordId(profile.id))
+        }
+
+        @Test
+        fun shouldKeepUpdateDiscordName() {
+            userCollection.insertOne(user)
+
+            val user = userRepository.findUpdated(profile)
+
+            assertEquals(profile.username, user.discordUsername)
+        }
     }
 }

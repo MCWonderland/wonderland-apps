@@ -24,8 +24,8 @@ class AppDepends {
     private val mojangApi = Mojang().connect()
 
     @ApplicationScoped
-    fun authService(discordAuthApi: DiscordAuthApi, userFinder: UserFinder): AuthService {
-        return AuthService(discordAuthApi, userFinder)
+    fun authService(discordAuthApi: DiscordAuthApi, userRepository: UserRepository): AuthService {
+        return AuthService(discordAuthApi, userRepository)
     }
 
     @ApplicationScoped

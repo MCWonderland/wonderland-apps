@@ -1,11 +1,25 @@
 package org.mcwonderland.domain.fakes
 
+import org.mcwonderland.domain.model.DiscordProfile
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 
 class UserRepositoryFake : UserRepository {
 
     private val users: MutableSet<User> = mutableSetOf()
+
+    override fun findUpdated(profile: DiscordProfile): User {
+        val user = findUserByDiscordId(profile.id) ?: run {
+            val newUser = User(discordId = profile.id, discordUsername = profile.username)
+            users.add(newUser)
+            newUser
+        }
+
+        user.discordUsername = profile.username
+
+        return user
+    }
+
 
     override fun findUserByMcId(mcUUID: String): User? {
         return users.find { it.mcId == mcUUID }
@@ -21,7 +35,7 @@ class UserRepositoryFake : UserRepository {
         return user
     }
 
-    override fun insertUser(user: User): User {
+    fun insertUser(user: User): User {
         users.add(user)
         return user
     }
