@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.service
+package org.mcwonderland.domain
 
 import org.mcwonderland.domain.model.DiscordUser
 

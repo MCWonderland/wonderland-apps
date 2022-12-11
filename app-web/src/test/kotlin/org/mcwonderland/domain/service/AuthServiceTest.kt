@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.fakes.UserFinderFake
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.DiscordUser

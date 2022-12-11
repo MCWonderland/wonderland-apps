@@ -2,18 +2,15 @@ package org.mcwonderland
 
 import com.mongodb.client.MongoClient
 import io.mokulu.discord.oauth.DiscordOAuth
-import org.mcwonderland.access.RegistrationRepositoryImpl
-import org.mcwonderland.access.TeamRepositoryImpl
-import org.mcwonderland.access.UserRepositoryImpl
+import org.mcwonderland.access.*
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.access.DiscordApiCreator
-import org.mcwonderland.domain.access.DiscordAuthApiImpl
 import org.mcwonderland.domain.features.*
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.domain.service.AuthService
-import org.mcwonderland.domain.service.DiscordAuthApi
+import org.mcwonderland.domain.DiscordAuthApi
+import org.mcwonderland.domain.service.UserTokenService
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.mcwonderland.web.Config
 import org.shanerx.mojang.Mojang
@@ -27,6 +24,11 @@ class AppDepends {
     @ApplicationScoped
     fun authService(discordAuthApi: DiscordAuthApi, userFinder: UserFinder): AuthService {
         return AuthService(discordAuthApi, userFinder)
+    }
+
+    @ApplicationScoped
+    fun userTokenService(): UserTokenService {
+        return UserTokenServiceImpl()
     }
 
     @ApplicationScoped

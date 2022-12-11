@@ -13,4 +13,8 @@ data class Config(
     val clientSecret: String,
     @ConfigProperty(name = "discord.redirect-uri")
     val redirectUri: String,
+    @ConfigProperty(name = "jwt.cookie-key")
+    val tokenCookieKey: String,
+    @ConfigProperty(name = "website.domain")
+    val websiteDomain: String
 )

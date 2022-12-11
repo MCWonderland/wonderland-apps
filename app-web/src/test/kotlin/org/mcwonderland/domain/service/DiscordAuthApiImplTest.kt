@@ -6,8 +6,9 @@ import io.mokulu.discord.oauth.DiscordOAuth
 import io.mokulu.discord.oauth.model.TokensResponse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mcwonderland.domain.access.DiscordApiCreator
-import org.mcwonderland.domain.access.DiscordAuthApiImpl
+import org.mcwonderland.access.DiscordApiCreator
+import org.mcwonderland.access.DiscordAuthApiImpl
+import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.model.DiscordUser
 import kotlin.test.assertEquals
 

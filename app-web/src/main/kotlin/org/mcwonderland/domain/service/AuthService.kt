@@ -1,5 +1,6 @@
 package org.mcwonderland.domain.service
 
+import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 

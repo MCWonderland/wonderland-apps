@@ -1,8 +1,8 @@
-package org.mcwonderland.domain.access
+package org.mcwonderland.access
 
 import io.mokulu.discord.oauth.DiscordOAuth
 import org.mcwonderland.domain.model.DiscordUser
-import org.mcwonderland.domain.service.DiscordAuthApi
+import org.mcwonderland.domain.DiscordAuthApi
 
 class DiscordAuthApiImpl(
     private val discordOAuth: DiscordOAuth,

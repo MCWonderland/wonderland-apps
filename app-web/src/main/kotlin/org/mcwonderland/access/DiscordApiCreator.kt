@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.access
+package org.mcwonderland.access
 
 import io.mokulu.discord.oauth.DiscordAPI
 
