@@ -6,5 +6,11 @@ import javax.enterprise.context.ApplicationScoped
 @ApplicationScoped
 data class Config(
     @ConfigProperty(name = "quarkus.mongodb.db-name")
-    val mongoDbName: String
+    val mongoDbName: String,
+    @ConfigProperty(name = "discord.client-id")
+    val clientId: String,
+    @ConfigProperty(name = "discord.client-secret")
+    val clientSecret: String,
+    @ConfigProperty(name = "discord.redirect-uri")
+    val redirectUri: String,
 )

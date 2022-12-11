@@ -1,5 +1,6 @@
 package org.mcwonderland.web.resource
 
+import org.jetbrains.annotations.NotNull
 import org.mcwonderland.domain.service.AuthService
 import org.mcwonderland.web.request.LoginRequest
 import javax.ws.rs.POST
@@ -13,7 +14,7 @@ class AuthResource(
 
     @POST
     @Path("/login")
-    fun login(request: LoginRequest): Response {
+    fun login(@NotNull request: LoginRequest): Response {
         authService.login(request.code)
         return Response.ok().build()
     }

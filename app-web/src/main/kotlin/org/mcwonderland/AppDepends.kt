@@ -1,16 +1,19 @@
 package org.mcwonderland
 
 import com.mongodb.client.MongoClient
+import io.mokulu.discord.oauth.DiscordOAuth
 import org.mcwonderland.access.RegistrationRepositoryImpl
 import org.mcwonderland.access.TeamRepositoryImpl
 import org.mcwonderland.access.UserRepositoryImpl
 import org.mcwonderland.domain.MojangAccount
+import org.mcwonderland.domain.access.DiscordApiCreator
+import org.mcwonderland.domain.access.DiscordAuthApiImpl
 import org.mcwonderland.domain.features.*
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.domain.service.AuthService
-import org.mcwonderland.domain.service.DiscordOAuth
+import org.mcwonderland.domain.service.DiscordAuthApi
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.mcwonderland.web.Config
 import org.shanerx.mojang.Mojang
@@ -22,8 +25,26 @@ class AppDepends {
     private val mojangApi = Mojang().connect()
 
     @ApplicationScoped
-    fun authService(discordOAuth: DiscordOAuth, userFinder: UserFinder): AuthService {
-        return AuthService(discordOAuth, userFinder)
+    fun authService(discordAuthApi: DiscordAuthApi, userFinder: UserFinder): AuthService {
+        return AuthService(discordAuthApi, userFinder)
+    }
+
+    @ApplicationScoped
+    fun discordAuthApi(config: Config, discordApiCreator: DiscordApiCreator): DiscordAuthApi {
+        return DiscordAuthApiImpl(
+            DiscordOAuth(
+                config.clientId,
+                config.clientSecret,
+                config.redirectUri,
+                emptyArray()
+            ),
+            discordApiCreator
+        )
+    }
+
+    @ApplicationScoped
+    fun discordApiCreator(): DiscordApiCreator {
+        return DiscordApiCreator()
     }
 
     @ApplicationScoped

@@ -4,7 +4,7 @@ import org.mcwonderland.domain.features.UserFinder
 import org.mcwonderland.domain.model.User
 
 class AuthService(
-    private val discordOAuth: DiscordOAuth,
+    private val discordOAuth: DiscordAuthApi,
     private val userFinder: UserFinder
 ) {
 
