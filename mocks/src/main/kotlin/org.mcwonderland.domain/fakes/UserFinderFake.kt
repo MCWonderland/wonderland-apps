@@ -10,10 +10,6 @@ class UserFinderFake : UserFinder {
         return users[platformId]
     }
 
-    override fun findOrCreate(platformId: String): User {
-        return users.getOrPut(platformId) { User(id = platformId) }
-    }
-
     fun add(member: User) {
         users[member.id] = member
     }

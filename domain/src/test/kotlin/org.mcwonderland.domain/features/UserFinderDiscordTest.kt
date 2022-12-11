@@ -1,21 +1,17 @@
 package org.mcwonderland.domain.features
 
-import io.mockk.every
-import io.mockk.mockkStatic
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.domain.features.UserFinderDiscord
+import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.fakes.UserRepositoryFake
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.model.User
 import java.util.*
-import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 internal class UserFinderDiscordTest {
 
     private lateinit var userFinder: UserFinder
     private lateinit var userRepository: UserRepositoryFake
-
-    private val fixedUuid = UUID.randomUUID()
 
     @BeforeEach
     fun setup() {
@@ -24,19 +20,16 @@ internal class UserFinderDiscordTest {
     }
 
     @Test
-    fun userNotExistInDB_shouldCreate() {
-        mockUuid()
-
-        val discordId = "123456789"
-        val user = userFinder.findOrCreate(discordId)
-
-        assertEquals(discordId, user.discordId)
-        assertEquals(fixedUuid.toString(), user.id)
-        assertEquals(userRepository.findUserByDiscordId(discordId), user)
+    fun userWithDiscordIdNotExist_shouldNull() {
+        assertNull(userFinder.find("123"))
     }
 
-    private fun mockUuid() {
-        mockkStatic(UUID::class)
-        every { UUID.randomUUID() } returns fixedUuid
+    @Test
+    fun userExists_shouldReturn() {
+        val expected = User(discordId = "hello")
+        userRepository.addUser(expected)
+
+        assertEquals(expected, userFinder.find("hello"))
     }
+
 }
