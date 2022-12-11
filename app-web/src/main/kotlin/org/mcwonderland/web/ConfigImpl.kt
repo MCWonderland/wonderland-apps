@@ -15,6 +15,11 @@ data class ConfigImpl(
     override val redirectUri: String,
     @ConfigProperty(name = "jwt.cookie-key")
     override val tokenCookieKey: String,
+    @ConfigProperty(name = "jwt.secret")
+    override val jwtSecret: String,
+    @ConfigProperty(name = "jwt.issuer")
+    override val jwtIssuer: String,
     @ConfigProperty(name = "website.domain")
-    override val websiteDomain: String
-) : Config
+    override val websiteDomain: String,
+) : Config {
+}

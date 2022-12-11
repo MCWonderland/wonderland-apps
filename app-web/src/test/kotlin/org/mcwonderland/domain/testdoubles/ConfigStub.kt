@@ -9,4 +9,6 @@ class ConfigStub : Config {
     override val redirectUri: String = "test"
     override val tokenCookieKey: String = "test"
     override val websiteDomain: String = "test"
+    override val jwtSecret: String = "test"
+    override val jwtIssuer: String = "test"
 }

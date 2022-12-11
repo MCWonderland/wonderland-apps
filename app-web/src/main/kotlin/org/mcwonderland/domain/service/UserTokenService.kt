@@ -4,5 +4,5 @@ import org.mcwonderland.domain.model.User
 
 interface UserTokenService {
     fun encodeToken(user: User): String
-    fun decodeToken(token: String): User
+    fun decodeToken(token: String): User?
 }

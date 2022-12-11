@@ -1,5 +1,6 @@
 package org.mcwonderland
 
+import com.auth0.jwt.algorithms.Algorithm
 import com.mongodb.client.MongoClient
 import io.mokulu.discord.oauth.DiscordOAuth
 import org.mcwonderland.access.*
@@ -33,8 +34,13 @@ class AppDepends {
     }
 
     @ApplicationScoped
-    fun userTokenService(): UserTokenService {
-        return UserTokenServiceImpl()
+    fun userTokenService(config: Config): UserTokenService {
+        return UserTokenServiceImpl(
+            JwtConfig(
+                issuer = config.jwtIssuer,
+                algorithm = Algorithm.HMAC256(config.jwtSecret),
+            )
+        )
     }
 
     @ApplicationScoped

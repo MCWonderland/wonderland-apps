@@ -25,6 +25,7 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("com.github.Mokulu:discord-oauth2-api:1.0.2")
+    implementation("com.auth0:java-jwt:4.2.1")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")

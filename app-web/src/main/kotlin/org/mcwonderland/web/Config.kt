@@ -7,4 +7,6 @@ interface Config {
     val redirectUri: String
     val tokenCookieKey: String
     val websiteDomain: String
+    val jwtSecret: String
+    val jwtIssuer: String
 }
