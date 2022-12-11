@@ -13,5 +13,4 @@ class TeamResource(private val teamService: TeamService) {
         return Response.ok(mapOf("teams" to teamService.listTeams())).build()
     }
 
-
 }
