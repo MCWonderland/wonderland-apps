@@ -86,18 +86,13 @@ internal class RegistrationServiceImplTest {
     inner class ListRegistrations {
 
         @Test
-        fun withoutPermission_shouldDenied() {
-            assertThrows<PermissionDeniedException> { registrationService.listRegistrations(user) }
-        }
-
-        @Test
         fun shouldReturnRegisteredUsers() {
             userRepository.insertUser(user)
             registrationRepository.addRegistration(user.id)
 
             user.addAdminPerm()
 
-            val result = registrationService.listRegistrations(user)
+            val result = registrationService.listRegistrations()
 
             assertTrue { result.contains(user) }
         }

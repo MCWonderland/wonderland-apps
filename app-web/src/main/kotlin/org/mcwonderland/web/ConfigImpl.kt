@@ -21,5 +21,7 @@ data class ConfigImpl(
     override val jwtIssuer: String,
     @ConfigProperty(name = "website.domain")
     override val websiteDomain: String,
+    @ConfigProperty(name = "settings.id")
+    override val settingsId: String,
 ) : Config {
 }

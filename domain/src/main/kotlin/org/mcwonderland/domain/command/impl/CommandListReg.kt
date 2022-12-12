@@ -17,7 +17,9 @@ class CommandListReg(
     override fun execute(sender: User, args: List<String>): CommandResponse {
 
         return try {
-            val users = registrationService.listRegistrations(sender)
+            sender.checkAdminPermission()
+
+            val users = registrationService.listRegistrations()
             ok(messages.listRegistrations(users))
         } catch (e: PermissionDeniedException) {
             fail(messages.noPermission())

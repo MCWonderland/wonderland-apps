@@ -20,19 +20,17 @@ internal class CommandListRegTest : CommandTestBase() {
     }
 
     @Test
-    fun shouldCallService() {
-        val expectUsers = listOf(User(), User())
-        every { registrationService.listRegistrations(sender) } returns expectUsers
-
-        executeWithNoArgs().assertSuccess(messages.listRegistrations(expectUsers))
+    fun wihtoutPerm_shouldFail() {
+        executeCommand("listreg").assertFail(messages.noPermission())
     }
 
     @Test
-    fun testExceptionMapping(){
-        every { registrationService.listRegistrations(sender) } throws PermissionDeniedException()
+    fun shouldCallService() {
+        val expectUsers = listOf(User(), User())
+        sender.addAdminPerm()
+        every { registrationService.listRegistrations() } returns expectUsers
 
-        executeWithNoArgs().assertFail(messages.noPermission())
+        executeWithNoArgs().assertSuccess(messages.listRegistrations(expectUsers))
     }
-
 
 }

@@ -11,4 +11,5 @@ class ConfigStub : Config {
     override val websiteDomain: String = "test"
     override val jwtSecret: String = "test"
     override val jwtIssuer: String = "test"
+    override val settingsId: String = "test"
 }

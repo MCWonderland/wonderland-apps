@@ -11,6 +11,7 @@ import org.mcwonderland.domain.repository.TeamRepository
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.domain.service.AuthService
 import org.mcwonderland.domain.DiscordAuthApi
+import org.mcwonderland.domain.repository.SettingsRepository
 import org.mcwonderland.domain.service.UserTokenService
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.mcwonderland.web.Config
@@ -46,6 +47,21 @@ class AppDepends {
                 issuer = config.jwtIssuer,
                 algorithm = Algorithm.HMAC256(config.jwtSecret),
             )
+        )
+    }
+
+    @ApplicationScoped
+    fun registrationService(
+        accountLinker: AccountLinker,
+        registrationRepository: RegistrationRepository,
+        settingsRepository: SettingsRepository,
+        userRepository: UserRepository
+    ): RegistrationService {
+        return RegistrationServiceImpl(
+            accountLinker,
+            registrationRepository,
+            settingsRepository,
+            userRepository
         )
     }
 
@@ -91,6 +107,11 @@ class AppDepends {
     @ApplicationScoped
     fun userRepository(mongoClient: MongoClient, config: Config): UserRepository {
         return UserRepositoryImpl(mongoClient, config.mongoDbName)
+    }
+
+    @ApplicationScoped
+    fun settingsRepository(mongoClient: MongoClient, config: Config): SettingsRepository {
+        return SettingsRepositoryImpl(mongoClient, config.mongoDbName, config.settingsId)
     }
 
     @ApplicationScoped
