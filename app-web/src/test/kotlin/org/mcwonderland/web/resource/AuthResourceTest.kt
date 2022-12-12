@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.NewCookie
 
 @QuarkusTest
-class AuthResourceTest {
+class AuthResourceTest : ResourceTest() {
 
     @InjectMock
     private lateinit var loginProcess: LoginProcess
@@ -40,7 +40,7 @@ class AuthResourceTest {
         fun withoutBody_should400() {
             jsonReq()
                 .sendRequest()
-                .statusCode(400)
+                .assertBadRequest()
         }
 
         @Test
@@ -53,7 +53,7 @@ class AuthResourceTest {
             jsonReq()
                 .body(request)
                 .sendRequest()
-                .statusCode(200)
+                .assertOk()
                 .header("Set-Cookie", cookie.toString().plus(";SameSite=Strict"))
         }
 

@@ -14,6 +14,7 @@ class UserTokenServiceImpl(private val jwtSettings: JwtConfig) : UserTokenServic
             .withClaim("discordId", user.discordId)
             .withClaim("discordUsername", user.discordUsername)
             .withClaim("mcId", user.mcId)
+            .withClaim("mcUsername", user.mcUsername)
             .withClaim("isAdmin", user.isAdmin)
             .withIssuer(jwtSettings.issuer)
             .sign(jwtSettings.algorithm)
@@ -27,6 +28,7 @@ class UserTokenServiceImpl(private val jwtSettings: JwtConfig) : UserTokenServic
                 id = jwt.getClaim("id").asString(),
                 discordId = jwt.getClaim("discordId").asString(),
                 discordUsername = jwt.getClaim("discordUsername").asString(),
+                mcUsername = jwt.getClaim("mcUsername").asString(),
                 mcId = jwt.getClaim("mcId").asString(),
                 isAdmin = jwt.getClaim("isAdmin").asBoolean()
             )

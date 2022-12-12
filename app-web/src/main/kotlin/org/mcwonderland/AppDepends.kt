@@ -14,6 +14,7 @@ import org.mcwonderland.domain.DiscordAuthApi
 import org.mcwonderland.domain.service.UserTokenService
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.mcwonderland.web.Config
+import org.mcwonderland.web.TokenExtractor
 import org.mcwonderland.web.logic.LoginProcess
 import org.shanerx.mojang.Mojang
 import javax.enterprise.context.ApplicationScoped
@@ -31,6 +32,11 @@ class AppDepends {
     @ApplicationScoped
     fun loginProcess(authService: AuthService, userTokenService: UserTokenService, config: Config): LoginProcess {
         return LoginProcess(authService, userTokenService, config)
+    }
+
+    @ApplicationScoped
+    fun tokenExtractor(config: Config, userTokenService: UserTokenService): TokenExtractor {
+        return TokenExtractor(config, userTokenService)
     }
 
     @ApplicationScoped

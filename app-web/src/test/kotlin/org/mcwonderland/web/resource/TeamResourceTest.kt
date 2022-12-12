@@ -15,7 +15,7 @@ import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 
 @QuarkusTest
-class TeamResourceTest {
+class TeamResourceTest : ResourceTest() {
 
     @InjectMock
     private lateinit var teamService: TeamService
@@ -34,7 +34,7 @@ class TeamResourceTest {
                 .`when`()
                 .get("/teams")
                 .then()
-                .statusCode(200)
+                .assertOk()
                 .body("teams[0].id", equalTo(excepted.id))
         }
     }

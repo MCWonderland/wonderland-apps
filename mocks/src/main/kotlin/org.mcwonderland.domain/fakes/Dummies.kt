@@ -13,6 +13,7 @@ object Dummies {
         return User(
             id = "id",
             mcId = "mc_id",
+            mcUsername = "mc_username",
             discordId = "discord_id",
             discordUsername = "discord_username",
             isAdmin = false
