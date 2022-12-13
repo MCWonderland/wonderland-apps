@@ -6,12 +6,14 @@ import org.mcwonderland.domain.service.UserTokenService
 
 class UserTokenServiceFake : UserTokenService {
 
+    private val gson = Gson()
+
     override fun encodeToken(user: User): String {
-        return Gson().toJson(user)
+        return gson.toJson(user)
     }
 
     override fun decodeToken(token: String): User {
-        return Gson().fromJson(token, User::class.java)
+        return gson.fromJson(token, User::class.java)
     }
 
 }
