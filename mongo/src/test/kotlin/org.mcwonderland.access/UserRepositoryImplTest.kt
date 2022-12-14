@@ -29,8 +29,7 @@ internal class UserRepositoryImplTest : MongoDBTest() {
     fun findByMcId() {
         userCollection.insertOne(user.toMongoUser())
 
-
-        assertTrue(user.equals(userRepository.findUserByMcId("mc_id")))
+        assertEquals(user, userRepository.findUserByMcId(user.mcProfile.uuid))
     }
 
     @Test
