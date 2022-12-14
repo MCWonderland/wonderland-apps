@@ -16,7 +16,9 @@ class CommandListTeams(
 
     override fun execute(sender: User, args: List<String>): CommandResponse {
         return try {
-            val teams = this.teamService.listTeams(sender)
+            sender.checkAdminPermission()
+
+            val teams = this.teamService.listTeams()
             ok(messages.teamList(teams))
         } catch (e: PermissionDeniedException) {
             fail(messages.noPermission())

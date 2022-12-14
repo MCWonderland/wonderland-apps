@@ -13,23 +13,32 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation("io.quarkus:quarkus-hibernate-validator")
+    implementation("io.quarkus:quarkus-mongodb-client")
+    implementation(project(":mongo"))
+    implementation(project(":mojang"))
+
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-kotlin")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive")
+    implementation("com.github.Mokulu:discord-oauth2-api:1.0.2")
+    implementation("com.auth0:java-jwt:4.2.1")
+
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.quarkiverse.mockk:quarkus-junit5-mockk:1.1.1")
 }
 
 group = "org.mcwonderland"
 version = "1.0.0-SNAPSHOT"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
+//java {
+//    sourceCompatibility = JavaVersion.VERSION_11
+//    targetCompatibility = JavaVersion.VERSION_11
+//}
 
 tasks.withType<Test> {
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")

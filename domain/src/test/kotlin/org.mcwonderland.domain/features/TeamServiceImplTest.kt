@@ -7,10 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.domain.exceptions.*
-import org.mcwonderland.domain.fakes.IdGeneratorFixed
-import org.mcwonderland.domain.fakes.TeamRepositoryFake
-import org.mcwonderland.domain.fakes.UserFinderFake
-import org.mcwonderland.domain.fakes.UserRepositoryFake
+import org.mcwonderland.domain.fakes.*
 import org.mcwonderland.domain.model.*
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -26,11 +23,11 @@ internal class TeamServiceImplTest {
     private lateinit var accountLinker: AccountLinker
     private lateinit var idGenerator: IdGenerator
 
-    private lateinit var user: User
+    private lateinit var user: UserStub
 
     @BeforeEach
-    fun setup() {
-        user = User()
+    fun setUp() {
+        user = Dummies.createUserFullFilled()
         userFinder = UserFinderFake()
         teamRepository = TeamRepositoryFake()
         userRepository = UserRepositoryFake()
@@ -43,7 +40,7 @@ internal class TeamServiceImplTest {
     @Nested
     inner class CreateTeam {
 
-        private val member = User(id = "member_id")
+        private val member = Dummies.createUserFullFilled()
 
         @Test
         fun executorWithoutPerm_shouldDenied() {
@@ -142,18 +139,13 @@ internal class TeamServiceImplTest {
     inner class ListTeams {
 
         @Test
-        fun executorWithoutPerm_shouldDenied() {
-            assertThrows<PermissionDeniedException> { teamService.listTeams(user) }
-        }
-
-        @Test
         fun shouldListTeams() {
-            val member = User(id = "member_id")
+            val member = Dummies.createUserFullFilled()
             val team = teamRepository.createTeamWithUsers(member).toTeam(listOf(member))
             userRepository.addUser(member)
             user.addAdminPerm()
 
-            val teams = teamService.listTeams(user)
+            val teams = teamService.listTeams()
 
             assertEquals(listOf(team), teams)
         }
@@ -164,7 +156,7 @@ internal class TeamServiceImplTest {
     inner class RemoveFromTeam {
 
         private val targetId = "target_id"
-        private val target = User(id = "target_id")
+        private val target = Dummies.createUserFullFilled().apply { id = targetId }
 
         @Test
         fun withoutPermission_shouldDenied() {
@@ -217,7 +209,7 @@ internal class TeamServiceImplTest {
     inner class AddUserToTeam {
 
         private val teamId = "team_id"
-        private val target = User(id = "target_id")
+        private val target = Dummies.createUserFullFilled()
 
         @Test
         fun withoutPermission_shouldDenied() {

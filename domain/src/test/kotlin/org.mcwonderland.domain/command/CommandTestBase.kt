@@ -3,6 +3,8 @@ package org.mcwonderland.domain.command
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
+import org.mcwonderland.domain.fakes.Dummies
+import org.mcwonderland.domain.fakes.UserStub
 import org.mcwonderland.domain.model.User
 import kotlin.test.assertEquals
 
@@ -12,10 +14,11 @@ abstract class CommandTestBase {
     protected lateinit var messages: Messages
         private set
 
-    protected val sender = User("user")
+    protected lateinit var sender: UserStub
 
     @BeforeEach
     fun setupCommandTestBase() {
+        sender = Dummies.createUserFullFilled()
         messages = MessagesStub()
     }
 

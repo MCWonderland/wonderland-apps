@@ -11,8 +11,8 @@ import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.fakes.Dummies
-import org.mcwonderland.domain.fakes.UserFinderFake
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.fakes.UserRepositoryFake
+import org.mcwonderland.domain.model.User
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,26 +20,30 @@ internal class CommandListenerTest {
 
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
-    private lateinit var userFinder: UserFinder
+    private lateinit var userRepository: UserRepositoryFake
 
     private lateinit var messageMock: Message
     private lateinit var messenger: MessengerFake
 
+    private val user: User = Dummies.createUserFullFilled()
+
     private val prefix = "!"
-    private val user = Dummies.createUserFullFilled()
     private val channelId = "channel_id"
 
     @BeforeEach
     fun setup() {
         commandProcessor = mockk(relaxed = true)
         messenger = MessengerFake()
-        userFinder = UserFinderFake().apply { add(user) }
-        commandListener = CommandListener(commandProcessor, prefix, messenger, userFinder)
+        userRepository = UserRepositoryFake()
+        commandListener = CommandListener(commandProcessor, prefix, messenger, userRepository)
 
         messageMock = mockk(relaxed = true)
-        every { messageMock.author.id } returns user.id
-        every { messageMock.channel.id } returns channelId
 
+        userRepository.insertUser(user)
+
+        every { messageMock.author.id } returns user.discordProfile.id
+        every { messageMock.author.name } returns user.discordProfile.username
+        every { messageMock.channel.id } returns channelId
     }
 
     @Test

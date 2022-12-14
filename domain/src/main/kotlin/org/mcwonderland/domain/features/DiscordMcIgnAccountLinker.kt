@@ -1,10 +1,9 @@
-package org.mcwonderland.discord.impl
+package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.MojangAccount
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
-import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.UserRepository
 
@@ -14,8 +13,8 @@ class DiscordMcIgnAccountLinker(
 ) : AccountLinker {
 
     override fun link(user: User, userIgn: String): User {
-        if (user.mcId.isNotEmpty())
-            throw AccountAlreadyLinkedException(user.mcId)
+        if (isLinked(user))
+            throw AccountAlreadyLinkedException(user.mcProfile.uuid)
 
         val uuid = mojangAccount.getUUIDByName(userIgn) ?: throw MCAccountNotFoundException(userIgn)
 
@@ -26,7 +25,7 @@ class DiscordMcIgnAccountLinker(
     }
 
     override fun isLinked(user: User): Boolean {
-        return user.mcId.isNotEmpty()
+        return user.mcProfile.hasUuid()
     }
 
 }

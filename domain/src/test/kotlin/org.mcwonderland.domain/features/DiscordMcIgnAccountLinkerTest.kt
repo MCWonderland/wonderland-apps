@@ -1,17 +1,15 @@
-package org.mcwonderland.discord
+package org.mcwonderland.domain.features
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mcwonderland.discord.impl.DiscordMcIgnAccountLinker
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.MojangAccountFake
 import org.mcwonderland.domain.fakes.UserRepositoryFake
-import org.mcwonderland.domain.model.User
 import kotlin.test.assertEquals
 
 internal class DiscordMcIgnAccountLinkerTest {
@@ -20,7 +18,7 @@ internal class DiscordMcIgnAccountLinkerTest {
     private lateinit var mojangAccount: MojangAccountFake
     private lateinit var userRepository: UserRepositoryFake
 
-    private val sender = Dummies.createUserDefault()
+    private val sender = Dummies.createUserEmpty()
 
     @BeforeEach
     fun setUp() {
@@ -34,12 +32,12 @@ internal class DiscordMcIgnAccountLinkerTest {
     inner class LinkAccount {
         @Test
         fun alreadyLinked_shouldThrowException() {
-            sender.mcId = "123"
+            sender.mcProfile.uuid = "123"
 
             assertThrows<AccountAlreadyLinkedException> {
                 linker.link(sender, "target")
             }.also {
-                assertEquals(it.linkedId, sender.mcId)
+                assertEquals(it.linkedId, sender.mcProfile.uuid)
             }
         }
 
@@ -56,7 +54,7 @@ internal class DiscordMcIgnAccountLinkerTest {
         fun targetAccountAlreadyLinked_shouldThrowException() {
             val account = mojangAccount.addRandomAccount()
 
-            userRepository.addUser(User(mcId = account.uuid.toString()))
+            userRepository.addUser(Dummies.createUserEmpty().apply { mcProfile.uuid = account.uuid.toString() })
 
             assertThrows<MCAccountLinkedByOthersException> {
                 linker.link(sender, account.name)
@@ -73,7 +71,7 @@ internal class DiscordMcIgnAccountLinkerTest {
 
             linker.link(sender, account.name)
 
-            assertEquals(account.uuid.toString(), sender.mcId)
+            assertEquals(account.uuid.toString(), sender.mcProfile.uuid)
         }
     }
 
@@ -86,9 +84,10 @@ internal class DiscordMcIgnAccountLinkerTest {
 
         @Test
         fun shouldTrueIfMcIdExists() {
-            sender.mcId = "123"
+            sender.mcProfile.uuid = "123"
             assertEquals(true, linker.isLinked(sender))
         }
 
     }
+
 }

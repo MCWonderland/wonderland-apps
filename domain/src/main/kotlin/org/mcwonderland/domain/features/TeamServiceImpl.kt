@@ -30,8 +30,7 @@ class TeamServiceImpl(
     }
 
 
-    override fun listTeams(executor: User): List<Team> {
-        executor.checkAdminPermission()
+    override fun listTeams(): List<Team> {
 
         val dbTeams = teamRepository.findAll()
         val users = userRepository.findUsers(dbTeams.map { it.members }.flatten())

@@ -10,6 +10,7 @@ import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.repository.UserRepository
 import org.shanerx.mojang.Mojang
 
 
@@ -52,7 +53,7 @@ fun main() {
             CommandProcessorImpl(commands, messages),
             config.commandPrefix,
             messenger,
-            injector.getInstance(UserFinder::class.java)
+            injector.getInstance(UserRepository::class.java)
         ),
     )
 }

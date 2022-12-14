@@ -7,7 +7,7 @@ import org.mcwonderland.domain.model.UserModification
 
 interface TeamService {
     fun createTeam(executor: User, ids: List<String>): Team
-    fun listTeams(executor: User): List<Team>
+    fun listTeams(): List<Team>
     fun removeFromTeam(modification: UserModification): Team
     fun addUserToTeam(modification: UserModification, teamId: String): AddToTeamResult
     fun deleteTeam(sender: User, teamId: String)

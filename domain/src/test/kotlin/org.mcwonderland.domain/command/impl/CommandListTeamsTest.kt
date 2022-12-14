@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
@@ -20,23 +21,29 @@ internal class CommandListTeamsTest : CommandTestBase() {
         command = CommandListTeams("listteams", teamService, messages)
     }
 
+    @Test
+    fun withoutPerm_shouldDenied() {
+        executeCommand("listteams").assertFail(messages.noPermission())
+    }
 
     @Test
     fun shouldResponseFromService() {
-        val members = listOf(User("member"))
+        val members = listOf(Dummies.createUserFullFilled())
         val teams = listOf(Team(members = members))
 
-        every { teamService.listTeams(sender) } returns teams
+        sender.addAdminPerm()
+        every { teamService.listTeams() } returns teams
 
         executeWithNoArgs().assertSuccess(messages.teamList(teams))
     }
 
     @Test
     fun testExceptionMapping() {
-        every { teamService.listTeams(sender) } throws PermissionDeniedException()
+        every { teamService.listTeams() } throws PermissionDeniedException()
 
         executeWithNoArgs().assertFail(messages.noPermission())
     }
+
 
 
 }

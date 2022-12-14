@@ -11,7 +11,7 @@ dependencies {
 
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "org.mcwonderland.ApplicationKt"
+        attributes["Main-Class"] = "org.mcwonderland.discord.ApplicationKt"
     }
     configurations["compileClasspath"].forEach { file: File ->
         from(zipTree(file.absoluteFile))
