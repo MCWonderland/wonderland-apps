@@ -50,7 +50,7 @@ fun main() {
 
     jda.addEventListener(
         CommandListener(
-            CommandProcessorImpl(commands, messages),
+            CommandProcessorImpl(commands),
             config.commandPrefix,
             messenger,
             injector.getInstance(UserRepository::class.java)
