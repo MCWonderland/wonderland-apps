@@ -5,10 +5,9 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.commands.CommandListReg
 
 internal class CommandListRegTest : CommandTestBase() {
 

@@ -10,8 +10,8 @@ import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
+import org.mcwonderland.domain.commands.CommandRemoveTeam
 import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.UserModification
 
 internal class CommandRemoveTeamTest : CommandTestBase() {

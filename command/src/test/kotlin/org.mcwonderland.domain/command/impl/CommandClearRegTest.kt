@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
+import org.mcwonderland.domain.commands.CommandClearReg
 
 class CommandClearRegTest : CommandTestBase() {
 

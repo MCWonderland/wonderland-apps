@@ -8,8 +8,8 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
+import org.mcwonderland.domain.commands.CommandListTeams
 import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
 
 internal class CommandListTeamsTest : CommandTestBase() {
 

@@ -7,9 +7,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.discord.impl.MessengerImpl
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.command.CommandProcessorImpl
-import org.mcwonderland.domain.command.impl.*
 import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.repository.UserRepository
 import org.shanerx.mojang.Mojang
 

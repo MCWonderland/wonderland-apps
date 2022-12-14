@@ -9,6 +9,7 @@ import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.commands.CommandLink
 import kotlin.test.Test
 
 class CommandLinkTest : CommandTestBase() {

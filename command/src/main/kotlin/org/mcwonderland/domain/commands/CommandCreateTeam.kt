@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse

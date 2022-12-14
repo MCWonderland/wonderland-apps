@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.features.TeamService
+import org.mcwonderland.domain.commands.CommandDeleteTeam
 
 class CommandDeleteTeamTest : CommandTestBase() {
 

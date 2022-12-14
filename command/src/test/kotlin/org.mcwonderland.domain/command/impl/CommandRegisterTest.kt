@@ -8,6 +8,7 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
+import org.mcwonderland.domain.commands.CommandRegister
 
 internal class CommandRegisterTest : CommandTestBase() {
 

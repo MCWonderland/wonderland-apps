@@ -11,6 +11,7 @@ import org.mcwonderland.domain.exceptions.UserAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
+import org.mcwonderland.domain.commands.CommandAddToTeam
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.UserModification
 
