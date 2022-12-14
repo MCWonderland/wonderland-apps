@@ -147,9 +147,9 @@ class MessagesImpl(private val mojangAccount: MojangAccount) : Messages {
         return "${discordTag(user)}(${mcName(user)})"
     }
 
-    private fun discordTag(user: User) = discordTag(user.discordId)
+    private fun discordTag(user: User) = discordTag(user.discordProfile.id)
     private fun discordTag(id: String): String = "<@${id}>"
-    private fun mcName(user: User): String = mojangAccount.getNameByUUID(user.mcId) ?: "未知的 ID"
+    private fun mcName(user: User): String = mojangAccount.getNameByUUID(user.discordProfile.username) ?: "未知的 ID"
 
     private fun mcName(uuid: String) = mojangAccount.getNameByUUID(uuid) ?: "未知的 ID"
 }

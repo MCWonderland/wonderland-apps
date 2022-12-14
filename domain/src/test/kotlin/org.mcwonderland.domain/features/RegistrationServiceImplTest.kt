@@ -7,10 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
-import org.mcwonderland.domain.fakes.AccountLinkerFake
-import org.mcwonderland.domain.fakes.RegistrationRepositoryFake
-import org.mcwonderland.domain.fakes.SettingsRepositoryFake
-import org.mcwonderland.domain.fakes.UserRepositoryFake
+import org.mcwonderland.domain.fakes.*
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.SettingsRepository
 import org.mcwonderland.domain.repository.UserRepository
@@ -26,11 +23,11 @@ internal class RegistrationServiceImplTest {
     private lateinit var userRepository: UserRepositoryFake
     private lateinit var settingsRepository: SettingsRepository
 
-    private lateinit var user: User
+    private lateinit var user: UserStub
 
     @BeforeEach
     fun setUp() {
-        user = User("user_id")
+        user = Dummies.createUserFullFilled()
 
         accountLinker = AccountLinkerFake()
         registrationRepository = RegistrationRepositoryFake()

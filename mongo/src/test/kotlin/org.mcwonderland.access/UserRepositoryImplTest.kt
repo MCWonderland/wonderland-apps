@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.fakes.Dummies
-import org.mcwonderland.domain.model.DiscordProfile
+import org.mcwonderland.domain.fakes.UserStub
+import org.mcwonderland.domain.model.User
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class UserRepositoryImplTest : MongoDBTest() {
 
@@ -25,32 +27,34 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
     @Test
     fun findByMcId() {
-        userCollection.insertOne(user)
+        userCollection.insertOne(user.toMongoUser())
 
-        assertEquals(user, userRepository.findUserByMcId("mc_id"))
+
+        assertTrue(user.equals(userRepository.findUserByMcId("mc_id")))
     }
 
     @Test
     fun findByDiscordId() {
-        userCollection.insertOne(user)
+        insert(user)
 
         assertEquals(user, userRepository.findUserByDiscordId("discord_id"))
     }
 
     @Test
     fun updateMcId() {
-        userCollection.insertOne(user)
+        insert(user)
 
         val newMcId = "new_mc_id"
         val user = userRepository.updateMcId(user.id, newMcId)
 
-        assertEquals(newMcId, user?.mcId)
+        assertEquals(newMcId, user?.mcProfile?.uuid)
     }
 
     @Test
     fun findUsers() {
-        val users = listOf(user, user.copy(id = "456"))
-        userCollection.insertMany(users)
+        val users = listOf(user, UserStub(id = "456"))
+
+        users.forEach { insert(it) }
 
         userRepository.findUsers(users.map { it.id }).let { result ->
             assertEquals(result.size, users.size)
@@ -63,24 +67,27 @@ internal class UserRepositoryImplTest : MongoDBTest() {
 
     @Nested
     inner class FindUpdated {
-        private val profile = DiscordProfile(user.discordId, "newName")
+        private val profile = user.discordProfile.copy(username = "newName")
 
         @Test
         fun shouldCreateIfNotExist() {
             val user = userRepository.findUpdated(profile)
 
-            assertEquals(profile.id, user.discordId)
-            assertEquals(profile.username, user.discordUsername)
+            assertEquals(profile, user.discordProfile)
             assertEquals(user, userRepository.findUserByDiscordId(profile.id))
         }
 
         @Test
         fun shouldKeepUpdateDiscordName() {
-            userCollection.insertOne(user)
+            insert(user)
 
             val user = userRepository.findUpdated(profile)
 
-            assertEquals(profile.username, user.discordUsername)
+            assertEquals(profile.username, user.discordProfile.username)
         }
+    }
+
+    private fun insert(user: User) {
+        userCollection.insertOne(user.toMongoUser())
     }
 }

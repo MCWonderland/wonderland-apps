@@ -41,8 +41,8 @@ internal class CommandListenerTest {
 
         userRepository.insertUser(user)
 
-        every { messageMock.author.id } returns user.discordId
-        every { messageMock.author.name } returns user.discordUsername
+        every { messageMock.author.id } returns user.discordProfile.id
+        every { messageMock.author.name } returns user.discordProfile.username
         every { messageMock.channel.id } returns channelId
     }
 

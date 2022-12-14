@@ -1,6 +1,13 @@
 package org.mcwonderland.domain.model
 
 data class DiscordProfile(
-    val id: String,
-    val username: String,
-)
+    var id: String = "",
+    var username: String = ""
+) {
+    fun toMap(): Map<String, String> {
+        return mapOf(
+            "id" to id,
+            "username" to username
+        )
+    }
+}

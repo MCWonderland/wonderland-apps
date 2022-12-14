@@ -8,6 +8,7 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException
+import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
@@ -31,7 +32,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
 
     @Test
     fun shouldCallService() {
-        val membersLeftAfterRemoved = listOf(User("member_left"))
+        val membersLeftAfterRemoved = listOf(Dummies.createUserFullFilled())
         val expectTeam = Team(members = membersLeftAfterRemoved)
 
         every { teamService.removeFromTeam(UserModification(sender, "target")) } returns expectTeam
@@ -41,7 +42,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
 
     @Test
     fun testExceptionMapping() {
-        val target = User()
+        val target = Dummies.createUserFullFilled()
 
         assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
         assertExceptionMapping(UserNotFoundException("target"), messages.userNotFound("target"))

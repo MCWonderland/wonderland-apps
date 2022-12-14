@@ -22,28 +22,28 @@ class UserRepositoryImpl(
 
     override fun findUpdated(profile: DiscordProfile): User {
         return userCollection.findOneAndUpdate(
-            eq(User::discordId.name, profile.id),
+            eq(MongoUser::discordId.name, profile.id),
             combine(
                 setOnInsert("_id", UUID.randomUUID().toString()),
-                setOnInsert(User::discordId.name, profile.id),
-                set(User::discordUsername.name, profile.username),
+                setOnInsert(MongoUser::discordId.name, profile.id),
+                set(MongoUser::discordUsername.name, profile.username),
             ),
             FindOneAndUpdateOptions().upsert(true).returnDocument(ReturnDocument.AFTER)
         )!!
     }
 
     override fun findUserByMcId(mcUUID: String): User? {
-        return userCollection.find(eq(User::mcId.name, mcUUID)).first()
+        return userCollection.find(eq(MongoUser::mcId.name, mcUUID)).first()
     }
 
     override fun findUserByDiscordId(discordId: String): User? {
-        return userCollection.find(eq(User::discordId.name, discordId)).first()
+        return userCollection.find(eq(MongoUser::discordId.name, discordId)).first()
     }
 
     override fun updateMcId(userId: String, mcId: String): User? {
         return userCollection.findOneAndUpdate(
             eq("_id", userId),
-            set(User::mcId.name, mcId),
+            set(MongoUser::mcId.name, mcId),
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
     }

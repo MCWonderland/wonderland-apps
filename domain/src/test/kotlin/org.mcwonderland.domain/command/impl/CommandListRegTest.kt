@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
@@ -26,7 +27,7 @@ internal class CommandListRegTest : CommandTestBase() {
 
     @Test
     fun shouldCallService() {
-        val expectUsers = listOf(User(), User())
+        val expectUsers = listOf(Dummies.createUserFullFilled(), Dummies.createUserFullFilled())
         sender.addAdminPerm()
         every { registrationService.listRegistrations() } returns expectUsers
 

@@ -13,8 +13,8 @@ class DiscordMcIgnAccountLinker(
 ) : AccountLinker {
 
     override fun link(user: User, userIgn: String): User {
-        if (user.mcId.isNotEmpty())
-            throw AccountAlreadyLinkedException(user.mcId)
+        if (isLinked(user))
+            throw AccountAlreadyLinkedException(user.mcProfile.uuid)
 
         val uuid = mojangAccount.getUUIDByName(userIgn) ?: throw MCAccountNotFoundException(userIgn)
 
@@ -25,7 +25,7 @@ class DiscordMcIgnAccountLinker(
     }
 
     override fun isLinked(user: User): Boolean {
-        return user.mcId.isNotEmpty()
+        return user.mcProfile.hasUuid()
     }
 
 }

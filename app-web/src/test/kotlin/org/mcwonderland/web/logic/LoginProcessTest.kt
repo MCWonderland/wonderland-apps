@@ -7,6 +7,7 @@ import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.fakes.UserStub
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.service.AuthService
 import org.mcwonderland.domain.testdoubles.ConfigStub
@@ -39,7 +40,7 @@ class LoginProcessTest {
     @Test
     fun shouldCallService() {
         val request = LoginRequest("code")
-        val user = User("id")
+        val user = UserStub("id")
 
         every { authService.login(request.code) } returns user
 

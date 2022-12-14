@@ -1,21 +1,21 @@
 package org.mcwonderland.domain.fakes
 
+import org.mcwonderland.domain.model.DiscordProfile
+import org.mcwonderland.domain.model.McProfile
 import org.mcwonderland.domain.model.Team
-import org.mcwonderland.domain.model.User
+import java.util.UUID
 
 object Dummies {
 
-    fun createUserDefault(): User {
-        return User(id = "123")
+    fun createUserEmpty(): UserStub {
+        return UserStub()
     }
 
-    fun createUserFullFilled(): User {
-        return User(
-            id = "id",
-            mcId = "mc_id",
-            mcUsername = "mc_username",
-            discordId = "discord_id",
-            discordUsername = "discord_username",
+    fun createUserFullFilled(): UserStub {
+        return UserStub(
+            id = UUID.randomUUID().toString(),
+            McProfile("mc_id", "mc_username"),
+            DiscordProfile("discord_id", "discord_username"),
             isAdmin = false
         )
     }

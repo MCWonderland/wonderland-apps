@@ -8,7 +8,7 @@ import org.mcwonderland.domain.model.DBTeam
 import org.mcwonderland.domain.model.Settings
 import org.mcwonderland.domain.model.User
 
-fun MongoDatabase.getUserCollection(): MongoCollection<User> = getCollection("user", User::class.java)
+fun MongoDatabase.getUserCollection(): MongoCollection<MongoUser> = getCollection("user", MongoUser::class.java)
 fun MongoDatabase.getTeamCollection(): MongoCollection<DBTeam> = getCollection("team", DBTeam::class.java)
 
 fun MongoDatabase.getRegistrationCollection(): MongoCollection<RegistrationContext> =

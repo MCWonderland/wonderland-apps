@@ -2,9 +2,8 @@ package org.mcwonderland.domain.features
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.UserRepositoryFake
-import org.mcwonderland.domain.model.User
-import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -26,7 +25,7 @@ internal class UserFinderDiscordTest {
 
     @Test
     fun userExists_shouldReturn() {
-        val expected = User(discordId = "hello")
+        val expected = Dummies.createUserEmpty().apply { discordProfile.id = "hello" }
         userRepository.addUser(expected)
 
         assertEquals(expected, userFinder.find("hello"))

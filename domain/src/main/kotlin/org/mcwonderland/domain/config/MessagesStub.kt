@@ -16,7 +16,7 @@ class MessagesStub : Messages {
 
     override fun membersAlreadyInTeam(ids: List<User>): String =
         "以下成員已經在隊伍當中了: ${
-            ids.map { userTag(it.discordId) }.joinToString(", ")
+            ids.map { userTag(it) }.joinToString(", ")
         }"
 
     override fun accountAlreadyLinked(id: String): String = "你的帳號已經連結過了"
@@ -25,24 +25,26 @@ class MessagesStub : Messages {
     override fun invalidArg(argName: String): String = "缺少或是無效的參數: $argName"
     override fun teamCreated(team: Team): String =
         "隊伍已經建立，成員: ${
-            team.members.map { userTag(it.discordId) }
+            team.members.map { userTag(it) }
                 .joinToString(", ")
         }"
 
+    private fun userTag(user: User): String = "<@${user.discordProfile.id}>"
     private fun userTag(id: String): String = "<@${id}>"
+    
     override fun teamList(teams: List<Team>): String = teams.mapIndexed { index, team ->
-        "隊伍 ${index}, 成員: ${team.members.map { userTag(it.discordId) }.joinToString(", ")}"
+        "隊伍 ${index}, 成員: ${team.members.map { userTag(it) }.joinToString(", ")}"
     }.joinToString("\n")
 
     override fun noPermission(): String = "你沒有權限執行這個操作"
     override fun userNotFound(targetId: String): String = "找不到使用者的數據: ${userTag(targetId)}"
 
-    override fun userNotInTeam(target: User): String = "使用者 ${userTag(target.discordId)} 不在任何隊伍當中"
+    override fun userNotInTeam(target: User): String = "使用者 ${userTag(target)} 不在任何隊伍當中"
 
     override fun userRemovedFromTeam(expectTeam: Team): String = "使用者已經從隊伍中移除"
     override fun membersNotLinked(listOf: List<User>): String {
         return "以下成員尚未連結帳號: ${
-            listOf.map { userTag(it.discordId) }
+            listOf.map { userTag(it) }
                 .joinToString(", ")
         }"
     }
@@ -52,7 +54,7 @@ class MessagesStub : Messages {
     }
 
     override fun linked(foundedUser: User): String {
-        return "已經連結帳號: ${foundedUser.mcId}"
+        return "已經連結帳號: ${foundedUser.mcProfile.username}"
     }
 
     override fun registered(): String {
@@ -65,7 +67,7 @@ class MessagesStub : Messages {
 
     override fun listRegistrations(users: Collection<User>): String {
         return "已經註冊的玩家: ${
-            users.map { it.mcId }
+            users.map { it.mcProfile.username }
                 .joinToString(", ")
         }"
     }
