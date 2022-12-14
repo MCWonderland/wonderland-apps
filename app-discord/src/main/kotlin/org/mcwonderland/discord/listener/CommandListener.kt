@@ -31,9 +31,7 @@ class CommandListener(
 
         val user = userRepository.findUpdated(DiscordProfile(author.id, author.name))
 
-        commandProcessor.onCommand(user, label, args)?.let {
-            it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
-        }
+        commandProcessor.onCommand(user, label, args)
     }
 
     private fun String.removeTrailingSpaces(): String {

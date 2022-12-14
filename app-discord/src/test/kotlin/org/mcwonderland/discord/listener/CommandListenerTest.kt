@@ -106,11 +106,10 @@ internal class CommandListenerTest {
             )
         )
 
-        every { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) } returns response
 
         sendMessage()
 
-        assertEquals(response.messages, messenger.messages)
+        verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
     }
 
     private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {

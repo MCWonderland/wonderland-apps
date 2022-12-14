@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.fakes
+package org.mcwonderland.domain.command
 
 import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandResponse

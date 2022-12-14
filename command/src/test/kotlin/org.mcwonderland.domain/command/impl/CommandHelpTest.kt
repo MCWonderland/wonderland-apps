@@ -3,7 +3,7 @@ package org.mcwonderland.domain.command.impl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.fakes.CommandStub
+import org.mcwonderland.domain.command.CommandStub
 
 class CommandHelpTest : CommandTestBase() {
 
