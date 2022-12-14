@@ -5,7 +5,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.command.CommandStub
+import org.mcwonderland.domain.command.CommandDummy
 import org.mcwonderland.domain.commands.CommandHelp
 import org.mcwonderland.domain.commands.CommandHelpHandle
 
@@ -14,8 +14,8 @@ class CommandHelpTest : CommandTestBase() {
     private lateinit var handle: CommandHelpHandle
 
     private val commands = listOf(
-        CommandStub("cmdA"),
-        CommandStub("cmdB"),
+        CommandDummy("cmdA"),
+        CommandDummy("cmdB"),
     )
 
     @BeforeEach

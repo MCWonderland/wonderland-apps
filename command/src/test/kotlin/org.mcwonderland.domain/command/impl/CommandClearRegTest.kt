@@ -20,6 +20,7 @@ class CommandClearRegTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         registrationService = mockk(relaxed = true)
+        handle = mockk(relaxed = true)
         command = CommandClearReg("clearreg", registrationService, handle)
     }
 

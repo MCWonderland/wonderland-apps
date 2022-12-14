@@ -2,31 +2,36 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.commands.CommandToggleReg
+import org.mcwonderland.domain.commands.CommandToggleRegHandle
+import org.mcwonderland.domain.features.RegistrationService
 
 class CommandToggleRegTest : CommandTestBase() {
 
     private lateinit var service: RegistrationService
+    private lateinit var handle: CommandToggleRegHandle
 
     @BeforeEach
     fun setup() {
         service = mockk(relaxed = true)
-        command = CommandToggleReg("togglereg", service, messages)
+        handle = mockk(relaxed = true)
+        command = CommandToggleReg("togglereg", service, handle)
     }
 
     @Test
     fun shouldCallRegistrationService() {
-        assertToggleMessage(true, messages.nowAcceptRegistrations())
-        assertToggleMessage(false, messages.noLongerAcceptRegistrations())
+        assertToggleMessage(true) { handle.onEnableRegistrations() }
+        assertToggleMessage(false) { handle.onDisableRegisttrations() }
     }
 
-    private fun assertToggleMessage(state: Boolean, msg: String) {
+    private fun assertToggleMessage(state: Boolean, toggle: () -> Unit) {
         every { service.toggleAllowRegistrations(sender) } returns state
-        executeWithNoArgs().assertSuccess(msg)
+        executeWithNoArgs()
+        verify { toggle() }
     }
 
 

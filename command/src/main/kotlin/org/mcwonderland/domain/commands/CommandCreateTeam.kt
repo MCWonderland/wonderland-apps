@@ -1,10 +1,8 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.CommandResponse
 import org.mcwonderland.domain.command.handles.FailNoPermission
 import org.mcwonderland.domain.command.handles.FailWithUsage
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
@@ -29,7 +27,7 @@ class CommandCreateTeam(
             val team = teamService.createTeam(sender, args)
             handle.success(team)
         } catch (e: PermissionDeniedException) {
-            handle.failNoPermission(e)
+            handle.failPermissionDenied(e)
         } catch (e: MemberCantBeEmptyException) {
             handle.failMembersCantBeEmpty(e)
         } catch (e: UsersNotFoundException) {
@@ -43,7 +41,6 @@ class CommandCreateTeam(
 
 interface CommandCreateTeamHandle : FailWithUsage, FailNoPermission {
     fun success(team: Team)
-    fun failNoPermission(e: PermissionDeniedException)
     fun failMembersCantBeEmpty(e: MemberCantBeEmptyException)
     fun failUsersNotFound(e: UsersNotFoundException)
     fun failUsersAlreadyInTeam(e: UsersAlreadyInTeamException)

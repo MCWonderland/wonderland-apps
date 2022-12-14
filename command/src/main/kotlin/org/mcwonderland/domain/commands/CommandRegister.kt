@@ -1,8 +1,6 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
@@ -11,21 +9,32 @@ import org.mcwonderland.domain.model.User
 class CommandRegister(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val messages: Messages
+    private val handle: CommandRegisterHandle
 ) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(sender: User, args: List<String>): CommandResponse {
+    override fun execute(sender: User, args: List<String>) {
 
         return try {
             val newState = registrationService.toggleRegister(sender)
-            ok(if (newState) messages.registered() else messages.unRegistered())
+
+            if (newState)
+                handle.onRegistered()
+            else
+                handle.onUnregistered()
         } catch (e: RequireLinkedAccountException) {
-            return fail(messages.requireLinkedAccount())
-        } catch (e: NotAllowRegistrationsException){
-            return fail(messages.notAllowRegistrations())
+            handle.failRequireLinkedAccount(e)
+        } catch (e: NotAllowRegistrationsException) {
+            handle.failNotAllowRegistrations(e)
         }
 
     }
 
+}
+
+interface CommandRegisterHandle {
+    fun onRegistered()
+    fun onUnregistered()
+    fun failRequireLinkedAccount(e: RequireLinkedAccountException)
+    fun failNotAllowRegistrations(e: NotAllowRegistrationsException)
 }

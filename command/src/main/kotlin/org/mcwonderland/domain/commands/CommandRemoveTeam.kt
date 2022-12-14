@@ -1,40 +1,44 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.domain.command.handles.FailWithUsage
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException
 import org.mcwonderland.domain.features.TeamService
+import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.UserModification
 
 class CommandRemoveTeam(
     override val label: String,
     private val teamService: TeamService,
-    private val messages: Messages
+    private val handle: CommandRemoveTeamHandle
 ) : Command {
 
     override val usage: String = "/$label <user>"
 
-    override fun execute(sender: User, args: List<String>): CommandResponse {
-        if (args.isEmpty())
-            return failWithUsage()
-
-        val targetId = args[0]
-
+    override fun execute(sender: User, args: List<String>) {
+        val targetId = args.getOrNull(0) ?: return handle.failWithUsage(usage)
 
         return try {
             val teamAfterRemoveTarget = teamService.removeFromTeam(UserModification(sender, targetId))
-            ok(messages.userRemovedFromTeam(teamAfterRemoveTarget))
+            handle.onSuccess(teamAfterRemoveTarget)
         } catch (e: PermissionDeniedException) {
-            fail(messages.noPermission())
+            handle.failPermissionDenied(e)
         } catch (e: UserNotFoundException) {
-            fail(messages.userNotFound(targetId))
+            handle.failUserNotFound(e)
         } catch (e: UserNotInTeamException) {
-            fail(messages.userNotInTeam(e.user))
+            handle.failUserNotInTeam(e)
         }
     }
 
 }
+
+interface CommandRemoveTeamHandle : FailWithUsage {
+    fun onSuccess(teamAfterRemoveTarget: Team)
+    fun failPermissionDenied(e: PermissionDeniedException)
+    fun failUserNotFound(e: UserNotFoundException)
+    fun failUserNotInTeam(e: UserNotInTeamException)
+}
+

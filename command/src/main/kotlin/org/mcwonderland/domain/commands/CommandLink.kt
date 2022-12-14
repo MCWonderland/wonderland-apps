@@ -1,8 +1,6 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
@@ -23,11 +21,11 @@ class CommandLink(
             val userLinked = accountLinker.link(sender, uuid)
             handle.linked(userLinked)
         } catch (e: AccountAlreadyLinkedException) {
-            handle.accountAlreadyLinked(e)
+            handle.failAccountAlreadyLinked(e)
         } catch (e: MCAccountNotFoundException) {
-            handle.mcAccountNotFound(e)
+            handle.failMcAccountNotFound(e)
         } catch (e: MCAccountLinkedByOthersException) {
-            handle.mcAccountLinkedByOthers(e)
+            handle.failMcAccountLinkedByOthers(e)
         }
     }
 
@@ -36,7 +34,7 @@ class CommandLink(
 interface CommandLinkHandle {
     fun missingArgId()
     fun linked(userLinked: User)
-    fun accountAlreadyLinked(e: AccountAlreadyLinkedException)
-    fun mcAccountNotFound(e: MCAccountNotFoundException)
-    fun mcAccountLinkedByOthers(e: MCAccountLinkedByOthersException)
+    fun failAccountAlreadyLinked(e: AccountAlreadyLinkedException)
+    fun failMcAccountNotFound(e: MCAccountNotFoundException)
+    fun failMcAccountLinkedByOthers(e: MCAccountLinkedByOthersException)
 }

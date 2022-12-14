@@ -2,44 +2,49 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
+import org.mcwonderland.domain.commands.CommandRegister
+import org.mcwonderland.domain.commands.CommandRegisterHandle
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.commands.CommandRegister
 
 internal class CommandRegisterTest : CommandTestBase() {
 
     private lateinit var registerService: RegistrationService
+    private lateinit var handle: CommandRegisterHandle
 
     @BeforeEach
     fun setUp() {
         registerService = mockk(relaxed = true)
-        command = CommandRegister("register", registerService, messages)
+        handle = mockk(relaxed = true)
+        command = CommandRegister("register", registerService, handle)
     }
 
     @Test
     fun shouldSendMessageBaseOnState() {
-        assertToggleStateMessage(true, messages.registered())
-        assertToggleStateMessage(false, messages.unRegistered())
+        assertStateToggled(true) { handle.onRegistered() }
+        assertStateToggled(false) { handle.onUnregistered() }
     }
 
     @Test
     fun testExceptionMapping() {
-        assertExceptionMapping(RequireLinkedAccountException(), messages.requireLinkedAccount())
-        assertExceptionMapping(NotAllowRegistrationsException(), messages.notAllowRegistrations())
+        assertExceptionMapping(RequireLinkedAccountException()) { handle.failRequireLinkedAccount(it) }
+        assertExceptionMapping(NotAllowRegistrationsException()) { handle.failNotAllowRegistrations(it) }
     }
 
-    private fun assertExceptionMapping(exception: Exception, message: String) {
+    private fun <T : Exception> assertExceptionMapping(exception: T, block: (T) -> Unit) {
         every { registerService.toggleRegister(sender) } throws exception
-        executeWithNoArgs().assertFail(message)
+        executeWithNoArgs()
+        verify { block(exception) }
     }
 
-    private fun assertToggleStateMessage(state: Boolean, message: String) {
+    private fun assertStateToggled(state: Boolean, block: () -> Unit) {
         every { registerService.toggleRegister(sender) } returns state
-
-        executeWithNoArgs().assertSuccess(message)
+        executeWithNoArgs()
+        verify { block() }
     }
 }

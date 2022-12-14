@@ -48,7 +48,7 @@ class CommandAddToTeamTest : CommandTestBase() {
 
         every { teamService.addUserToTeam(UserModification(sender, "targetId"), "teamId") } returns result
 
-        executeCommand("teamId id1").also { verify { handle.onAdded(result) } }
+        executeCommand("teamId targetId").also { verify { handle.onAdded(result) } }
     }
 
     @Test
@@ -60,7 +60,7 @@ class CommandAddToTeamTest : CommandTestBase() {
     }
 
     private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {
-        every { teamService.addUserToTeam(UserModification(sender, "targetId"), "teamId") } throws ex
+        every { teamService.addUserToTeam(UserModification(sender, "id1"), "teamId") } throws ex
         executeCommand("teamId id1")
         verify { function(ex) }
     }

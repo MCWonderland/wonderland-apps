@@ -2,28 +2,31 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.commands.CommandListTeams
+import org.mcwonderland.domain.commands.CommandListTeamsHandle
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.commands.CommandListTeams
 import org.mcwonderland.domain.model.Team
 
 internal class CommandListTeamsTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
+    private lateinit var handle: CommandListTeamsHandle
 
     @BeforeEach
     fun setUp() {
         teamService = mockk(relaxed = true)
-        command = CommandListTeams("listteams", teamService, messages)
+        handle = mockk(relaxed = true)
+        command = CommandListTeams("listteams", teamService, handle)
     }
 
     @Test
     fun withoutPerm_shouldDenied() {
-        executeCommand("listteams").assertFail(messages.noPermission())
+        executeCommand("listteams").also { verify { handle.failNoPermission() } }
     }
 
     @Test
@@ -34,16 +37,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
         sender.addAdminPerm()
         every { teamService.listTeams() } returns teams
 
-        executeWithNoArgs().assertSuccess(messages.teamList(teams))
+        executeWithNoArgs().also { verify { handle.success(teams) } }
     }
-
-    @Test
-    fun testExceptionMapping() {
-        every { teamService.listTeams() } throws PermissionDeniedException()
-
-        executeWithNoArgs().assertFail(messages.noPermission())
-    }
-
-
 
 }
