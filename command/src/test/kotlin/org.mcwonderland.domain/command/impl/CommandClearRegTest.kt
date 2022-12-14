@@ -9,33 +9,36 @@ import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.commands.CommandClearReg
+import org.mcwonderland.domain.commands.CommandClearRegHandle
+import org.mcwonderland.domain.model.UserModification
 
 class CommandClearRegTest : CommandTestBase() {
 
     private lateinit var registrationService: RegistrationService
+    private lateinit var handle: CommandClearRegHandle
 
     @BeforeEach
     fun setup() {
         registrationService = mockk(relaxed = true)
-        command = CommandClearReg("clearreg", registrationService, messages)
+        command = CommandClearReg("clearreg", registrationService, handle)
     }
 
     @Test
     fun shouldCallService() {
         executeWithNoArgs()
             .also { verify { registrationService.clearRegistrations(sender) } }
-            .also { it.assertSuccess(messages.registrationsCleared()) }
+            .also { verify { handle.onCleared() } }
     }
 
     @Test
     fun testExceptionMessageMappings() {
-        assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
     }
 
-    private fun assertExceptionMapping(exception: Exception, noPermission: String) {
-        every { registrationService.clearRegistrations(sender) } throws exception
-        executeWithNoArgs().assertFail(noPermission)
+    private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {
+        every { registrationService.clearRegistrations(sender) } throws ex
+        executeWithNoArgs()
+        verify { function(ex) }
     }
-
 
 }

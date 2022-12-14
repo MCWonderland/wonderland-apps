@@ -5,8 +5,6 @@ import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.UserStub
-import org.mcwonderland.domain.model.User
-import kotlin.test.assertEquals
 
 abstract class CommandTestBase {
 
@@ -22,27 +20,16 @@ abstract class CommandTestBase {
         messages = MessagesStub()
     }
 
-    fun executeCommand(exeString: String): CommandResponse {
+    fun executeCommand(exeString: String) {
         return command.execute(sender, exeString.split(" "))
     }
 
-    fun executeWithNoArgs(): CommandResponse {
+    fun executeWithNoArgs() {
         return command.execute(sender, listOf())
     }
 
-    fun executeCommand(args: List<String>): CommandResponse {
+    fun executeCommand(args: List<String>) {
         return command.execute(sender, args)
-    }
-
-
-    fun CommandResponse.assertFail(message: String) {
-        assertEquals(message, messages.last())
-        assertEquals(CommandStatus.FAILURE, status)
-    }
-
-    fun CommandResponse.assertSuccess(message: String) {
-        assertEquals(CommandStatus.SUCCESS, status)
-        assertEquals(message, messages.last())
     }
 
 

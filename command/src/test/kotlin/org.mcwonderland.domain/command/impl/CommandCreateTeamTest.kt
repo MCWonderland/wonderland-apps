@@ -2,6 +2,7 @@ package org.mcwonderland.domain.command.impl
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandTestBase
@@ -12,11 +13,13 @@ import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.commands.CommandCreateTeam
+import org.mcwonderland.domain.commands.CommandCreateTeamHandle
 import org.mcwonderland.domain.model.Team
 
 internal class CommandCreateTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
+    private lateinit var handle: CommandCreateTeamHandle
 
     private val ids = listOf("id", "id2")
     private val team = Team(members = listOf(Dummies.createUserFullFilled()))
@@ -24,33 +27,36 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @BeforeEach
     fun setup() {
         teamService = mockk(relaxed = true)
-        command = CommandCreateTeam("createTeam", teamService, messages)
+        handle = mockk(relaxed = true)
+        command = CommandCreateTeam("createTeam", teamService, handle)
     }
 
     @Test
     fun withoutArgs_shouldShowUsage() {
-        executeWithNoArgs().assertFail(command.usage)
+        executeWithNoArgs().also {
+            verify { handle.failWithUsage(command.usage) }
+        }
     }
 
     @Test
     fun testExceptionMessageMappings() {
-        assertExceptionMapping(PermissionDeniedException(), messages.noPermission())
-        assertExceptionMapping(MemberCantBeEmptyException(), messages.membersCantBeEmpty())
-        assertExceptionMapping(UsersNotFoundException(listOf("1")), messages.membersCouldNotFound(listOf("1")))
-        assertExceptionMapping(
-            UsersAlreadyInTeamException(listOf(sender)),
-            messages.membersAlreadyInTeam(listOf(sender))
-        )
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
+        assertExceptionMapping(MemberCantBeEmptyException()) { handle.failMembersCantBeEmpty(it) }
+        assertExceptionMapping(UsersNotFoundException(listOf("1"))) { handle.failUsersNotFound(it) }
+        assertExceptionMapping(UsersAlreadyInTeamException(listOf(sender))) { handle.failUsersAlreadyInTeam(it) }
     }
 
-    private fun assertExceptionMapping(exception: Exception, noPermission: String) {
-        every { teamService.createTeam(any(), any()) } throws exception
-        executeCommand(ids).assertFail(noPermission)
+    private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {
+        every { teamService.createTeam(any(), any()) } throws ex
+        executeCommand(ids)
+        verify { function(ex) }
     }
 
     @Test
     fun success_shouldSendMessage() {
         every { teamService.createTeam(sender, ids) } returns team
-        executeCommand(ids).assertSuccess(messages.teamCreated(team))
+        executeCommand(ids).also {
+            verify { handle.success(team) }
+        }
     }
 }

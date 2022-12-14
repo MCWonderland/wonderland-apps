@@ -12,23 +12,31 @@ import org.mcwonderland.domain.model.User
 class CommandLink(
     override val label: String,
     private val accountLinker: AccountLinker,
-    private val messages: Messages
+    private val handle: CommandLinkHandle
 ) : Command {
     override val usage: String = "/$label <minecraft username>"
 
-    override fun execute(sender: User, args: List<String>): CommandResponse {
-        val uuid = args.getOrNull(0) ?: return fail(messages.invalidArg("mcIgn"))
+    override fun execute(sender: User, args: List<String>) {
+        val uuid = args.getOrNull(0) ?: return handle.missingArgId()
 
         return try {
             val userLinked = accountLinker.link(sender, uuid)
-            ok(messages.linked(userLinked))
+            handle.linked(userLinked)
         } catch (e: AccountAlreadyLinkedException) {
-            fail(messages.accountAlreadyLinked(e.linkedId))
+            handle.accountAlreadyLinked(e)
         } catch (e: MCAccountNotFoundException) {
-            fail(messages.mcAccountWithIgnNotFound(e.searchStr))
+            handle.mcAccountNotFound(e)
         } catch (e: MCAccountLinkedByOthersException) {
-            fail(messages.targetAccountAlreadyLink(e.ign))
+            handle.mcAccountLinkedByOthers(e)
         }
     }
 
+}
+
+interface CommandLinkHandle {
+    fun missingArgId()
+    fun linked(userLinked: User)
+    fun accountAlreadyLinked(e: AccountAlreadyLinkedException)
+    fun mcAccountNotFound(e: MCAccountNotFoundException)
+    fun mcAccountLinkedByOthers(e: MCAccountLinkedByOthersException)
 }
