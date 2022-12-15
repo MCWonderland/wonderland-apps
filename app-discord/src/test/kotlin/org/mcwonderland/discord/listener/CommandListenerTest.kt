@@ -6,6 +6,8 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.discord.CommandHistory
+import org.mcwonderland.discord.CommandRecord
 import org.mcwonderland.discord.MessengerFake
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.command.CommandResponse
@@ -21,6 +23,7 @@ internal class CommandListenerTest {
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
     private lateinit var userRepository: UserRepositoryFake
+    private lateinit var commandHistory: CommandHistory
 
     private lateinit var messageMock: Message
     private lateinit var messenger: MessengerFake
@@ -35,7 +38,8 @@ internal class CommandListenerTest {
         commandProcessor = mockk(relaxed = true)
         messenger = MessengerFake()
         userRepository = UserRepositoryFake()
-        commandListener = CommandListener(commandProcessor, prefix, messenger, userRepository)
+        commandHistory = CommandHistory()
+        commandListener = CommandListener(commandProcessor, prefix, userRepository, commandHistory)
 
         messageMock = mockk(relaxed = true)
 
@@ -97,19 +101,10 @@ internal class CommandListenerTest {
     @Test
     fun shouldSendMessages() {
         mockMessageAndPrefix("!cw command sub")
-
-        val response = CommandResponse(
-            status = CommandStatus.SUCCESS,
-            messages = listOf(
-                "message1",
-                "message2"
-            )
-        )
-
-
         sendMessage()
 
         verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
+        assertEquals(commandHistory.get(), CommandRecord(messageMock.channel, user))
     }
 
     private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {

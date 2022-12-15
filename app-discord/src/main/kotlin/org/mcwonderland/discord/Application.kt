@@ -27,32 +27,29 @@ fun main() {
         ServiceModule()
     )
 
-    val messenger = MessengerImpl()
-    val messages = injector.getInstance(Messages::class.java)
     val config = injector.getInstance(Config::class.java)
 
-
     val commands = mutableListOf(
-        injector.getInstance(CommandAddToTeam::class.java),
-        injector.getInstance(CommandClearReg::class.java),
-        injector.getInstance(CommandCreateTeam::class.java),
-        injector.getInstance(CommandDeleteTeam::class.java),
+//        injector.getInstance(CommandAddToTeam::class.java),
+//        injector.getInstance(CommandClearReg::class.java),
+//        injector.getInstance(CommandCreateTeam::class.java),
+//        injector.getInstance(CommandDeleteTeam::class.java),
         injector.getInstance(CommandLink::class.java),
-        injector.getInstance(CommandListReg::class.java),
-        injector.getInstance(CommandListTeams::class.java),
-        injector.getInstance(CommandRegister::class.java),
-        injector.getInstance(CommandRemoveTeam::class.java),
-        injector.getInstance(CommandToggleReg::class.java)
+//        injector.getInstance(CommandListReg::class.java),
+//        injector.getInstance(CommandListTeams::class.java),
+//        injector.getInstance(CommandRegister::class.java),
+//        injector.getInstance(CommandRemoveTeam::class.java),
+//        injector.getInstance(CommandToggleReg::class.java)
     )
 
-    commands.add(CommandHelp("help", commands, messages))
+//    commands.add(CommandHelp("help", commands, messages))
 
     jda.addEventListener(
         CommandListener(
             CommandProcessorImpl(commands),
             config.commandPrefix,
-            messenger,
-            injector.getInstance(UserRepository::class.java)
+            injector.getInstance(UserRepository::class.java),
+            CommandHistory()
         ),
     )
 }
