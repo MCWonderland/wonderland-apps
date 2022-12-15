@@ -1,40 +1,36 @@
 package org.mcwonderland.discord.commands
 
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder
+import org.mcwonderland.discord.config.Messages
+import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.domain.commands.CommandLinkHandle
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.model.User
 
-class CommandLinkHandleImpl : CommandLinkHandle {
+class CommandLinkHandleImpl(
+    private val messages: Messages,
+    private val history: CommandHistory
+) : CommandLinkHandle {
 
     override fun missingArgId() {
-        //create embed message with two buttons
-        //one button is to link the account
-        //another button is to cancel
-
-        EmbedBuilder()
-            .setTitle("Link your Minecraft account")
-            .setDescription("Please enter your Minecraft username")
-            .build()
+        history.createEmbed(messages.missingArg("mcIgn")).queue()
     }
 
     override fun linked(userLinked: User) {
-        TODO("Not yet implemented")
+        history.createEmbed(messages.linked(userLinked)).queue()
     }
 
     override fun failAccountAlreadyLinked(e: AccountAlreadyLinkedException) {
-        TODO("Not yet implemented")
+        history.createEmbed(messages.accountAlreadyLinked(e.linkedId)).queue()
     }
 
     override fun failMcAccountNotFound(e: MCAccountNotFoundException) {
-        TODO("Not yet implemented")
+        history.createEmbed(messages.mcAccountWithIgnNotFound(e.searchStr)).queue()
     }
 
     override fun failMcAccountLinkedByOthers(e: MCAccountLinkedByOthersException) {
-        TODO("Not yet implemented")
+        history.createEmbed(messages.targetAccountAlreadyLink(e.ign)).queue()
     }
 
 }

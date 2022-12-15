@@ -2,9 +2,8 @@ package org.mcwonderland.discord.listener
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.mcwonderland.discord.CommandHistory
-import org.mcwonderland.discord.CommandRecord
-import org.mcwonderland.discord.impl.Messenger
+import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.discord.module.CommandRecord
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.model.DiscordProfile
 import org.mcwonderland.domain.repository.UserRepository
@@ -32,8 +31,8 @@ class CommandListener(
 
         val user = userRepository.findUpdated(DiscordProfile(author.id, author.name))
 
-        commandProcessor.onCommand(user, label, args)
         commandHistory.add(CommandRecord(event.channel, user))
+        commandProcessor.onCommand(user, label, args)
     }
 
     private fun String.removeTrailingSpaces(): String {

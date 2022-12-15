@@ -1,5 +1,8 @@
 package org.mcwonderland.discord
 
+import org.mcwonderland.discord.config.CommandLabels
+import org.mcwonderland.discord.config.CommandLabelsDefault
+import org.mcwonderland.discord.config.Config
 import java.util.*
 
 class AppConfig(private val properties: Properties) : Config {

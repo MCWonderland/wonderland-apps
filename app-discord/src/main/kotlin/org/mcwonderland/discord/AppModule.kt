@@ -3,15 +3,11 @@ package org.mcwonderland.discord
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import net.dv8tion.jda.api.JDA
-import org.mcwonderland.domain.features.DiscordMcIgnAccountLinker
-import org.mcwonderland.domain.features.UserFinderDiscord
+import org.mcwonderland.discord.config.CommandLabels
+import org.mcwonderland.discord.config.Config
+import org.mcwonderland.discord.config.Messages
 import org.mcwonderland.domain.MojangAccount
-import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.config.MessagesImpl
-import org.mcwonderland.domain.features.AccountLinker
-import org.mcwonderland.domain.features.IdGenerator
-import org.mcwonderland.domain.features.IdGeneratorImpl
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.features.*
 import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.shanerx.mojang.Mojang
@@ -44,7 +40,7 @@ class AppModule(
 
     @Provides
     fun messages(mojangAccount: MojangAccount): Messages {
-        return MessagesImpl(mojangAccount)
+        return Messages(mojangAccount)
     }
 
     @Provides

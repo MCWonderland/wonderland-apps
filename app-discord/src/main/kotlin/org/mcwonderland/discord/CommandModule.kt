@@ -3,10 +3,13 @@ package org.mcwonderland.discord
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import org.mcwonderland.discord.commands.CommandLinkHandleImpl
-import org.mcwonderland.domain.commands.*
+import org.mcwonderland.discord.config.CommandLabels
+import org.mcwonderland.discord.config.Messages
+import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.domain.commands.CommandLink
 import org.mcwonderland.domain.features.AccountLinker
 
-class CommandModule : AbstractModule() {
+class CommandModule(private val commandHistory: CommandHistory) : AbstractModule() {
 
     interface CommandProviders {
         val commandLabels: CommandLabels
@@ -22,11 +25,15 @@ class CommandModule : AbstractModule() {
     }
 
     @Provides
-    fun commandLink(providers: CommandProviders, accountLinker: AccountLinker): CommandLink {
+    fun commandLink(
+        providers: CommandProviders,
+        accountLinker: AccountLinker,
+        messages: Messages,
+    ): CommandLink {
         return CommandLink(
             label = providers.commandLabels.link,
             accountLinker = accountLinker,
-            handle = CommandLinkHandleImpl()
+            handle = CommandLinkHandleImpl(messages, commandHistory)
         )
     }
 //

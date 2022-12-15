@@ -1,4 +1,4 @@
-package org.mcwonderland.discord
+package org.mcwonderland.discord.config
 
 interface Config {
     val commandPrefix: String

@@ -3,10 +3,13 @@ package org.mcwonderland.discord
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.discord.module.CommandHistoryImpl
+import org.mcwonderland.discord.module.CommandRecord
 
-class CommandHistoryTest {
+class CommandHistoryImplTest {
 
-    private val commandHistory = CommandHistory()
+    private val commandHistory = CommandHistoryImpl()
 
     @Test
     fun shouldRecord() {

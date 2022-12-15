@@ -4,10 +4,11 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
-import org.mcwonderland.discord.impl.MessengerImpl
+import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.listener.CommandListener
+import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.discord.module.CommandHistoryImpl
 import org.mcwonderland.domain.command.CommandProcessorImpl
-import org.mcwonderland.domain.config.Messages
 import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.repository.UserRepository
 import org.shanerx.mojang.Mojang
@@ -20,10 +21,12 @@ fun main() {
         .build()
         .awaitReady()
 
+    val commandHistory: CommandHistory = CommandHistoryImpl()
+
     val injector: Injector = Guice.createInjector(
         AppModule(jda = jda, mojangApi = Mojang().connect()),
         DatabaseModule(),
-        CommandModule(),
+        CommandModule(commandHistory),
         ServiceModule()
     )
 
@@ -49,7 +52,7 @@ fun main() {
             CommandProcessorImpl(commands),
             config.commandPrefix,
             injector.getInstance(UserRepository::class.java),
-            CommandHistory()
+            commandHistory
         ),
     )
 }

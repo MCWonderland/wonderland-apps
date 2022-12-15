@@ -6,12 +6,11 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.discord.CommandHistory
-import org.mcwonderland.discord.CommandRecord
+import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.discord.module.CommandRecord
 import org.mcwonderland.discord.MessengerFake
+import org.mcwonderland.discord.module.CommandHistoryImpl
 import org.mcwonderland.domain.command.CommandProcessor
-import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
@@ -38,7 +37,7 @@ internal class CommandListenerTest {
         commandProcessor = mockk(relaxed = true)
         messenger = MessengerFake()
         userRepository = UserRepositoryFake()
-        commandHistory = CommandHistory()
+        commandHistory = CommandHistoryImpl()
         commandListener = CommandListener(commandProcessor, prefix, userRepository, commandHistory)
 
         messageMock = mockk(relaxed = true)
