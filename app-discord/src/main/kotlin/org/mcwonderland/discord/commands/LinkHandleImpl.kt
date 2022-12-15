@@ -8,7 +8,7 @@ import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.model.User
 
-class CommandLinkHandleImpl(
+class LinkHandleImpl(
     private val messages: Messages,
     private val history: CommandHistory
 ) : CommandLinkHandle {

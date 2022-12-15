@@ -40,7 +40,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandLink(
             label = providers.commandLabels.link,
             accountLinker = accountLinker,
-            handle = CommandLinkHandleImpl(messages, commandHistory)
+            handle = LinkHandleImpl(messages, commandHistory)
         )
     }
 
@@ -49,7 +49,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandCreateTeam(
             label = providers.commandLabels.createTeam,
             teamService = teamService,
-            handle = CommandCreateTeamHandleImpl(providers.messages, commandHistory)
+            handle = TeamHandleImpl(providers.messages, commandHistory)
         )
     }
 
@@ -58,7 +58,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandRegister(
             label = providers.commandLabels.register,
             registrationService = registrationService,
-            handle = CommandRegisterHandleImpl(providers.messages, commandHistory)
+            handle = RegisterHandleImpl(providers.messages, commandHistory)
         )
     }
 
@@ -76,53 +76,53 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandListTeams(
             label = providers.commandLabels.listTeams,
             teamService = teamService,
-            handle = CommandListTeamsHandleImpl(providers.messages, commandHistory)
+            handle = ListTeamsHandleImpl(providers.messages, commandHistory)
         )
     }
 
-//    @Provides
-//    fun commandListReg(providers: CommandProviders, registrationService: RegistrationService): CommandListReg {
-//        return CommandListReg(
-//            messages = providers.messages,
-//            label = providers.commandLabels.listReg,
-//            registrationService = registrationService,
-//        )
-//    }
-//
-//    @Provides
-//    fun commandAddToTeam(providers: CommandProviders, teamService: TeamService): CommandAddToTeam {
-//        return CommandAddToTeam(
-//            messages = providers.messages,
-//            label = providers.commandLabels.addToTeam,
-//            teamService = teamService,
-//        )
-//    }
-//
-//    @Provides
-//    fun commandDeleteTeam(providers: CommandProviders, teamService: TeamService): CommandDeleteTeam {
-//        return CommandDeleteTeam(
-//            messages = providers.messages,
-//            label = providers.commandLabels.deleteTeam,
-//            teamService = teamService,
-//        )
-//    }
-//
-//    @Provides
-//    fun commandClearReg(providers: CommandProviders, registrationService: RegistrationService): CommandClearReg {
-//        return CommandClearReg(
-//            messages = providers.messages,
-//            label = providers.commandLabels.clearReg,
-//            registrationService = registrationService,
-//        )
-//    }
-//
-//    @Provides
-//    fun commandToggleReg(providers: CommandProviders, registrationService: RegistrationService): CommandToggleReg {
-//        return CommandToggleReg(
-//            messages = providers.messages,
-//            label = providers.commandLabels.toggleReg,
-//            service = registrationService,
-//        )
-//    }
+    @Provides
+    fun commandListReg(providers: CommandProviders, registrationService: RegistrationService): CommandListReg {
+        return CommandListReg(
+            label = providers.commandLabels.listReg,
+            registrationService = registrationService,
+            handle = ListRegHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandAddToTeam(providers: CommandProviders, teamService: TeamService): CommandAddToTeam {
+        return CommandAddToTeam(
+            label = providers.commandLabels.addToTeam,
+            teamService = teamService,
+            handle = AddToTeamHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandDeleteTeam(providers: CommandProviders, teamService: TeamService): CommandDeleteTeam {
+        return CommandDeleteTeam(
+            label = providers.commandLabels.deleteTeam,
+            teamService = teamService,
+            handle = DeleteTeamHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandClearReg(providers: CommandProviders, registrationService: RegistrationService): CommandClearReg {
+        return CommandClearReg(
+            label = providers.commandLabels.clearReg,
+            registrationService = registrationService,
+            handle = ClearRegHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandToggleReg(providers: CommandProviders, registrationService: RegistrationService): CommandToggleReg {
+        return CommandToggleReg(
+            label = providers.commandLabels.toggleReg,
+            service = registrationService,
+            handle = ToggleRegHandleImpl(providers.messages, commandHistory)
+        )
+    }
 
 }

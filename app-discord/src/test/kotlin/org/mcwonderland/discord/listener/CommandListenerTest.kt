@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.discord.module.CommandRecord
-import org.mcwonderland.discord.MessengerFake
 import org.mcwonderland.discord.module.CommandHistoryImpl
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.fakes.Dummies
@@ -25,7 +24,6 @@ internal class CommandListenerTest {
     private lateinit var commandHistory: CommandHistory
 
     private lateinit var messageMock: Message
-    private lateinit var messenger: MessengerFake
 
     private val user: User = Dummies.createUserFullFilled()
 
@@ -35,7 +33,6 @@ internal class CommandListenerTest {
     @BeforeEach
     fun setup() {
         commandProcessor = mockk(relaxed = true)
-        messenger = MessengerFake()
         userRepository = UserRepositoryFake()
         commandHistory = CommandHistoryImpl()
         commandListener = CommandListener(commandProcessor, prefix, userRepository, commandHistory)

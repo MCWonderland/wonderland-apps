@@ -25,7 +25,7 @@ class CommandToggleRegTest : CommandTestBase() {
     @Test
     fun shouldCallRegistrationService() {
         assertToggleMessage(true) { handle.onEnableRegistrations() }
-        assertToggleMessage(false) { handle.onDisableRegisttrations() }
+        assertToggleMessage(false) { handle.onDisableRegistrations() }
     }
 
     private fun assertToggleMessage(state: Boolean, toggle: () -> Unit) {

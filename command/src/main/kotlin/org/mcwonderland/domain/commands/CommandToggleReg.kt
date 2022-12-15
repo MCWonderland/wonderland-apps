@@ -17,12 +17,12 @@ class CommandToggleReg(
         if (state)
             handle.onEnableRegistrations()
         else
-            handle.onDisableRegisttrations()
+            handle.onDisableRegistrations()
     }
 
 }
 
 interface CommandToggleRegHandle {
-    fun onEnableRegistrations(): String
-    fun onDisableRegisttrations(): String
+    fun onEnableRegistrations()
+    fun onDisableRegistrations()
 }

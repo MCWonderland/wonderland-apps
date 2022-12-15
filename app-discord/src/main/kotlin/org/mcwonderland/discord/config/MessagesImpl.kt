@@ -58,8 +58,6 @@ class Messages(private val mojangAccount: MojangAccount) {
             .build()
     }
 
-    fun invalidArg(argName: String): String = "缺少或是無效的參數: $argName"
-
     fun teamCreated(team: Team): MessageEmbed {
         return EmbedBuilder()
             .setTitle("隊伍已建立")
@@ -140,44 +138,49 @@ class Messages(private val mojangAccount: MojangAccount) {
             .build()
     }
 
-    fun listRegistrations(users: Collection<User>): String {
-        val messages = mutableListOf<String>()
-
-        messages.add("報名列表:")
-        messages.add(" ")
-        users.forEach { messages.add("> " + tagAndName(it)) }
-
-        return messages.joinToString("\n")
+    fun listRegistrations(users: Collection<User>): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("報名清單")
+            .addField("報名人數", users.size.toString(), false)
+            .addField("報名名單", users.joinToString("\n") { discordTag(it) }, false)
+            .build()
     }
 
-    fun unHandledCommandError(exceptionClassName: String): String {
-        return "發生了一個未處理的錯誤: $exceptionClassName, 請聯絡管理員"
+    fun addedUserToTeam(result: AddToTeamResult): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已將使用者加入隊伍")
+            .addField("新增的使用者", discordTag(result.user), false)
+            .teamInfo(result.team)
+            .build()
     }
 
-    fun addedUserToTeam(result: AddToTeamResult): String {
-        val messages = mutableListOf<String>()
-
-        messages.add("已經將 ${tagAndName(result.user)} 加入隊伍")
-        messages.add("目前隊伍成員:")
-        messages.addAll(teamInfo(result.team))
-
-        return messages.joinToString("\n")
+    fun userAlreadyInTeam(user: User): MessageEmbed {
+        return EmbedBuilder()
+            .error()
+            .setDescription("使用者 ${discordTag(user)} 已經在隊伍中了")
+            .build()
     }
 
-    fun userAlreadyInTeam(user: User): String {
-        return "使用者 ${discordTag(user)} 已經在隊伍當中了"
+    fun teamNotFound(teamId: String): MessageEmbed {
+        return EmbedBuilder()
+            .error()
+            .setDescription("找不到此隊伍")
+            .addField("隊伍 ID", teamId, false)
+            .build()
     }
 
-    fun teamNotFound(teamId: String): String {
-        return "找不到隊伍: $teamId"
+    fun teamDeleted(teamId: String): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已刪除隊伍")
+            .addField("隊伍 ID", teamId, false)
+            .build()
     }
 
-    fun teamDeleted(teamId: String): String {
-        return "已經刪除隊伍: $teamId"
-    }
-
-    fun registrationsCleared(): String {
-        return "已經清除報名列表"
+    fun registrationsCleared(): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已清除報名列表")
+            .setDescription("看看這裡空如也")
+            .build()
     }
 
     fun commandHelp(commands: List<Command>): String {
@@ -197,12 +200,18 @@ class Messages(private val mojangAccount: MojangAccount) {
             .build()
     }
 
-    fun nowAcceptRegistrations(): String {
-        return "開放報名！"
+    fun nowAcceptRegistrations(): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已開放報名")
+            .setDescription("玩家現在可以報名參加比賽")
+            .build()
     }
 
-    fun noLongerAcceptRegistrations(): String {
-        return "已關閉報名"
+    fun noLongerAcceptRegistrations(): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已關閉報名")
+            .setDescription("玩家現在無法使用報名功能")
+            .build()
     }
 
     fun notAllowRegistrations(): MessageEmbed {
@@ -212,12 +221,8 @@ class Messages(private val mojangAccount: MojangAccount) {
             .build()
     }
 
-    private fun teamInfo(team: Team): List<String> {
-        return team.members.map { "> " + tagAndName(it) }
-    }
-
     private fun tagAndName(user: User): String {
-        return "${discordTag(user)}(${mcName(user)})"
+        return "${discordTag(user)} (${mcName(user)})"
     }
 
     private fun discordTag(user: User) = discordTag(user.discordProfile.id)
@@ -245,6 +250,10 @@ class Messages(private val mojangAccount: MojangAccount) {
     }
 
     private fun teamMembers(team: Team): String {
-        return team.members.joinToString("\n") { discordTag(it) + "(${mcName(it)})" }
+        return team.members.joinToString("\n") { tagAndName(it) }
+    }
+
+    private fun listUsers(users: Collection<User>): String {
+        return users.joinToString("\n") { tagAndName(it) }
     }
 }

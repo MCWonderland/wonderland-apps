@@ -6,7 +6,7 @@ import org.mcwonderland.domain.commands.CommandRegisterHandle
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 
-class CommandRegisterHandleImpl(
+class RegisterHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
 ) : CommandRegisterHandle {

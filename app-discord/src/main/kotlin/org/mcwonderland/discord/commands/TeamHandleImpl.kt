@@ -9,7 +9,7 @@ import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.model.Team
 
-class CommandCreateTeamHandleImpl(
+class TeamHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
 ) : CommandCreateTeamHandle {
