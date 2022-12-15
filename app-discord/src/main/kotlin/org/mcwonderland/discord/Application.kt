@@ -35,13 +35,13 @@ fun main() {
     val commands = mutableListOf(
 //        injector.getInstance(CommandAddToTeam::class.java),
 //        injector.getInstance(CommandClearReg::class.java),
-//        injector.getInstance(CommandCreateTeam::class.java),
+        injector.getInstance(CommandCreateTeam::class.java),
 //        injector.getInstance(CommandDeleteTeam::class.java),
         injector.getInstance(CommandLink::class.java),
 //        injector.getInstance(CommandListReg::class.java),
-//        injector.getInstance(CommandListTeams::class.java),
-//        injector.getInstance(CommandRegister::class.java),
-//        injector.getInstance(CommandRemoveTeam::class.java),
+        injector.getInstance(CommandListTeams::class.java),
+        injector.getInstance(CommandRegister::class.java),
+        injector.getInstance(CommandRemoveTeam::class.java),
 //        injector.getInstance(CommandToggleReg::class.java)
     )
 

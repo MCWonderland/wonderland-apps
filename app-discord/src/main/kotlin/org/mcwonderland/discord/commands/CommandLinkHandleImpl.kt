@@ -14,23 +14,23 @@ class CommandLinkHandleImpl(
 ) : CommandLinkHandle {
 
     override fun missingArgId() {
-        history.createEmbed(messages.missingArg("mcIgn")).queue()
+        history.sendEmbed(messages.missingArg("mcIgn"))
     }
 
     override fun linked(userLinked: User) {
-        history.createEmbed(messages.linked(userLinked)).queue()
+        history.sendEmbed(messages.linked(userLinked))
     }
 
     override fun failAccountAlreadyLinked(e: AccountAlreadyLinkedException) {
-        history.createEmbed(messages.accountAlreadyLinked(e.linkedId)).queue()
+        history.sendEmbed(messages.accountAlreadyLinked(e.linkedId))
     }
 
     override fun failMcAccountNotFound(e: MCAccountNotFoundException) {
-        history.createEmbed(messages.mcAccountWithIgnNotFound(e.searchStr)).queue()
+        history.sendEmbed(messages.mcAccountWithIgnNotFound(e.searchStr))
     }
 
     override fun failMcAccountLinkedByOthers(e: MCAccountLinkedByOthersException) {
-        history.createEmbed(messages.targetAccountAlreadyLink(e.ign)).queue()
+        history.sendEmbed(messages.targetAccountAlreadyLink(e.ign))
     }
 
 }

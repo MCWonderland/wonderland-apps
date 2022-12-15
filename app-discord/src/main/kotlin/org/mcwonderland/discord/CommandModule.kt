@@ -2,25 +2,32 @@ package org.mcwonderland.discord
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import org.mcwonderland.discord.commands.CommandLinkHandleImpl
+import org.mcwonderland.discord.commands.*
 import org.mcwonderland.discord.config.CommandLabels
 import org.mcwonderland.discord.config.Messages
 import org.mcwonderland.discord.module.CommandHistory
-import org.mcwonderland.domain.commands.CommandLink
+import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.features.AccountLinker
+import org.mcwonderland.domain.features.RegistrationService
+import org.mcwonderland.domain.features.TeamService
 
 class CommandModule(private val commandHistory: CommandHistory) : AbstractModule() {
 
     interface CommandProviders {
         val commandLabels: CommandLabels
+        val messages: Messages
+        val commandHistory: CommandHistory
     }
 
     @Provides
     fun commandProviders(
         commandLabels: CommandLabels,
+        messages: Messages,
     ): CommandProviders {
         return object : CommandProviders {
             override val commandLabels: CommandLabels = commandLabels
+            override val messages: Messages = messages
+            override val commandHistory: CommandHistory = this@CommandModule.commandHistory
         }
     }
 
@@ -36,43 +43,43 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
             handle = CommandLinkHandleImpl(messages, commandHistory)
         )
     }
-//
-//    @Provides
-//    fun commandCreateTeam(providers: CommandProviders, teamService: TeamService): CommandCreateTeam {
-//        return CommandCreateTeam(
-//            messages = providers.messages,
-//            label = providers.commandLabels.createTeam,
-//            teamService = teamService
-//        )
-//    }
-//
-//    @Provides
-//    fun commandRegister(providers: CommandProviders, registrationService: RegistrationService): CommandRegister {
-//        return CommandRegister(
-//            messages = providers.messages,
-//            label = providers.commandLabels.register,
-//            registrationService = registrationService
-//        )
-//    }
-//
-//    @Provides
-//    fun commandRemoveTeam(providers: CommandProviders, teamService: TeamService): CommandRemoveTeam {
-//        return CommandRemoveTeam(
-//            messages = providers.messages,
-//            label = providers.commandLabels.removeTeam,
-//            teamService = teamService
-//        )
-//    }
-//
-//    @Provides
-//    fun commandListTeams(providers: CommandProviders, teamService: TeamService): CommandListTeams {
-//        return CommandListTeams(
-//            messages = providers.messages,
-//            label = providers.commandLabels.listTeams,
-//            teamService = teamService,
-//        )
-//    }
-//
+
+    @Provides
+    fun commandCreateTeam(providers: CommandProviders, teamService: TeamService): CommandCreateTeam {
+        return CommandCreateTeam(
+            label = providers.commandLabels.createTeam,
+            teamService = teamService,
+            handle = CommandCreateTeamHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandRegister(providers: CommandProviders, registrationService: RegistrationService): CommandRegister {
+        return CommandRegister(
+            label = providers.commandLabels.register,
+            registrationService = registrationService,
+            handle = CommandRegisterHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandRemoveTeam(providers: CommandProviders, teamService: TeamService): CommandRemoveTeam {
+        return CommandRemoveTeam(
+            label = providers.commandLabels.removeTeam,
+            teamService = teamService,
+            handle = CommandRemoveTeamHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
+    @Provides
+    fun commandListTeams(providers: CommandProviders, teamService: TeamService): CommandListTeams {
+        return CommandListTeams(
+            label = providers.commandLabels.listTeams,
+            teamService = teamService,
+            handle = CommandListTeamsHandleImpl(providers.messages, commandHistory)
+        )
+    }
+
 //    @Provides
 //    fun commandListReg(providers: CommandProviders, registrationService: RegistrationService): CommandListReg {
 //        return CommandListReg(

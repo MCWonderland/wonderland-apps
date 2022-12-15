@@ -9,11 +9,15 @@ interface CommandHistory {
     fun add(record: CommandRecord)
     fun get(): CommandRecord
 
+    fun sendEmbed(embed: MessageEmbed) {
+        createEmbed(embed).queue()
+    }
+
     fun createEmbed(embed: MessageEmbed): MessageCreateAction {
         return get().channel.sendMessageEmbeds(embed)
     }
 
-    fun createMessge(message: String): MessageCreateAction {
+    fun createMessage(message: String): MessageCreateAction {
         return get().channel.sendMessage(message)
     }
 }
