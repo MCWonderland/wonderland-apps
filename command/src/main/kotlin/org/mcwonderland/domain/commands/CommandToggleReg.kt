@@ -9,7 +9,7 @@ class CommandToggleReg(
     private val service: RegistrationService,
     private val handle: CommandToggleRegHandle<CommandContext>
 ) : Command {
-    override val usage: String = "/$label"
+    override val usage: String = "$label"
 
     override fun execute(context: CommandContext) {
         val state = service.toggleAllowRegistrations(context.sender)

@@ -9,7 +9,10 @@ import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import java.awt.Color
 
-class Messages(private val mojangAccount: MojangAccount) {
+class Messages(
+    private val mojangAccount: MojangAccount,
+    private val config: Config
+) {
 
     fun membersCantBeEmpty(): MessageEmbed {
         return EmbedBuilder()
@@ -239,7 +242,7 @@ class Messages(private val mojangAccount: MojangAccount) {
         return EmbedBuilder()
             .setColor(Color.CYAN)
             .setTitle("指令用法")
-            .setDescription(usage)
+            .setDescription(config.commandPrefix + usage)
             .build()
     }
 

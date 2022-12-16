@@ -16,7 +16,7 @@ class CommandRemoveTeam(
     private val handle: CommandRemoveTeamHandle<CommandContext>
 ) : Command {
 
-    override val usage: String = "/$label <user>"
+    override val usage: String = "$label <user>"
 
     override fun execute(context: CommandContext) {
         val targetId = context.getArg(0) ?: return handle.failWithUsage(context, usage)

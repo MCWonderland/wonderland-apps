@@ -13,7 +13,7 @@ class CommandLink(
     private val accountLinker: AccountLinker,
     private val handle: CommandLinkHandle<CommandContext>
 ) : Command {
-    override val usage: String = "/$label <minecraft username>"
+    override val usage: String = "$label <minecraft username>"
 
     override fun execute(context: CommandContext) {
         val uuid = context.getArg(0) ?: return handle.missingArgId(context)

@@ -39,8 +39,8 @@ class AppModule(
     }
 
     @Provides
-    fun messages(mojangAccount: MojangAccount): Messages {
-        return Messages(mojangAccount)
+    fun messages(mojangAccount: MojangAccount, config: Config): Messages {
+        return Messages(mojangAccount, config)
     }
 
     @Provides

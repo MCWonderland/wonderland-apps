@@ -17,7 +17,7 @@ class CommandCreateTeam(
     private val handle: CommandCreateTeamHandle<CommandContext>
 ) : Command {
 
-    override val usage: String = "/$label <id> <id>...."
+    override val usage: String = "$label <id> <id>...."
 
     override fun execute(context: CommandContext) {
         val ids = context.args

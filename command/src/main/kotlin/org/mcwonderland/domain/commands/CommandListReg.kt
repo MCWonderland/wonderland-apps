@@ -11,7 +11,7 @@ class CommandListReg(
     private val registrationService: RegistrationService,
     private val handle: CommandListRegHandle<CommandContext>
 ) : Command {
-    override val usage: String = "/$label"
+    override val usage: String = "$label"
 
     override fun execute(context: CommandContext) {
 

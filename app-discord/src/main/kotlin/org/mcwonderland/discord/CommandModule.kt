@@ -126,4 +126,5 @@ class CommandModule() : AbstractModule() {
             handle = ToggleRegHandleImpl(providers.messages) as CommandToggleRegHandle<CommandContext>
         )
     }
+
 }
