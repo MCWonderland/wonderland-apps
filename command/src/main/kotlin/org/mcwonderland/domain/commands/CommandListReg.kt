@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
@@ -12,10 +13,10 @@ class CommandListReg(
 ) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(sender: User, args: List<String>) {
+    override fun execute(context: CommandContext) {
 
         return try {
-            sender.checkAdminPermission()
+            context.checkAdminPermission()
             val users = registrationService.listRegistrations()
             handle.success(users)
         } catch (e: PermissionDeniedException) {

@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
@@ -14,11 +15,11 @@ class CommandLink(
 ) : Command {
     override val usage: String = "/$label <minecraft username>"
 
-    override fun execute(sender: User, args: List<String>) {
-        val uuid = args.getOrNull(0) ?: return handle.missingArgId()
+    override fun execute(context: CommandContext) {
+        val uuid = context.getArg(0) ?: return handle.missingArgId()
 
         return try {
-            val userLinked = accountLinker.link(sender, uuid)
+            val userLinked = accountLinker.link(context.sender, uuid)
             handle.linked(userLinked)
         } catch (e: AccountAlreadyLinkedException) {
             handle.failAccountAlreadyLinked(e)

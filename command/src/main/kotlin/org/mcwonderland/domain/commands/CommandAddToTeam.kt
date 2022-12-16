@@ -1,6 +1,7 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.handles.FailNoPermission
 import org.mcwonderland.domain.command.handles.FailWithUsage
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
@@ -9,7 +10,6 @@ import org.mcwonderland.domain.exceptions.UserAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.AddToTeamResult
-import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.model.UserModification
 
 class CommandAddToTeam(
@@ -20,12 +20,12 @@ class CommandAddToTeam(
 
     override val usage: String = "/$label <team> <id>"
 
-    override fun execute(sender: User, args: List<String>) {
-        val teamId = args.getOrNull(0) ?: return handle.failWithUsage(usage)
-        val userId = args.getOrNull(1) ?: return handle.failWithUsage(usage)
+    override fun execute(context: CommandContext) {
+        val teamId = context.getArg(0) ?: return handle.failWithUsage(usage)
+        val userId = context.getArg(1) ?: return handle.failWithUsage(usage)
 
         try {
-            val result = teamService.addUserToTeam(UserModification(sender, userId), teamId)
+            val result = teamService.addUserToTeam(UserModification(context.sender, userId), teamId)
             handle.onAdded(result)
         } catch (e: PermissionDeniedException) {
             handle.failPermissionDenied(e)

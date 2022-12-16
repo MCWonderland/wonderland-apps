@@ -4,8 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.config.MessagesStub
 import org.mcwonderland.domain.fakes.Dummies
 import kotlin.test.Test
 
@@ -25,7 +23,7 @@ internal class CommandProcessorImplTest {
     @Test
     fun shouldForwardToCorrectCommand() {
         processer.onCommand(user, "test", listOf("arg"))
-        verify(exactly = 1) { command.execute(user, listOf("arg")) }
+        verify(exactly = 1) { command.execute(user) }
     }
 
 }

@@ -1,10 +1,10 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.model.User
 
 class CommandRegister(
     override val label: String,
@@ -13,10 +13,10 @@ class CommandRegister(
 ) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(sender: User, args: List<String>) {
+    override fun execute(context: CommandContext) {
 
         return try {
-            val newState = registrationService.toggleRegister(sender)
+            val newState = registrationService.toggleRegister(context.sender)
 
             if (newState)
                 handle.onRegistered()

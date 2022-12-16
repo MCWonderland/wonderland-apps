@@ -21,15 +21,15 @@ abstract class CommandTestBase {
     }
 
     fun executeCommand(exeString: String) {
-        return command.execute(sender, exeString.split(" "))
+        return command.execute(sender)
     }
 
     fun executeWithNoArgs() {
-        return command.execute(sender, listOf())
+        return command.execute(sender)
     }
 
     fun executeCommand(args: List<String>) {
-        return command.execute(sender, args)
+        return command.execute(sender)
     }
 
 

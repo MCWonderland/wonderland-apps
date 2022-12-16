@@ -6,6 +6,7 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.discord.module.CommandRecord
 import org.mcwonderland.discord.module.CommandHistoryImpl
@@ -76,37 +77,25 @@ internal class CommandListenerTest {
     }
 
     @Test
-    fun startWithCmdPrefix_shouldCallCommandService() {
-        mockMessageAndPrefix("!cw command sub")
-
-        sendMessage()
-
-        verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
-    }
-
-    @Test
     fun shouldFormatUsers() {
-        assertMessageToCommand("!cw command <@user_id>", label = "cw", args = listOf("command", "user_id"))
+        assertMessageToCommand(
+            "!cw command <@user_id>",
+            DiscordCommandContext(user, "cw", listOf("command", "user_id"), messageMock.channel)
+        )
     }
 
     @Test
     fun shouldTrimWhitespace() {
-        assertMessageToCommand("!cw command  sub", label = "cw", args = listOf("command", "sub"))
+        assertMessageToCommand(
+            "!cw command  sub",
+            DiscordCommandContext(user, "cw", listOf("command", "sub"), messageMock.channel)
+        )
     }
 
-    @Test
-    fun shouldSendMessages() {
-        mockMessageAndPrefix("!cw command sub")
-        sendMessage()
-
-        verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
-        assertEquals(commandHistory.get(), CommandRecord(messageMock.channel, user))
-    }
-
-    private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {
+    private fun assertMessageToCommand(msg: String, context: DiscordCommandContext) {
         mockMessageAndPrefix(msg)
         sendMessage()
-        verify { commandProcessor.onCommand(user, label, args) }
+        verify { commandProcessor.onCommand(context) }
     }
 
     private fun mockMessageAndPrefix(content: String) {
@@ -116,7 +105,7 @@ internal class CommandListenerTest {
     }
 
     private fun assertIgnored() {
-        verify(exactly = 0) { commandProcessor.onCommand(any(), any(), any()) }
+        verify(exactly = 0) { commandProcessor.onCommand(any()) }
     }
 
     private fun sendMessage() {

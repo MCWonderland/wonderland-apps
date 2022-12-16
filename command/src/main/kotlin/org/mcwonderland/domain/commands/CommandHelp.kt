@@ -1,7 +1,7 @@
 package org.mcwonderland.domain.commands
 
 import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.model.User
+import org.mcwonderland.domain.command.CommandContext
 
 class CommandHelp(
     override val label: String,
@@ -10,7 +10,7 @@ class CommandHelp(
 ) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(sender: User, args: List<String>) {
+    override fun execute(context: CommandContext) {
         return handle.showHelp(commands)
     }
 
