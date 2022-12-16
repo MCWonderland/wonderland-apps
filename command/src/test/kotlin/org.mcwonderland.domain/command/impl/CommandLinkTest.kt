@@ -5,6 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
+import org.mcwonderland.domain.command.CommandContext
+import org.mcwonderland.domain.command.CommandContextStub
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.commands.CommandLink
 import org.mcwonderland.domain.commands.CommandLinkHandle
@@ -18,7 +20,7 @@ class CommandLinkTest : CommandTestBase() {
 
     private val label = "link"
     private lateinit var accountLinker: AccountLinker
-    private lateinit var handle: CommandLinkHandle
+    private lateinit var handle: CommandLinkHandle<CommandContext>
 
     @BeforeEach
     fun setUp() {
@@ -30,7 +32,7 @@ class CommandLinkTest : CommandTestBase() {
     @Test
     fun missingArguments() {
         executeWithNoArgs().also {
-            verify { handle.missingArgId() }
+            verify { handle.missingArgId(context) }
         }
     }
 
@@ -44,15 +46,25 @@ class CommandLinkTest : CommandTestBase() {
             every { accountLinker.link(sender, targetId) } returns sender
 
             executeCommand(targetId).also {
-                verify { handle.linked(sender) }
+                verify { handle.linked(context, sender) }
             }
         }
 
         @Test
         fun testExceptionMappings() {
-            assertException(AccountAlreadyLinkedException(linkedId = "mcId")) { handle.failAccountAlreadyLinked(it) }
-            assertException(MCAccountNotFoundException(searchStr = "id")) { handle.failMcAccountNotFound(it) }
-            assertException(MCAccountLinkedByOthersException(ign = "ign")) { handle.failMcAccountLinkedByOthers(it) }
+            assertException(AccountAlreadyLinkedException(linkedId = "mcId")) {
+                handle.failAccountAlreadyLinked(
+                    context,
+                    it
+                )
+            }
+            assertException(MCAccountNotFoundException(searchStr = "id")) { handle.failMcAccountNotFound(context, it) }
+            assertException(MCAccountLinkedByOthersException(ign = "ign")) {
+                handle.failMcAccountLinkedByOthers(
+                    context,
+                    it
+                )
+            }
         }
 
         private fun <T : Exception> assertException(exception: T, block: (T) -> Unit) {

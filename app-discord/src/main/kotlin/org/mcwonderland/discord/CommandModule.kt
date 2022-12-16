@@ -5,8 +5,6 @@ import com.google.inject.Provides
 import org.mcwonderland.discord.commands.*
 import org.mcwonderland.discord.config.CommandLabels
 import org.mcwonderland.discord.config.Messages
-import org.mcwonderland.discord.model.DiscordCommandContext
-import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.features.AccountLinker
@@ -14,12 +12,11 @@ import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.features.TeamService
 
 @Suppress("UNCHECKED_CAST")
-class CommandModule(private val commandHistory: CommandHistory) : AbstractModule() {
+class CommandModule() : AbstractModule() {
 
     interface CommandProviders {
         val commandLabels: CommandLabels
         val messages: Messages
-        val commandHistory: CommandHistory
     }
 
     @Provides
@@ -30,7 +27,6 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return object : CommandProviders {
             override val commandLabels: CommandLabels = commandLabels
             override val messages: Messages = messages
-            override val commandHistory: CommandHistory = this@CommandModule.commandHistory
         }
     }
 
@@ -43,7 +39,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandLink(
             label = providers.commandLabels.link,
             accountLinker = accountLinker,
-            handle = LinkHandleImpl(messages, commandHistory) as CommandLinkHandle<CommandContext>,
+            handle = LinkHandleImpl(messages) as CommandLinkHandle<CommandContext>,
         )
     }
 
@@ -52,7 +48,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandCreateTeam(
             label = providers.commandLabels.createTeam,
             teamService = teamService,
-            handle = TeamHandleImpl(providers.messages, commandHistory) as CommandCreateTeamHandle<CommandContext>
+            handle = TeamHandleImpl(providers.messages) as CommandCreateTeamHandle<CommandContext>
         )
     }
 
@@ -61,7 +57,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandRegister(
             label = providers.commandLabels.register,
             registrationService = registrationService,
-            handle = RegisterHandleImpl(providers.messages, commandHistory) as CommandRegisterHandle<CommandContext>
+            handle = RegisterHandleImpl(providers.messages) as CommandRegisterHandle<CommandContext>
         )
     }
 
@@ -70,7 +66,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandRemoveTeam(
             label = providers.commandLabels.removeTeam,
             teamService = teamService,
-            handle = CommandRemoveTeamHandleImpl(providers.messages, commandHistory) as CommandRemoveTeamHandle<CommandContext>
+            handle = CommandRemoveTeamHandleImpl(providers.messages) as CommandRemoveTeamHandle<CommandContext>
         )
     }
 
@@ -79,7 +75,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandListTeams(
             label = providers.commandLabels.listTeams,
             teamService = teamService,
-            handle = ListTeamsHandleImpl(providers.messages, commandHistory) as CommandListTeamsHandle<CommandContext>
+            handle = ListTeamsHandleImpl(providers.messages) as CommandListTeamsHandle<CommandContext>
         )
     }
 
@@ -88,7 +84,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandListReg(
             label = providers.commandLabels.listReg,
             registrationService = registrationService,
-            handle = ListRegHandleImpl(providers.messages, commandHistory) as CommandListRegHandle<CommandContext>
+            handle = ListRegHandleImpl(providers.messages) as CommandListRegHandle<CommandContext>
         )
     }
 
@@ -100,7 +96,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandAddToTeam(
             label = providers.commandLabels.addToTeam,
             teamService = teamService,
-            handle = AddToTeamHandleImpl(providers.messages, commandHistory) as CommandAddToTeamHandle<CommandContext>
+            handle = AddToTeamHandleImpl(providers.messages) as CommandAddToTeamHandle<CommandContext>
         )
     }
 
@@ -109,7 +105,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandDeleteTeam(
             label = providers.commandLabels.deleteTeam,
             teamService = teamService,
-            handle = DeleteTeamHandleImpl(providers.messages, commandHistory) as CommandDeleteTeamHandle<CommandContext>
+            handle = DeleteTeamHandleImpl(providers.messages) as CommandDeleteTeamHandle<CommandContext>
         )
     }
 
@@ -118,7 +114,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandClearReg(
             label = providers.commandLabels.clearReg,
             registrationService = registrationService,
-            handle = ClearRegHandleImpl(providers.messages, commandHistory) as CommandClearRegHandle<CommandContext>
+            handle = ClearRegHandleImpl(providers.messages) as CommandClearRegHandle<CommandContext>
         )
     }
 
@@ -127,7 +123,7 @@ class CommandModule(private val commandHistory: CommandHistory) : AbstractModule
         return CommandToggleReg(
             label = providers.commandLabels.toggleReg,
             service = registrationService,
-            handle = ToggleRegHandleImpl(providers.messages, commandHistory) as CommandToggleRegHandle<CommandContext>
+            handle = ToggleRegHandleImpl(providers.messages) as CommandToggleRegHandle<CommandContext>
         )
     }
 }

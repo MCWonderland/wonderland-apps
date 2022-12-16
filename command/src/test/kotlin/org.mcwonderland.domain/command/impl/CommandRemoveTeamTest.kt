@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.commands.CommandRemoveTeam
 import org.mcwonderland.domain.commands.CommandRemoveTeamHandle
@@ -19,7 +20,7 @@ import org.mcwonderland.domain.model.UserModification
 internal class CommandRemoveTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandRemoveTeamHandle
+    private lateinit var handle: CommandRemoveTeamHandle<CommandContext>
 
 
     @BeforeEach
@@ -31,7 +32,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
 
     @Test
     fun withoutArgs_showUsage() {
-        executeWithNoArgs().also { verify { handle.failWithUsage(command.usage) } }
+        executeWithNoArgs().also { verify { handle.failWithUsage(context, command.usage) } }
     }
 
     @Test
@@ -42,7 +43,7 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
         every { teamService.removeFromTeam(UserModification(sender, "target")) } returns expectTeam
 
         executeCommand(listOf("target")).also {
-            verify { handle.onSuccess(expectTeam) }
+            verify { handle.onSuccess(context, expectTeam) }
         }
     }
 
@@ -50,9 +51,9 @@ internal class CommandRemoveTeamTest : CommandTestBase() {
     fun testExceptionMapping() {
         val target = Dummies.createUserFullFilled()
 
-        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
-        assertExceptionMapping(UserNotFoundException("target")) { handle.failUserNotFound(it) }
-        assertExceptionMapping(UserNotInTeamException(target)) { handle.failUserNotInTeam(it) }
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(context, it) }
+        assertExceptionMapping(UserNotFoundException("target")) { handle.failUserNotFound(context, it) }
+        assertExceptionMapping(UserNotInTeamException(target)) { handle.failUserNotInTeam(context, it) }
     }
 
     private fun <T : Exception> assertExceptionMapping(exception: T, block: (T) -> Unit) {

@@ -7,22 +7,17 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
 import org.mcwonderland.discord.model.DiscordCommandContext
-import org.mcwonderland.discord.module.CommandHistory
-import org.mcwonderland.discord.module.CommandRecord
-import org.mcwonderland.discord.module.CommandHistoryImpl
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 internal class CommandListenerTest {
 
     private lateinit var commandListener: CommandListener
     private lateinit var commandProcessor: CommandProcessor
     private lateinit var userRepository: UserRepositoryFake
-    private lateinit var commandHistory: CommandHistory
 
     private lateinit var messageMock: Message
 
@@ -35,8 +30,7 @@ internal class CommandListenerTest {
     fun setup() {
         commandProcessor = mockk(relaxed = true)
         userRepository = UserRepositoryFake()
-        commandHistory = CommandHistoryImpl()
-        commandListener = CommandListener(commandProcessor, prefix, userRepository, commandHistory)
+        commandListener = CommandListener(commandProcessor, prefix, userRepository)
 
         messageMock = mockk(relaxed = true)
 

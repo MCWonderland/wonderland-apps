@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.commands.CommandRegister
 import org.mcwonderland.domain.commands.CommandRegisterHandle
@@ -15,7 +16,7 @@ import org.mcwonderland.domain.features.RegistrationService
 internal class CommandRegisterTest : CommandTestBase() {
 
     private lateinit var registerService: RegistrationService
-    private lateinit var handle: CommandRegisterHandle<Any?>
+    private lateinit var handle: CommandRegisterHandle<CommandContext>
 
     @BeforeEach
     fun setUp() {
@@ -26,14 +27,14 @@ internal class CommandRegisterTest : CommandTestBase() {
 
     @Test
     fun shouldSendMessageBaseOnState() {
-        assertStateToggled(true) { handle.onRegistered() }
-        assertStateToggled(false) { handle.onUnregistered() }
+        assertStateToggled(true) { handle.onRegistered(context) }
+        assertStateToggled(false) { handle.onUnregistered(context) }
     }
 
     @Test
     fun testExceptionMapping() {
-        assertExceptionMapping(RequireLinkedAccountException()) { handle.failRequireLinkedAccount(it) }
-        assertExceptionMapping(NotAllowRegistrationsException()) { handle.failNotAllowRegistrations(it) }
+        assertExceptionMapping(RequireLinkedAccountException()) { handle.failRequireLinkedAccount(context, it) }
+        assertExceptionMapping(NotAllowRegistrationsException()) { handle.failNotAllowRegistrations(context, it) }
     }
 
     private fun <T : Exception> assertExceptionMapping(exception: T, block: (T) -> Unit) {

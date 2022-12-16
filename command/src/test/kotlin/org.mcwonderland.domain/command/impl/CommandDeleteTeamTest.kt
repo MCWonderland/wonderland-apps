@@ -4,6 +4,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.commands.CommandDeleteTeam
@@ -12,7 +13,7 @@ import org.mcwonderland.domain.commands.CommandDeleteTeamHandle
 class CommandDeleteTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandDeleteTeamHandle
+    private lateinit var handle: CommandDeleteTeamHandle<CommandContext>
 
     @BeforeEach
     fun setup() {
@@ -23,7 +24,7 @@ class CommandDeleteTeamTest : CommandTestBase() {
 
     @Test
     fun withoutArgs_shouldShowUsage() {
-        executeWithNoArgs().also { verify { handle.failWithUsage(command.usage) } }
+        executeWithNoArgs().also { verify { handle.failWithUsage(context, command.usage) } }
     }
 
     @Test
@@ -31,7 +32,7 @@ class CommandDeleteTeamTest : CommandTestBase() {
         executeCommand("teamId")
             .also {
                 verify { teamService.deleteTeam(sender, "teamId") }
-                verify { handle.success("teamId") }
+                verify { handle.success(context, "teamId") }
             }
     }
 

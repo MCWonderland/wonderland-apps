@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.commands.CommandListTeams
 import org.mcwonderland.domain.commands.CommandListTeamsHandle
@@ -15,7 +16,7 @@ import org.mcwonderland.domain.model.Team
 internal class CommandListTeamsTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandListTeamsHandle<Any?>
+    private lateinit var handle: CommandListTeamsHandle<CommandContext>
 
     @BeforeEach
     fun setUp() {
@@ -26,7 +27,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
 
     @Test
     fun withoutPerm_shouldDenied() {
-        executeCommand("listteams").also { verify { handle.failNoPermission() } }
+        executeCommand("listteams").also { verify { handle.failNoPermission(context) } }
     }
 
     @Test
@@ -37,7 +38,7 @@ internal class CommandListTeamsTest : CommandTestBase() {
         sender.addAdminPerm()
         every { teamService.listTeams() } returns teams
 
-        executeWithNoArgs().also { verify { handle.success(teams) } }
+        executeWithNoArgs().also { verify { handle.success(context, teams) } }
     }
 
 }

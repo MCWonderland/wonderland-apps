@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.MemberCantBeEmptyException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
@@ -19,7 +20,7 @@ import org.mcwonderland.domain.model.Team
 internal class CommandCreateTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandCreateTeamHandle
+    private lateinit var handle: CommandCreateTeamHandle<CommandContext>
 
     private val ids = listOf("id", "id2")
     private val team = Team(members = listOf(Dummies.createUserFullFilled()))
@@ -34,16 +35,18 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     @Test
     fun withoutArgs_shouldShowUsage() {
         executeWithNoArgs().also {
-            verify { handle.failWithUsage(command.usage) }
+            verify { handle.failWithUsage(context, command.usage) }
         }
     }
 
     @Test
     fun testExceptionMessageMappings() {
-        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
-        assertExceptionMapping(MemberCantBeEmptyException()) { handle.failMembersCantBeEmpty(it) }
-        assertExceptionMapping(UsersNotFoundException(listOf("1"))) { handle.failUsersNotFound(it) }
-        assertExceptionMapping(UsersAlreadyInTeamException(listOf(sender))) { handle.failUsersAlreadyInTeam(it) }
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(context, it) }
+        assertExceptionMapping(MemberCantBeEmptyException()) { handle.failMembersCantBeEmpty(context, it) }
+        assertExceptionMapping(UsersNotFoundException(listOf("1"))) { handle.failUsersNotFound(context, it) }
+        assertExceptionMapping(UsersAlreadyInTeamException(listOf(sender))) {
+            handle.failUsersAlreadyInTeam(context, it)
+        }
     }
 
     private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {
@@ -56,7 +59,7 @@ internal class CommandCreateTeamTest : CommandTestBase() {
     fun success_shouldSendMessage() {
         every { teamService.createTeam(sender, ids) } returns team
         executeCommand(ids).also {
-            verify { handle.success(team) }
+            verify { handle.success(context, team) }
         }
     }
 }

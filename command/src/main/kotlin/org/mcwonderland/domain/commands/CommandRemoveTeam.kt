@@ -23,22 +23,22 @@ class CommandRemoveTeam(
 
         return try {
             val teamAfterRemoveTarget = teamService.removeFromTeam(UserModification(context.sender, targetId))
-            handle.onSuccess(teamAfterRemoveTarget)
+            handle.onSuccess(context, teamAfterRemoveTarget)
         } catch (e: PermissionDeniedException) {
-            handle.failPermissionDenied(e)
+            handle.failPermissionDenied(context, e)
         } catch (e: UserNotFoundException) {
-            handle.failUserNotFound(e)
+            handle.failUserNotFound(context, e)
         } catch (e: UserNotInTeamException) {
-            handle.failUserNotInTeam(e)
+            handle.failUserNotInTeam(context, e)
         }
     }
 
 }
 
 interface CommandRemoveTeamHandle<Context : CommandContext> : FailWithUsage<Context> {
-    fun onSuccess(teamAfterRemoveTarget: Team)
-    fun failPermissionDenied(e: PermissionDeniedException)
-    fun failUserNotFound(e: UserNotFoundException)
-    fun failUserNotInTeam(e: UserNotInTeamException)
+    fun onSuccess(context: Context, teamAfterRemoveTarget: Team)
+    fun failPermissionDenied(context: Context, e: PermissionDeniedException)
+    fun failUserNotFound(context: Context, e: UserNotFoundException)
+    fun failUserNotInTeam(context: Context, e: UserNotInTeamException)
 }
 

@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.commands.CommandToggleReg
 import org.mcwonderland.domain.commands.CommandToggleRegHandle
@@ -13,7 +14,7 @@ import org.mcwonderland.domain.features.RegistrationService
 class CommandToggleRegTest : CommandTestBase() {
 
     private lateinit var service: RegistrationService
-    private lateinit var handle: CommandToggleRegHandle<Any?>
+    private lateinit var handle: CommandToggleRegHandle<CommandContext>
 
     @BeforeEach
     fun setup() {
@@ -24,8 +25,8 @@ class CommandToggleRegTest : CommandTestBase() {
 
     @Test
     fun shouldCallRegistrationService() {
-        assertToggleMessage(true) { handle.onEnableRegistrations() }
-        assertToggleMessage(false) { handle.onDisableRegistrations() }
+        assertToggleMessage(true) { handle.onEnableRegistrations(context) }
+        assertToggleMessage(false) { handle.onDisableRegistrations(context) }
     }
 
     private fun assertToggleMessage(state: Boolean, toggle: () -> Unit) {

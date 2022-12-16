@@ -22,7 +22,7 @@ import org.mcwonderland.domain.model.UserModification
 class CommandAddToTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandAddToTeamHandle<CommandContextStub>
+    private lateinit var handle: CommandAddToTeamHandle<CommandContext>
 
     @BeforeEach
     fun setup() {
@@ -50,15 +50,15 @@ class CommandAddToTeamTest : CommandTestBase() {
 
         every { teamService.addUserToTeam(UserModification(sender, "targetId"), "teamId") } returns result
 
-        executeCommand("teamId targetId").also { verify { handle.onAdded(result) } }
+        executeCommand("teamId targetId").also { verify { handle.onAdded(context, result) } }
     }
 
     @Test
     fun testExceptionMapping() {
-        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
-        assertExceptionMapping(UserNotFoundException("id")) { handle.failUserNotFound(it) }
-        assertExceptionMapping(UserAlreadyInTeamException(sender)) { handle.failUserAlreadyInTeam(it) }
-        assertExceptionMapping(TeamNotFoundException("id")) { handle.failTeamNotFound(it) }
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(context, it) }
+        assertExceptionMapping(UserNotFoundException("id")) { handle.failUserNotFound(context, it) }
+        assertExceptionMapping(UserAlreadyInTeamException(sender)) { handle.failUserAlreadyInTeam(context, it) }
+        assertExceptionMapping(TeamNotFoundException("id")) { handle.failTeamNotFound(context, it) }
     }
 
     private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {

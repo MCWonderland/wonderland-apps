@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
@@ -15,7 +16,7 @@ import org.mcwonderland.domain.model.UserModification
 class CommandClearRegTest : CommandTestBase() {
 
     private lateinit var registrationService: RegistrationService
-    private lateinit var handle: CommandClearRegHandle
+    private lateinit var handle: CommandClearRegHandle<CommandContext>
 
     @BeforeEach
     fun setup() {
@@ -28,12 +29,12 @@ class CommandClearRegTest : CommandTestBase() {
     fun shouldCallService() {
         executeWithNoArgs()
             .also { verify { registrationService.clearRegistrations(sender) } }
-            .also { verify { handle.onCleared() } }
+            .also { verify { handle.onCleared(context) } }
     }
 
     @Test
     fun testExceptionMessageMappings() {
-        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(it) }
+        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(context, it) }
     }
 
     private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {

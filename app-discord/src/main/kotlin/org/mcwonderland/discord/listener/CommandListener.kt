@@ -3,8 +3,6 @@ package org.mcwonderland.discord.listener
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.mcwonderland.discord.model.DiscordCommandContext
-import org.mcwonderland.discord.module.CommandHistory
-import org.mcwonderland.discord.module.CommandRecord
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.model.DiscordProfile
 import org.mcwonderland.domain.repository.UserRepository
@@ -13,7 +11,6 @@ class CommandListener(
     private val commandProcessor: CommandProcessor,
     private val prefix: String,
     private val userRepository: UserRepository,
-    private val commandHistory: CommandHistory
 ) : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
@@ -31,7 +28,6 @@ class CommandListener(
         val args = splits.drop(1).map { formatArgs(it) }
         val user = userRepository.findUpdated(DiscordProfile(author.id, author.name))
 
-        commandHistory.add(CommandRecord(event.channel, user))
         commandProcessor.onCommand(DiscordCommandContext(user, label, args, event.channel))
     }
 

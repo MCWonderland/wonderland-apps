@@ -6,11 +6,6 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.listener.CommandListener
-import org.mcwonderland.discord.model.DiscordCommandContext
-import org.mcwonderland.discord.module.CommandHistory
-import org.mcwonderland.discord.module.CommandHistoryImpl
-import org.mcwonderland.domain.command.Command
-import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.repository.UserRepository
@@ -24,12 +19,10 @@ fun main() {
         .build()
         .awaitReady()
 
-    val commandHistory: CommandHistory = CommandHistoryImpl()
-
     val injector: Injector = Guice.createInjector(
         AppModule(jda = jda, mojangApi = Mojang().connect()),
         DatabaseModule(),
-        CommandModule(commandHistory),
+        CommandModule(),
         ServiceModule()
     )
 
@@ -48,14 +41,13 @@ fun main() {
         injector.getInstance(CommandToggleReg::class.java)
     )
 
-//    commands.add(CommandHelp("help", commands, messages))
+//    commands.add(CommandHelp("help", commands))
 
     jda.addEventListener(
         CommandListener(
             CommandProcessorImpl(commands),
             config.commandPrefix,
             injector.getInstance(UserRepository::class.java),
-            commandHistory
         ),
     )
 }
