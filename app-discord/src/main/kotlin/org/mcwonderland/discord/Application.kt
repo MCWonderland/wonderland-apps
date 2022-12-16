@@ -4,12 +4,10 @@ import com.google.inject.Guice
 import com.google.inject.Injector
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
-import org.mcwonderland.discord.impl.MessengerImpl
+import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.listener.CommandListener
 import org.mcwonderland.domain.command.CommandProcessorImpl
-import org.mcwonderland.domain.command.impl.*
-import org.mcwonderland.domain.config.Messages
-import org.mcwonderland.domain.features.UserFinder
+import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.repository.UserRepository
 import org.shanerx.mojang.Mojang
 
@@ -28,10 +26,7 @@ fun main() {
         ServiceModule()
     )
 
-    val messenger = MessengerImpl()
-    val messages = injector.getInstance(Messages::class.java)
     val config = injector.getInstance(Config::class.java)
-
 
     val commands = mutableListOf(
         injector.getInstance(CommandAddToTeam::class.java),
@@ -46,14 +41,13 @@ fun main() {
         injector.getInstance(CommandToggleReg::class.java)
     )
 
-    commands.add(CommandHelp("help", commands, messages))
+//    commands.add(CommandHelp("help", commands))
 
     jda.addEventListener(
         CommandListener(
-            CommandProcessorImpl(commands, messages),
+            CommandProcessorImpl(commands),
             config.commandPrefix,
-            messenger,
-            injector.getInstance(UserRepository::class.java)
+            injector.getInstance(UserRepository::class.java),
         ),
     )
 }

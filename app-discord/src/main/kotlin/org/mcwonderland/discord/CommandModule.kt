@@ -2,126 +2,128 @@ package org.mcwonderland.discord
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import org.mcwonderland.domain.command.impl.*
-import org.mcwonderland.domain.config.Messages
+import org.mcwonderland.discord.commands.*
+import org.mcwonderland.discord.config.CommandLabels
+import org.mcwonderland.discord.config.Messages
+import org.mcwonderland.domain.command.CommandContext
+import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.features.UserFinder
 
-class CommandModule : AbstractModule() {
+@Suppress("UNCHECKED_CAST")
+class CommandModule() : AbstractModule() {
 
     interface CommandProviders {
-        val accountLinker: AccountLinker
-        val userFinder: UserFinder
-        val messages: Messages
         val commandLabels: CommandLabels
+        val messages: Messages
     }
 
     @Provides
     fun commandProviders(
-        accountLinker: AccountLinker,
-        userFinder: UserFinder,
-        messages: Messages,
         commandLabels: CommandLabels,
-        teamService: TeamService
+        messages: Messages,
     ): CommandProviders {
         return object : CommandProviders {
-            override val accountLinker: AccountLinker = accountLinker
-            override val userFinder: UserFinder = userFinder
-            override val messages: Messages = messages
             override val commandLabels: CommandLabels = commandLabels
+            override val messages: Messages = messages
         }
     }
 
     @Provides
-    fun commandLink(providers: CommandProviders): CommandLink {
+    fun commandLink(
+        providers: CommandProviders,
+        accountLinker: AccountLinker,
+        messages: Messages,
+    ): CommandLink {
         return CommandLink(
-            messages = providers.messages,
-            accountLinker = providers.accountLinker,
             label = providers.commandLabels.link,
+            accountLinker = accountLinker,
+            handle = LinkHandleImpl(messages) as CommandLinkHandle<CommandContext>,
         )
     }
 
     @Provides
     fun commandCreateTeam(providers: CommandProviders, teamService: TeamService): CommandCreateTeam {
         return CommandCreateTeam(
-            messages = providers.messages,
             label = providers.commandLabels.createTeam,
-            teamService = teamService
+            teamService = teamService,
+            handle = TeamHandleImpl(providers.messages) as CommandCreateTeamHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandRegister(providers: CommandProviders, registrationService: RegistrationService): CommandRegister {
         return CommandRegister(
-            messages = providers.messages,
             label = providers.commandLabels.register,
-            registrationService = registrationService
+            registrationService = registrationService,
+            handle = RegisterHandleImpl(providers.messages) as CommandRegisterHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandRemoveTeam(providers: CommandProviders, teamService: TeamService): CommandRemoveTeam {
         return CommandRemoveTeam(
-            messages = providers.messages,
             label = providers.commandLabels.removeTeam,
-            teamService = teamService
+            teamService = teamService,
+            handle = CommandRemoveTeamHandleImpl(providers.messages) as CommandRemoveTeamHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandListTeams(providers: CommandProviders, teamService: TeamService): CommandListTeams {
         return CommandListTeams(
-            messages = providers.messages,
             label = providers.commandLabels.listTeams,
             teamService = teamService,
+            handle = ListTeamsHandleImpl(providers.messages) as CommandListTeamsHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandListReg(providers: CommandProviders, registrationService: RegistrationService): CommandListReg {
         return CommandListReg(
-            messages = providers.messages,
             label = providers.commandLabels.listReg,
             registrationService = registrationService,
+            handle = ListRegHandleImpl(providers.messages) as CommandListRegHandle<CommandContext>
         )
     }
 
     @Provides
-    fun commandAddToTeam(providers: CommandProviders, teamService: TeamService): CommandAddToTeam {
+    fun commandAddToTeam(
+        providers: CommandProviders,
+        teamService: TeamService
+    ): CommandAddToTeam {
         return CommandAddToTeam(
-            messages = providers.messages,
             label = providers.commandLabels.addToTeam,
             teamService = teamService,
+            handle = AddToTeamHandleImpl(providers.messages) as CommandAddToTeamHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandDeleteTeam(providers: CommandProviders, teamService: TeamService): CommandDeleteTeam {
         return CommandDeleteTeam(
-            messages = providers.messages,
             label = providers.commandLabels.deleteTeam,
             teamService = teamService,
+            handle = DeleteTeamHandleImpl(providers.messages) as CommandDeleteTeamHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandClearReg(providers: CommandProviders, registrationService: RegistrationService): CommandClearReg {
         return CommandClearReg(
-            messages = providers.messages,
             label = providers.commandLabels.clearReg,
             registrationService = registrationService,
+            handle = ClearRegHandleImpl(providers.messages) as CommandClearRegHandle<CommandContext>
         )
     }
 
     @Provides
     fun commandToggleReg(providers: CommandProviders, registrationService: RegistrationService): CommandToggleReg {
         return CommandToggleReg(
-            messages = providers.messages,
             label = providers.commandLabels.toggleReg,
             service = registrationService,
+            handle = ToggleRegHandleImpl(providers.messages) as CommandToggleRegHandle<CommandContext>
         )
     }
-
 }

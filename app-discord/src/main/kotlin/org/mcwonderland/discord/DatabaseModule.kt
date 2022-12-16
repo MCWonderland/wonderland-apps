@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import com.mongodb.client.MongoClient
 import org.mcwonderland.access.*
+import org.mcwonderland.discord.config.Config
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.SettingsRepository
 import org.mcwonderland.domain.repository.TeamRepository

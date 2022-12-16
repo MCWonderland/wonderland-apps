@@ -2,7 +2,7 @@ package org.mcwonderland.discord.listener
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.mcwonderland.discord.impl.Messenger
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.domain.command.CommandProcessor
 import org.mcwonderland.domain.model.DiscordProfile
 import org.mcwonderland.domain.repository.UserRepository
@@ -10,7 +10,6 @@ import org.mcwonderland.domain.repository.UserRepository
 class CommandListener(
     private val commandProcessor: CommandProcessor,
     private val prefix: String,
-    private val messenger: Messenger,
     private val userRepository: UserRepository,
 ) : ListenerAdapter() {
 
@@ -18,7 +17,6 @@ class CommandListener(
         val message = event.message
         val rawMessage = message.contentRaw
         val author = message.author
-
 
         if (!message.isFromGuild
             || message.author.isBot
@@ -28,12 +26,9 @@ class CommandListener(
         val splits = rawMessage.removePrefix("!").removeTrailingSpaces().split(" ")
         val label = splits[0]
         val args = splits.drop(1).map { formatArgs(it) }
-
         val user = userRepository.findUpdated(DiscordProfile(author.id, author.name))
 
-        commandProcessor.onCommand(user, label, args)?.let {
-            it.messages.forEach { msg -> messenger.sendMessage(event.channel, msg) }
-        }
+        commandProcessor.onCommand(DiscordCommandContext(user, label, args, event.channel))
     }
 
     private fun String.removeTrailingSpaces(): String {

@@ -6,15 +6,12 @@ import io.mockk.verify
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import org.junit.jupiter.api.BeforeEach
-import org.mcwonderland.discord.MessengerFake
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.domain.command.CommandProcessor
-import org.mcwonderland.domain.command.CommandResponse
-import org.mcwonderland.domain.command.CommandStatus
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.fakes.UserRepositoryFake
 import org.mcwonderland.domain.model.User
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 internal class CommandListenerTest {
 
@@ -23,7 +20,6 @@ internal class CommandListenerTest {
     private lateinit var userRepository: UserRepositoryFake
 
     private lateinit var messageMock: Message
-    private lateinit var messenger: MessengerFake
 
     private val user: User = Dummies.createUserFullFilled()
 
@@ -33,9 +29,8 @@ internal class CommandListenerTest {
     @BeforeEach
     fun setup() {
         commandProcessor = mockk(relaxed = true)
-        messenger = MessengerFake()
         userRepository = UserRepositoryFake()
-        commandListener = CommandListener(commandProcessor, prefix, messenger, userRepository)
+        commandListener = CommandListener(commandProcessor, prefix, userRepository)
 
         messageMock = mockk(relaxed = true)
 
@@ -76,47 +71,25 @@ internal class CommandListenerTest {
     }
 
     @Test
-    fun startWithCmdPrefix_shouldCallCommandService() {
-        mockMessageAndPrefix("!cw command sub")
-
-        sendMessage()
-
-        verify { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) }
-    }
-
-    @Test
     fun shouldFormatUsers() {
-        assertMessageToCommand("!cw command <@user_id>", label = "cw", args = listOf("command", "user_id"))
+        assertMessageToCommand(
+            "!cw command <@user_id>",
+            DiscordCommandContext(user, "cw", listOf("command", "user_id"), messageMock.channel)
+        )
     }
 
     @Test
     fun shouldTrimWhitespace() {
-        assertMessageToCommand("!cw command  sub", label = "cw", args = listOf("command", "sub"))
-    }
-
-    @Test
-    fun shouldSendMessages() {
-        mockMessageAndPrefix("!cw command sub")
-
-        val response = CommandResponse(
-            status = CommandStatus.SUCCESS,
-            messages = listOf(
-                "message1",
-                "message2"
-            )
+        assertMessageToCommand(
+            "!cw command  sub",
+            DiscordCommandContext(user, "cw", listOf("command", "sub"), messageMock.channel)
         )
-
-        every { commandProcessor.onCommand(user, "cw", listOf("command", "sub")) } returns response
-
-        sendMessage()
-
-        assertEquals(response.messages, messenger.messages)
     }
 
-    private fun assertMessageToCommand(msg: String, label: String, args: List<String>) {
+    private fun assertMessageToCommand(msg: String, context: DiscordCommandContext) {
         mockMessageAndPrefix(msg)
         sendMessage()
-        verify { commandProcessor.onCommand(user, label, args) }
+        verify { commandProcessor.onCommand(context) }
     }
 
     private fun mockMessageAndPrefix(content: String) {
@@ -126,7 +99,7 @@ internal class CommandListenerTest {
     }
 
     private fun assertIgnored() {
-        verify(exactly = 0) { commandProcessor.onCommand(any(), any(), any()) }
+        verify(exactly = 0) { commandProcessor.onCommand(any()) }
     }
 
     private fun sendMessage() {
