@@ -22,8 +22,9 @@ internal class CommandProcessorImplTest {
 
     @Test
     fun shouldForwardToCorrectCommand() {
-        processer.onCommand(user, "test", listOf("arg"))
-        verify(exactly = 1) { command.execute(user) }
+        val context = CommandContextStub(user, "test", listOf())
+        processer.onCommand(context)
+        verify(exactly = 1) { command.execute(context) }
     }
 
 }
