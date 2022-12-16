@@ -5,6 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mcwonderland.domain.command.CommandContext
+import org.mcwonderland.domain.command.CommandContextStub
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.TeamNotFoundException
@@ -20,7 +22,7 @@ import org.mcwonderland.domain.model.UserModification
 class CommandAddToTeamTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandAddToTeamHandle
+    private lateinit var handle: CommandAddToTeamHandle<CommandContextStub>
 
     @BeforeEach
     fun setup() {
@@ -36,7 +38,7 @@ class CommandAddToTeamTest : CommandTestBase() {
     }
 
     private fun assertFailWithUsage() {
-        verify { handle.failWithUsage(command.usage) }
+        verify { handle.failWithUsage(context, command.usage) }
     }
 
     @Test

@@ -13,7 +13,7 @@ import org.mcwonderland.domain.features.RegistrationService
 class CommandToggleRegTest : CommandTestBase() {
 
     private lateinit var service: RegistrationService
-    private lateinit var handle: CommandToggleRegHandle
+    private lateinit var handle: CommandToggleRegHandle<Any?>
 
     @BeforeEach
     fun setup() {

@@ -13,7 +13,7 @@ import org.mcwonderland.domain.features.RegistrationService
 
 internal class CommandListRegTest : CommandTestBase() {
 
-    private lateinit var handle: CommandListRegHandle
+    private lateinit var handle: CommandListRegHandle<Any?>
     private lateinit var registrationService: RegistrationService
 
     @BeforeEach

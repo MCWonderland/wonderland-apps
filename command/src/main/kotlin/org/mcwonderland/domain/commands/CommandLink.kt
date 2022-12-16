@@ -8,34 +8,34 @@ import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.model.User
 
-class CommandLink(
+class CommandLink<T: CommandContext>(
     override val label: String,
     private val accountLinker: AccountLinker,
-    private val handle: CommandLinkHandle
-) : Command {
+    private val handle: CommandLinkHandle<in CommandContext>
+) : Command<T> {
     override val usage: String = "/$label <minecraft username>"
 
-    override fun execute(context: CommandContext) {
-        val uuid = context.getArg(0) ?: return handle.missingArgId()
+    override fun execute(context: T) {
+        val uuid = context.getArg(0) ?: return handle.missingArgId(context)
 
         return try {
             val userLinked = accountLinker.link(context.sender, uuid)
-            handle.linked(userLinked)
+            handle.linked(context, userLinked)
         } catch (e: AccountAlreadyLinkedException) {
-            handle.failAccountAlreadyLinked(e)
+            handle.failAccountAlreadyLinked(context, e)
         } catch (e: MCAccountNotFoundException) {
-            handle.failMcAccountNotFound(e)
+            handle.failMcAccountNotFound(context, e)
         } catch (e: MCAccountLinkedByOthersException) {
-            handle.failMcAccountLinkedByOthers(e)
+            handle.failMcAccountLinkedByOthers(context, e)
         }
     }
 
 }
 
-interface CommandLinkHandle {
-    fun missingArgId()
-    fun linked(userLinked: User)
-    fun failAccountAlreadyLinked(e: AccountAlreadyLinkedException)
-    fun failMcAccountNotFound(e: MCAccountNotFoundException)
-    fun failMcAccountLinkedByOthers(e: MCAccountLinkedByOthersException)
+interface CommandLinkHandle<Context : CommandContext> {
+    fun missingArgId(context: Context)
+    fun linked(context: Context, userLinked: User)
+    fun failAccountAlreadyLinked(context: Context, e: AccountAlreadyLinkedException)
+    fun failMcAccountNotFound(context: Context, e: MCAccountNotFoundException)
+    fun failMcAccountLinkedByOthers(context: Context, e: MCAccountLinkedByOthersException)
 }

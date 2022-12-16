@@ -10,16 +10,16 @@ import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.UserModification
 
-class CommandRemoveTeam(
+class CommandRemoveTeam<T: CommandContext>(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandRemoveTeamHandle
-) : Command {
+    private val handle: CommandRemoveTeamHandle<in CommandContext>
+) : Command<T> {
 
     override val usage: String = "/$label <user>"
 
-    override fun execute(context: CommandContext) {
-        val targetId = context.getArg(0) ?: return handle.failWithUsage(usage)
+    override fun execute(context: T) {
+        val targetId = context.getArg(0) ?: return handle.failWithUsage(context, usage)
 
         return try {
             val teamAfterRemoveTarget = teamService.removeFromTeam(UserModification(context.sender, targetId))
@@ -35,7 +35,7 @@ class CommandRemoveTeam(
 
 }
 
-interface CommandRemoveTeamHandle : FailWithUsage {
+interface CommandRemoveTeamHandle<Context : CommandContext> : FailWithUsage<Context> {
     fun onSuccess(teamAfterRemoveTarget: Team)
     fun failPermissionDenied(e: PermissionDeniedException)
     fun failUserNotFound(e: UserNotFoundException)

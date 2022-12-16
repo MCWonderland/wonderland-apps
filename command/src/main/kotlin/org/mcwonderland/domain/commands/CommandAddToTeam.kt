@@ -12,36 +12,36 @@ import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.UserModification
 
-class CommandAddToTeam(
+class CommandAddToTeam<T : CommandContext>(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandAddToTeamHandle,
-) : Command {
+    private val handle: CommandAddToTeamHandle<T>,
+) : Command<T> {
 
     override val usage: String = "/$label <team> <id>"
 
-    override fun execute(context: CommandContext) {
-        val teamId = context.getArg(0) ?: return handle.failWithUsage(usage)
-        val userId = context.getArg(1) ?: return handle.failWithUsage(usage)
+    override fun execute(context: T) {
+        val teamId = context.getArg(0) ?: return handle.failWithUsage(context, usage)
+        val userId = context.getArg(1) ?: return handle.failWithUsage(context, usage)
 
         try {
             val result = teamService.addUserToTeam(UserModification(context.sender, userId), teamId)
-            handle.onAdded(result)
+            handle.onAdded(context, result)
         } catch (e: PermissionDeniedException) {
-            handle.failPermissionDenied(e)
+            handle.failPermissionDenied(context, e)
         } catch (e: UserNotFoundException) {
-            handle.failUserNotFound(e)
+            handle.failUserNotFound(context, e)
         } catch (e: UserAlreadyInTeamException) {
-            handle.failUserAlreadyInTeam(e)
+            handle.failUserAlreadyInTeam(context, e)
         } catch (e: TeamNotFoundException) {
-            handle.failTeamNotFound(e)
+            handle.failTeamNotFound(context, e)
         }
     }
 }
 
-interface CommandAddToTeamHandle : FailWithUsage, FailNoPermission {
-    fun failUserNotFound(e: UserNotFoundException)
-    fun failUserAlreadyInTeam(e: UserAlreadyInTeamException)
-    fun failTeamNotFound(e: TeamNotFoundException)
-    fun onAdded(result: AddToTeamResult)
+interface CommandAddToTeamHandle<Context : CommandContext> : FailWithUsage<Context>, FailNoPermission<Context> {
+    fun failUserNotFound(context: Context, e: UserNotFoundException)
+    fun failUserAlreadyInTeam(context: Context, e: UserAlreadyInTeamException)
+    fun failTeamNotFound(context: Context, e: TeamNotFoundException)
+    fun onAdded(context: Context, result: AddToTeamResult)
 }

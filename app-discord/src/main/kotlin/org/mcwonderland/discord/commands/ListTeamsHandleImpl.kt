@@ -8,7 +8,7 @@ import org.mcwonderland.domain.model.Team
 class ListTeamsHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandListTeamsHandle {
+) : CommandListTeamsHandle<Any?> {
 
     override fun failNoPermission() {
         commandHistory.sendEmbed(messages.noPermission())

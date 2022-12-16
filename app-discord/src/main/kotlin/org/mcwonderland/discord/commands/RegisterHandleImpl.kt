@@ -9,7 +9,7 @@ import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 class RegisterHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandRegisterHandle {
+) : CommandRegisterHandle<Any?> {
 
     override fun onRegistered() {
         commandHistory.sendEmbed(messages.registered())

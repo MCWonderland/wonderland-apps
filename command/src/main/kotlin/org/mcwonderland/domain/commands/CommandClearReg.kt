@@ -6,25 +6,25 @@ import org.mcwonderland.domain.command.handles.FailNoPermission
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 
-class CommandClearReg(
+class CommandClearReg<T : CommandContext>(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val handle: CommandClearRegHandle
-) : Command {
+    private val handle: CommandClearRegHandle<T>
+) : Command<T> {
 
     override val usage: String = "/$label"
 
-    override fun execute(context: CommandContext) {
+    override fun execute(context: T) {
         return try {
             registrationService.clearRegistrations(context.sender)
-            handle.onCleared()
+            handle.onCleared(context)
         } catch (e: PermissionDeniedException) {
-            handle.failPermissionDenied(e)
+            handle.failPermissionDenied(context, e)
         }
     }
 
 }
 
-interface CommandClearRegHandle : FailNoPermission {
-    fun onCleared()
+interface CommandClearRegHandle<Context : CommandContext> : FailNoPermission<Context> {
+    fun onCleared(context: Context)
 }

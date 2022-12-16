@@ -6,8 +6,11 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.listener.CommandListener
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.discord.module.CommandHistoryImpl
+import org.mcwonderland.domain.command.Command
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.commands.*
 import org.mcwonderland.domain.repository.UserRepository
@@ -32,7 +35,7 @@ fun main() {
 
     val config = injector.getInstance(Config::class.java)
 
-    val commands = mutableListOf(
+    val commands = mutableListOf<Command<*>>(
         injector.getInstance(CommandAddToTeam::class.java),
         injector.getInstance(CommandClearReg::class.java),
         injector.getInstance(CommandCreateTeam::class.java),

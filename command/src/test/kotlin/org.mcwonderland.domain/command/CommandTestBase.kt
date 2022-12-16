@@ -9,6 +9,7 @@ abstract class CommandTestBase {
     protected lateinit var command: Command
 
     protected lateinit var sender: UserStub
+    protected lateinit var context: CommandContext
 
     @BeforeEach
     fun setupCommandTestBase() {
@@ -24,7 +25,8 @@ abstract class CommandTestBase {
     }
 
     fun executeCommand(args: List<String>) {
-        return command.execute(CommandContextStub(sender, command.label, args))
+        context = CommandContextStub(sender, command.label, args)
+        return command.execute(context)
     }
 
 

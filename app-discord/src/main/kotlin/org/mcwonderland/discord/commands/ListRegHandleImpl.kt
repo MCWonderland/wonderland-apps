@@ -8,7 +8,7 @@ import org.mcwonderland.domain.model.User
 class ListRegHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandListRegHandle {
+) : CommandListRegHandle<Any?> {
 
     override fun failNoPermission() {
         commandHistory.sendEmbed(messages.noPermission())

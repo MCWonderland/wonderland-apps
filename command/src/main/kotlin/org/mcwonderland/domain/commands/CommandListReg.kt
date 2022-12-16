@@ -6,27 +6,27 @@ import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
-class CommandListReg(
+class CommandListReg<T: CommandContext>(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val handle: CommandListRegHandle
-) : Command {
+    private val handle: CommandListRegHandle<in CommandContext>
+) : Command<T> {
     override val usage: String = "/$label"
 
-    override fun execute(context: CommandContext) {
+    override fun execute(context: T) {
 
         return try {
             context.checkAdminPermission()
             val users = registrationService.listRegistrations()
-            handle.success(users)
+            handle.success(context, users)
         } catch (e: PermissionDeniedException) {
-            handle.failNoPermission()
+            handle.failNoPermission(context)
         }
     }
 
 }
 
-interface CommandListRegHandle {
-    fun failNoPermission()
-    fun success(users: Collection<User>)
+interface CommandListRegHandle<Context : CommandContext> {
+    fun failNoPermission(context: Context)
+    fun success(context: Context, users: Collection<User>)
 }

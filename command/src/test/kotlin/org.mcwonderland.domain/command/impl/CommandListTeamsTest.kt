@@ -15,7 +15,7 @@ import org.mcwonderland.domain.model.Team
 internal class CommandListTeamsTest : CommandTestBase() {
 
     private lateinit var teamService: TeamService
-    private lateinit var handle: CommandListTeamsHandle
+    private lateinit var handle: CommandListTeamsHandle<Any?>
 
     @BeforeEach
     fun setUp() {

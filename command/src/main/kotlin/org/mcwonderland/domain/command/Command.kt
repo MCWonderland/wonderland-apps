@@ -1,9 +1,9 @@
 package org.mcwonderland.domain.command
 
-interface Command {
+interface Command<T : CommandContext> {
     val label: String
     val usage: String
 
-    fun execute(context: CommandContext)
+    fun execute(context: T)
 
 }

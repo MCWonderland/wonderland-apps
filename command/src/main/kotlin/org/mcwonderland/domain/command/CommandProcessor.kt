@@ -1,5 +1,5 @@
 package org.mcwonderland.domain.command
 
-interface CommandProcessor {
+interface CommandProcessor{
     fun onCommand(context: CommandContext)
 }

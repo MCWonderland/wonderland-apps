@@ -1,6 +1,7 @@
 package org.mcwonderland.discord.commands
 
 import org.mcwonderland.discord.config.Messages
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.discord.module.CommandHistory
 import org.mcwonderland.domain.commands.CommandAddToTeamHandle
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
@@ -12,13 +13,13 @@ import org.mcwonderland.domain.model.AddToTeamResult
 class AddToTeamHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandAddToTeamHandle {
+) : CommandAddToTeamHandle<DiscordCommandContext> {
 
-    override fun failUserNotFound(e: UserNotFoundException) {
+    override fun failUserNotFound(context: DiscordCommandContext, e: UserNotFoundException) {
         commandHistory.sendEmbed(messages.userNotFound(e.id))
     }
 
-    override fun failUserAlreadyInTeam(e: UserAlreadyInTeamException) {
+    override fun failUserAlreadyInTeam(context: DiscordCommandContext, e: UserAlreadyInTeamException) {
         commandHistory.sendEmbed(messages.userAlreadyInTeam(e.user))
     }
 
@@ -36,6 +37,22 @@ class AddToTeamHandleImpl(
 
     override fun failPermissionDenied(e: PermissionDeniedException) {
         commandHistory.sendEmbed(messages.noPermission())
+    }
+
+    override fun failPermissionDenied(context: DiscordCommandContext, e: PermissionDeniedException) {
+        TODO("Not yet implemented")
+    }
+
+    override fun failWithUsage(context: DiscordCommandContext, usage: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun failTeamNotFound(context: DiscordCommandContext, e: TeamNotFoundException) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAdded(context: DiscordCommandContext, result: AddToTeamResult) {
+        TODO("Not yet implemented")
     }
 
 }

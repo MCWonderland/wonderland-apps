@@ -6,35 +6,35 @@ import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
 
-class CommandRegister(
+class CommandRegister<T: CommandContext>(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val handle: CommandRegisterHandle
-) : Command {
+    private val handle: CommandRegisterHandle<in CommandContext>
+) : Command<T> {
     override val usage: String = "/$label"
 
-    override fun execute(context: CommandContext) {
+    override fun execute(context: T) {
 
         return try {
             val newState = registrationService.toggleRegister(context.sender)
 
             if (newState)
-                handle.onRegistered()
+                handle.onRegistered(context)
             else
-                handle.onUnregistered()
+                handle.onUnregistered(context)
         } catch (e: RequireLinkedAccountException) {
-            handle.failRequireLinkedAccount(e)
+            handle.failRequireLinkedAccount(context, e)
         } catch (e: NotAllowRegistrationsException) {
-            handle.failNotAllowRegistrations(e)
+            handle.failNotAllowRegistrations(context, e)
         }
 
     }
 
 }
 
-interface CommandRegisterHandle {
-    fun onRegistered()
-    fun onUnregistered()
-    fun failRequireLinkedAccount(e: RequireLinkedAccountException)
-    fun failNotAllowRegistrations(e: NotAllowRegistrationsException)
+interface CommandRegisterHandle<Context : CommandContext> {
+    fun onRegistered(context: Context)
+    fun onUnregistered(context: Context)
+    fun failRequireLinkedAccount(context: Context, e: RequireLinkedAccountException)
+    fun failNotAllowRegistrations(context: Context, e: NotAllowRegistrationsException)
 }

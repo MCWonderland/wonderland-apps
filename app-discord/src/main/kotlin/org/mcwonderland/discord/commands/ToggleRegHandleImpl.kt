@@ -7,7 +7,7 @@ import org.mcwonderland.domain.commands.CommandToggleRegHandle
 class ToggleRegHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandToggleRegHandle {
+) : CommandToggleRegHandle<Any?> {
 
     override fun onEnableRegistrations() {
         commandHistory.sendEmbed(messages.nowAcceptRegistrations())

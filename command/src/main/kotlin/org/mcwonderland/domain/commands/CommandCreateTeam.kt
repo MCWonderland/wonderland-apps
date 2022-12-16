@@ -11,39 +11,39 @@ import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 
-class CommandCreateTeam(
+class CommandCreateTeam<T : CommandContext>(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandCreateTeamHandle
-) : Command {
+    private val handle: CommandCreateTeamHandle<T>
+) : Command<T> {
 
     override val usage: String = "/$label <id> <id>...."
 
-    override fun execute(context: CommandContext) {
+    override fun execute(context: T) {
         val ids = context.args
 
         if (ids.isEmpty())
-            return handle.failWithUsage(usage)
+            return handle.failWithUsage(context, usage)
 
         return try {
             val team = teamService.createTeam(context.sender, ids)
-            handle.success(team)
+            handle.success(context, team)
         } catch (e: PermissionDeniedException) {
-            handle.failPermissionDenied(e)
+            handle.failPermissionDenied(context, e)
         } catch (e: MemberCantBeEmptyException) {
-            handle.failMembersCantBeEmpty(e)
+            handle.failMembersCantBeEmpty(context, e)
         } catch (e: UsersNotFoundException) {
-            handle.failUsersNotFound(e)
+            handle.failUsersNotFound(context, e)
         } catch (e: UsersAlreadyInTeamException) {
-            handle.failUsersAlreadyInTeam(e)
+            handle.failUsersAlreadyInTeam(context, e)
         }
     }
 
 }
 
-interface CommandCreateTeamHandle : FailWithUsage, FailNoPermission {
-    fun success(team: Team)
-    fun failMembersCantBeEmpty(e: MemberCantBeEmptyException)
-    fun failUsersNotFound(e: UsersNotFoundException)
-    fun failUsersAlreadyInTeam(e: UsersAlreadyInTeamException)
+interface CommandCreateTeamHandle<Context : CommandContext> : FailWithUsage<Context>, FailNoPermission<Context> {
+    fun success(context: Context, team: Team)
+    fun failMembersCantBeEmpty(context: Context, e: MemberCantBeEmptyException)
+    fun failUsersNotFound(context: Context, e: UsersNotFoundException)
+    fun failUsersAlreadyInTeam(context: Context, e: UsersAlreadyInTeamException)
 }
