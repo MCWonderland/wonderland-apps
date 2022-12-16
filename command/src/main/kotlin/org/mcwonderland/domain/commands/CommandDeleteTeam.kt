@@ -5,15 +5,15 @@ import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.handles.FailWithUsage
 import org.mcwonderland.domain.features.TeamService
 
-class CommandDeleteTeam<T : CommandContext>(
+class CommandDeleteTeam(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandDeleteTeamHandle<T>
-) : Command<T> {
+    private val handle: CommandDeleteTeamHandle<CommandContext>
+) : Command {
 
     override val usage: String = "/$label <teamId>"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
         val teamId = context.getArg(0) ?: return handle.failWithUsage(context, usage)
         teamService.deleteTeam(context.sender, teamId)
         return handle.success(context, teamId)

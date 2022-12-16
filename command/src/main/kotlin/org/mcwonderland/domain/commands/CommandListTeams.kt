@@ -6,14 +6,14 @@ import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 
-class CommandListTeams<T: CommandContext>(
+class CommandListTeams(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandListTeamsHandle<in CommandContext>
-) : Command<T> {
+    private val handle: CommandListTeamsHandle<CommandContext>
+) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
         return try {
             context.checkAdminPermission()
 

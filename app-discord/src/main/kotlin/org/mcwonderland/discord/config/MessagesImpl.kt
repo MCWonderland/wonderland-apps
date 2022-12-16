@@ -183,7 +183,7 @@ class Messages(private val mojangAccount: MojangAccount) {
             .build()
     }
 
-    fun commandHelp(commands: List<Command<*>>): String {
+    fun commandHelp(commands: List<Command>): String {
         val messages = mutableListOf<String>()
 
         messages.add("指令列表:")

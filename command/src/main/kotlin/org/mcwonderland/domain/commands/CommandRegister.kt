@@ -6,14 +6,14 @@ import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
 import org.mcwonderland.domain.features.RegistrationService
 
-class CommandRegister<T: CommandContext>(
+class CommandRegister(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val handle: CommandRegisterHandle<in CommandContext>
-) : Command<T> {
+    private val handle: CommandRegisterHandle<CommandContext>
+) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
 
         return try {
             val newState = registrationService.toggleRegister(context.sender)

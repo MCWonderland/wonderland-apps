@@ -11,15 +11,15 @@ import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team
 
-class CommandCreateTeam<T : CommandContext>(
+class CommandCreateTeam(
     override val label: String,
     private val teamService: TeamService,
-    private val handle: CommandCreateTeamHandle<T>
-) : Command<T> {
+    private val handle: CommandCreateTeamHandle<CommandContext>
+) : Command {
 
     override val usage: String = "/$label <id> <id>...."
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
         val ids = context.args
 
         if (ids.isEmpty())

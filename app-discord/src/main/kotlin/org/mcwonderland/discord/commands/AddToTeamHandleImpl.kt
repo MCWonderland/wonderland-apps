@@ -23,36 +23,19 @@ class AddToTeamHandleImpl(
         commandHistory.sendEmbed(messages.userAlreadyInTeam(e.user))
     }
 
-    override fun failTeamNotFound(e: TeamNotFoundException) {
+    override fun failTeamNotFound(context: DiscordCommandContext, e: TeamNotFoundException) {
         commandHistory.sendEmbed(messages.teamNotFound(e.teamId))
     }
 
-    override fun onAdded(result: AddToTeamResult) {
+    override fun onAdded(context: DiscordCommandContext, result: AddToTeamResult) {
         commandHistory.sendEmbed(messages.addedUserToTeam(result))
     }
 
-    override fun failWithUsage(usage: String) {
+    override fun failWithUsage(context: DiscordCommandContext, usage: String) {
         commandHistory.sendEmbed(messages.commandUsage(usage))
     }
 
-    override fun failPermissionDenied(e: PermissionDeniedException) {
+    override fun failPermissionDenied(context: DiscordCommandContext, e: PermissionDeniedException) {
         commandHistory.sendEmbed(messages.noPermission())
     }
-
-    override fun failPermissionDenied(context: DiscordCommandContext, e: PermissionDeniedException) {
-        TODO("Not yet implemented")
-    }
-
-    override fun failWithUsage(context: DiscordCommandContext, usage: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun failTeamNotFound(context: DiscordCommandContext, e: TeamNotFoundException) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAdded(context: DiscordCommandContext, result: AddToTeamResult) {
-        TODO("Not yet implemented")
-    }
-
 }

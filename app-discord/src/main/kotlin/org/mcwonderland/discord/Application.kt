@@ -35,7 +35,7 @@ fun main() {
 
     val config = injector.getInstance(Config::class.java)
 
-    val commands = mutableListOf<Command<*>>(
+    val commands = mutableListOf(
         injector.getInstance(CommandAddToTeam::class.java),
         injector.getInstance(CommandClearReg::class.java),
         injector.getInstance(CommandCreateTeam::class.java),

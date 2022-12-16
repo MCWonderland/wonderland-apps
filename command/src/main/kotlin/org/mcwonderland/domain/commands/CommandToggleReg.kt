@@ -4,14 +4,14 @@ import org.mcwonderland.domain.command.Command
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.features.RegistrationService
 
-class CommandToggleReg<T: CommandContext>(
+class CommandToggleReg(
     override val label: String,
     private val service: RegistrationService,
-    private val handle: CommandToggleRegHandle<in CommandContext>
-) : Command<T> {
+    private val handle: CommandToggleRegHandle<CommandContext>
+) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
         val state = service.toggleAllowRegistrations(context.sender)
 
         if (state)

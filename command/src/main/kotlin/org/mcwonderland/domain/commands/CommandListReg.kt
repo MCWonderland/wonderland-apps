@@ -6,14 +6,14 @@ import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 import org.mcwonderland.domain.model.User
 
-class CommandListReg<T: CommandContext>(
+class CommandListReg(
     override val label: String,
     private val registrationService: RegistrationService,
-    private val handle: CommandListRegHandle<in CommandContext>
-) : Command<T> {
+    private val handle: CommandListRegHandle<CommandContext>
+) : Command {
     override val usage: String = "/$label"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
 
         return try {
             context.checkAdminPermission()

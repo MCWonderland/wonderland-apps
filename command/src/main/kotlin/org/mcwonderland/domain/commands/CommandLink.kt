@@ -8,14 +8,14 @@ import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
 import org.mcwonderland.domain.features.AccountLinker
 import org.mcwonderland.domain.model.User
 
-class CommandLink<T: CommandContext>(
+class CommandLink(
     override val label: String,
     private val accountLinker: AccountLinker,
-    private val handle: CommandLinkHandle<in CommandContext>
-) : Command<T> {
+    private val handle: CommandLinkHandle<CommandContext>
+) : Command {
     override val usage: String = "/$label <minecraft username>"
 
-    override fun execute(context: T) {
+    override fun execute(context: CommandContext) {
         val uuid = context.getArg(0) ?: return handle.missingArgId(context)
 
         return try {

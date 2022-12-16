@@ -1,7 +1,9 @@
 package org.mcwonderland.discord.commands
 
 import org.mcwonderland.discord.config.Messages
+import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.discord.module.CommandHistory
+import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.commands.CommandRemoveTeamHandle
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
@@ -11,7 +13,7 @@ import org.mcwonderland.domain.model.Team
 class CommandRemoveTeamHandleImpl(
     private val messages: Messages,
     private val commandHistory: CommandHistory
-) : CommandRemoveTeamHandle {
+) : CommandRemoveTeamHandle<DiscordCommandContext> {
 
     override fun onSuccess(teamAfterRemoveTarget: Team) {
         commandHistory.sendEmbed(messages.userRemovedFromTeam(teamAfterRemoveTarget))
@@ -29,7 +31,7 @@ class CommandRemoveTeamHandleImpl(
         commandHistory.sendEmbed(messages.userNotInTeam(e.user))
     }
 
-    override fun failWithUsage(usage: String) {
+    override fun failWithUsage(context: DiscordCommandContext, usage: String) {
         commandHistory.sendEmbed(messages.commandUsage(usage))
     }
 
