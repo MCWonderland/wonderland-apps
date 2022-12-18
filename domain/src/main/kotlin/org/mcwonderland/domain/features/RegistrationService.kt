@@ -7,4 +7,5 @@ interface RegistrationService {
     fun listRegistrations(): Collection<User>
     fun clearRegistrations(executor: User)
     fun toggleAllowRegistrations(user: User): Boolean
+    fun removeRegistration(userId: String): User
 }

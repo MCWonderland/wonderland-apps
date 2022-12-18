@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -9,9 +9,6 @@ import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
-import org.mcwonderland.domain.commands.CommandClearReg
-import org.mcwonderland.domain.commands.CommandClearRegHandle
-import org.mcwonderland.domain.model.UserModification
 
 class CommandClearRegTest : CommandTestBase() {
 

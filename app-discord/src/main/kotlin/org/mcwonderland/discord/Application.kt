@@ -40,7 +40,8 @@ fun main() {
         injector.getInstance(CommandListTeams::class.java),
         injector.getInstance(CommandRegister::class.java),
         injector.getInstance(CommandRemoveTeam::class.java),
-        injector.getInstance(CommandToggleReg::class.java)
+        injector.getInstance(CommandToggleReg::class.java),
+        injector.getInstance(CommandRemoveReg::class.java),
     )
 
     commands.add(CommandHelp("help", commands, HelpHandleImpl(config.commandPrefix) as CommandHelpHandle<CommandContext>))

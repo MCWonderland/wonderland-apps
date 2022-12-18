@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -6,7 +6,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
-import org.mcwonderland.domain.command.CommandContextStub
 import org.mcwonderland.domain.command.CommandTestBase
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.TeamNotFoundException
@@ -14,8 +13,6 @@ import org.mcwonderland.domain.exceptions.UserAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.commands.CommandAddToTeam
-import org.mcwonderland.domain.commands.CommandAddToTeamHandle
 import org.mcwonderland.domain.model.AddToTeamResult
 import org.mcwonderland.domain.model.UserModification
 

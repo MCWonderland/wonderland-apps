@@ -15,6 +15,10 @@ class RegistrationRepositoryFake : RegistrationRepository {
         registeredUsers.add(userId)
     }
 
+    override fun removeRegistration(userId: String) {
+        registeredUsers.remove(userId)
+    }
+
     override fun toggleRegistration(userId: String): Boolean {
         if (isRegistered(userId)) {
             registeredUsers.remove(userId)

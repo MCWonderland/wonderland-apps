@@ -32,12 +32,14 @@ class ServiceModule : AbstractModule() {
         userRepository: UserRepository,
         settingsRepository: SettingsRepository,
         accountLinker: AccountLinker,
+        userFinder: UserFinder
     ): RegistrationService {
         return RegistrationServiceImpl(
             registrationRepository = registrationRepository,
             userRepository = userRepository,
             settingsRepository = settingsRepository,
             accountLinker = accountLinker,
+            userFinder = userFinder
         )
     }
 

@@ -80,4 +80,18 @@ internal class RegistrationRepositoryImplTest : MongoDBTest() {
         assertEquals(emptyList(), collection.find().toList())
     }
 
+    @Test
+    fun removeRegistration() {
+        collection.insertMany(
+            listOf(
+                RegistrationContext("test1", true),
+                RegistrationContext("test2", true)
+            )
+        )
+
+        repo.removeRegistration("test1")
+
+        assertEquals(listOf("test2"), repo.listRegistrations())
+    }
+
 }

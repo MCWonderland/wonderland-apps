@@ -7,10 +7,9 @@ import org.junit.jupiter.api.assertThrows
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
+import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.fakes.*
-import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.SettingsRepository
-import org.mcwonderland.domain.repository.UserRepository
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -21,6 +20,7 @@ internal class RegistrationServiceImplTest {
     private lateinit var accountLinker: AccountLinkerFake
     private lateinit var registrationRepository: RegistrationRepositoryFake
     private lateinit var userRepository: UserRepositoryFake
+    private lateinit var userFinder: UserFinderFake
     private lateinit var settingsRepository: SettingsRepository
 
     private lateinit var user: UserStub
@@ -33,8 +33,16 @@ internal class RegistrationServiceImplTest {
         registrationRepository = RegistrationRepositoryFake()
         userRepository = UserRepositoryFake()
         settingsRepository = SettingsRepositoryFake()
+        userFinder = UserFinderFake()
+
         registrationService =
-            RegistrationServiceImpl(accountLinker, registrationRepository, settingsRepository, userRepository)
+            RegistrationServiceImpl(
+                accountLinker,
+                registrationRepository,
+                settingsRepository,
+                userRepository,
+                userFinder
+            )
     }
 
     @Nested
@@ -131,6 +139,24 @@ internal class RegistrationServiceImplTest {
             assertTrue { settingsRepository.isAllowRegistrations() }
         }
 
+    }
+
+    @Nested
+    inner class RemoveRegistration {
+        @Test
+        fun userNotFound_shouldFail() {
+            assertThrows<UserNotFoundException> { registrationService.removeRegistration(user.id) }
+        }
+
+        @Test
+        fun shouldRemoveRegistration() {
+            registrationRepository.addRegistration(user.id)
+
+            userFinder.add(user)
+            registrationService.removeRegistration(user.id)
+
+            assertFalse { registrationRepository.isRegistered(user.id) }
+        }
     }
 
 

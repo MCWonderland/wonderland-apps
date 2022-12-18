@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.commands.CommandListTeams
-import org.mcwonderland.domain.commands.CommandListTeamsHandle
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
 import org.mcwonderland.domain.model.Team

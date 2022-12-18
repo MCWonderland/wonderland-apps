@@ -4,9 +4,10 @@ import org.mcwonderland.discord.config.Messages
 import org.mcwonderland.discord.model.DiscordCommandContext
 import org.mcwonderland.domain.commands.CommandRemoveRegHandle
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
+import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.model.User
 
-class RemoveRegHandle(private val messages: Messages) : CommandRemoveRegHandle<DiscordCommandContext> {
+class RemoveRegHandleImpl(private val messages: Messages) : CommandRemoveRegHandle<DiscordCommandContext> {
 
     override fun failPermissionDenied(context: DiscordCommandContext, e: PermissionDeniedException) {
         context.sendEmbed(messages.noPermission())
@@ -18,5 +19,9 @@ class RemoveRegHandle(private val messages: Messages) : CommandRemoveRegHandle<D
 
     override fun registrationRemoved(context: DiscordCommandContext, target: User) {
         context.sendEmbed(messages.registrationRemoved(target))
+    }
+
+    override fun failUserNotFound(context: DiscordCommandContext, e: UserNotFoundException) {
+        context.sendEmbed(messages.userNotFound(e.id))
     }
 }

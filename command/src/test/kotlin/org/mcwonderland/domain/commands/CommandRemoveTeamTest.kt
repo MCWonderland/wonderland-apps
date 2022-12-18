@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.commands.CommandRemoveTeam
-import org.mcwonderland.domain.commands.CommandRemoveTeamHandle
 import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.exceptions.UserNotInTeamException

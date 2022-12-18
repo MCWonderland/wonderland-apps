@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -6,10 +6,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.mcwonderland.domain.command.CommandContext
-import org.mcwonderland.domain.command.CommandContextStub
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.commands.CommandLink
-import org.mcwonderland.domain.commands.CommandLinkHandle
 import org.mcwonderland.domain.exceptions.AccountAlreadyLinkedException
 import org.mcwonderland.domain.exceptions.MCAccountLinkedByOthersException
 import org.mcwonderland.domain.exceptions.MCAccountNotFoundException
