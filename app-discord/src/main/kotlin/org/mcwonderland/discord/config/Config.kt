@@ -8,6 +8,7 @@ interface Config {
 }
 
 interface CommandLabels {
+    val clearTeams: String
     val removeReg: String
     val link: String
     val register: String
@@ -36,4 +37,5 @@ class CommandLabelsDefault : CommandLabels {
     override val toggleReg: String = "togglereg"
     override val deleteTeam: String = "deleteteam"
     override val clearReg: String = "clearreg"
+    override val clearTeams: String = "clearteams"
 }

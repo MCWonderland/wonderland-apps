@@ -302,6 +302,20 @@ internal class TeamServiceImplTest {
 
             assertTrue(teamRepository.findAll().isEmpty())
         }
+    }
+
+    @Nested
+    inner class ClearTeams {
+
+        @Test
+        fun shouldClearTeamsInDB() {
+            teamRepository.createEmptyTeam("team_id")
+
+            val amount = teamService.clearTeams()
+
+            assertTrue(teamRepository.findAll().isEmpty())
+            assertEquals(1, amount)
+        }
 
     }
 

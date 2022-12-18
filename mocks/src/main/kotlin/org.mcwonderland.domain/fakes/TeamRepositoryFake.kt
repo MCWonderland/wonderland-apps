@@ -39,6 +39,12 @@ class TeamRepositoryFake : TeamRepository {
         return team
     }
 
+    override fun clearTeams(): Int {
+        val size = teams.size
+        teams.clear()
+        return size
+    }
+
     fun createTeamWithUsers(vararg users: User): DBTeam {
         return createEmptyTeam(UUID.randomUUID().toString()).apply { members = users.map { it.id } }
     }

@@ -65,4 +65,12 @@ internal class TeamRepositoryImplTest : MongoDBTest() {
         assertEquals(team, teamRepository.deleteTeam(team.id))
         assertEquals(null, teamRepository.findUsersTeam("member"))
     }
+
+    @Test
+    fun clearTeams() {
+        collection.insertOne(team)
+
+        assertEquals(1, teamRepository.clearTeams())
+        assertEquals(0, collection.countDocuments())
+    }
 }

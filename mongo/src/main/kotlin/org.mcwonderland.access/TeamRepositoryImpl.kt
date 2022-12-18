@@ -2,6 +2,7 @@ package org.mcwonderland.access
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.*
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
@@ -18,7 +19,7 @@ class TeamRepositoryImpl(
 
     override fun findUsersTeam(userId: String): DBTeam? {
         return collection
-            .find(Filters.`in`(DBTeam::members.name, userId))
+            .find(`in`(DBTeam::members.name, userId))
             .first()
     }
 
@@ -32,7 +33,7 @@ class TeamRepositoryImpl(
 
     override fun removeUserFromTeam(id: String): DBTeam? {
         return collection.findOneAndUpdate(
-            Filters.`in`(DBTeam::members.name, id),
+            `in`(DBTeam::members.name, id),
             Updates.pull(DBTeam::members.name, id),
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
@@ -40,13 +41,17 @@ class TeamRepositoryImpl(
 
     override fun addUserToTeam(userId: String, teamId: String): DBTeam? {
         return collection.findOneAndUpdate(
-            Filters.eq("_id", teamId),
+            eq("_id", teamId),
             Updates.addToSet(DBTeam::members.name, userId),
             FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         )
     }
 
     override fun deleteTeam(teamId: String): DBTeam? {
-        return collection.findOneAndDelete(Filters.eq("_id", teamId))
+        return collection.findOneAndDelete(eq("_id", teamId))
+    }
+
+    override fun clearTeams(): Int {
+        return collection.deleteMany(exists("_id")).deletedCount.toInt()
     }
 }
