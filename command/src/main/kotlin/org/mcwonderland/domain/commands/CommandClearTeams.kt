@@ -16,8 +16,9 @@ class CommandClearTeams(
     override fun execute(context: CommandContext) {
         try {
             context.checkAdminPermission()
-            teamService.clearTeams()
-            handle.success(context, 5)
+            teamService.clearTeams().let {
+                handle.success(context, it)
+            }
         } catch (e: PermissionDeniedException) {
             handle.failPermissionDenied(context, e)
         }

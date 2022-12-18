@@ -35,11 +35,11 @@ class CommandClearTeamsTest : CommandTestBase() {
     @Test
     fun shouldCallService() {
         sender.addAdminPerm()
-        every { teamService.clearTeams() } returns 5
+        every { teamService.clearTeams() } returns 10
 
         executeWithNoArgs()
 
-        verify { handle.success(context, 5) }
+        verify { handle.success(context, 10) }
     }
 
 }
