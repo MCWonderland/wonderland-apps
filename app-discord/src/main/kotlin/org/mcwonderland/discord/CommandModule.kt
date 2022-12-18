@@ -140,7 +140,7 @@ class CommandModule() : AbstractModule() {
     fun commandClearTeams(providers: CommandProviders, teamService: TeamService): CommandClearTeams {
         return CommandClearTeams(
             label = providers.commandLabels.clearTeams,
-            handle = ClearTeamsHandleImpl(providers.messages) as CommandClearTeamsHandle<CommandContext>,
+            handle = ClearTeamsHandleImpl(providers.messages) as CommandClearTeamHandle<CommandContext>,
             teamService = teamService
         )
     }
