@@ -16,7 +16,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew app-discord:shadowJar
 
       - name: Get the version
         id: get_version
