@@ -16,14 +16,15 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Gradle
-        run: ./gradlew app-discord:shadowJar
+        run: ./gradlew :app-discord:test :app-discord:shadowJar
 
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
 
       - name: Build Docker Image With Commit Tag
-        run: cd app-discord && docker build . -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }}
+        # tag the image with the commit sha and latest
+        run: cd app-discord && docker build . -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }} -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:latest
 
       - name: Login to Container Registry
         uses: docker/login-action@v1
@@ -34,3 +35,10 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }}
+
+      - name: Update K8s Pod
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: set image deployment/wl-discord-bot wl-discord-bot=${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }}
