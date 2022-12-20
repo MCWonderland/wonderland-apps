@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.exceptions.PermissionDeniedException
 import org.mcwonderland.domain.features.RegistrationService
 
 class CommandClearRegTest : CommandTestBase() {
@@ -23,21 +22,17 @@ class CommandClearRegTest : CommandTestBase() {
     }
 
     @Test
-    fun shouldCallService() {
-        executeWithNoArgs()
-            .also { verify { registrationService.clearRegistrations(sender) } }
-            .also { verify { handle.onCleared(context) } }
+    fun testExceptionMessageMappings() {
+        executeWithNoArgs().let { verify { handle.failPermissionDenied(context, any()) } }
     }
 
     @Test
-    fun testExceptionMessageMappings() {
-        assertExceptionMapping(PermissionDeniedException()) { handle.failPermissionDenied(context, it) }
-    }
+    fun shouldCallService() {
+        sender.addAdminPerm()
 
-    private fun <T : Exception> assertExceptionMapping(ex: T, function: (ex: T) -> Unit) {
-        every { registrationService.clearRegistrations(sender) } throws ex
         executeWithNoArgs()
-        verify { function(ex) }
+            .also { verify { registrationService.clearRegistrations() } }
+            .also { verify { handle.onCleared(context) } }
     }
 
 }

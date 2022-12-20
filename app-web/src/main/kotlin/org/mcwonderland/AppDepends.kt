@@ -55,13 +55,15 @@ class AppDepends {
         accountLinker: AccountLinker,
         registrationRepository: RegistrationRepository,
         settingsRepository: SettingsRepository,
-        userRepository: UserRepository
+        userRepository: UserRepository,
+        userFinder: UserFinder
     ): RegistrationService {
         return RegistrationServiceImpl(
             accountLinker,
             registrationRepository,
             settingsRepository,
-            userRepository
+            userRepository,
+            userFinder
         )
     }
 
