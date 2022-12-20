@@ -3,7 +3,7 @@ package org.mcwonderland.discord.config
 interface Config {
     val commandPrefix: String
     val dbName: String
-    val mongoConnectionEnv: String
+    val mongoUrl: String
     val commandLabels: CommandLabels
 }
 
