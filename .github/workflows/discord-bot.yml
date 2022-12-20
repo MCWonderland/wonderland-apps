@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      #build with gradle and jdk 17
+
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
@@ -23,7 +23,6 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
 
       - name: Build Docker Image With Commit Tag
-        # tag the image with the commit sha and latest
         run: cd app-discord && docker build . -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }} -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:latest
 
       - name: Login to Container Registry

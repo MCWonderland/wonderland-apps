@@ -33,11 +33,19 @@ subprojects {
     }
 
     dependencies {
-        if (project.name != "domain")
-            implementation(project(":domain"))
 
         testImplementation(project(":mocks"))
         testImplementation(kotlin("test"))
         testImplementation("io.mockk:mockk:1.13.2")
+    }
+
+    if (project.name != "domain") {
+        dependencies {
+            implementation(project(":domain"))
+        }
+
+        tasks.getByName("shadowJar") {
+            dependsOn(":domain:test")
+        }
     }
 }

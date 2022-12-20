@@ -20,6 +20,7 @@ class AppConfig(private val file: File) : Config {
         if (!loaded) {
             loadConfig()
             loaded = true
+            loaded = true
         }
 
         val value = properties.getProperty(key, default)

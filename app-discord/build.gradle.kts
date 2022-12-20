@@ -10,6 +10,13 @@ dependencies {
     implementation("com.google.inject:guice:5.1.0")
 }
 
+tasks.getByName("shadowJar") {
+    dependsOn(":mojang:test")
+    dependsOn(":mongo:test")
+    dependsOn(":command:test")
+    dependsOn(":test")
+}
+
 tasks.jar {
     manifest {
         attributes["Main-Class"] = "org.mcwonderland.discord.ApplicationKt"
