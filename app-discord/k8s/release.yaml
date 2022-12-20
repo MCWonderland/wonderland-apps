@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: wl-discord-bot
-          image: wl-discord-bot:latest
+          image: registry.digitalocean.com/wonderland-apps/wl-discord-bot:latest
           imagePullPolicy: Always
           env:
             - name: DISCORD_BOT_TOKEN
@@ -24,22 +24,9 @@ spec:
                 secretKeyRef:
                   name: discord
                   key: token
+
             - name: MONGO_URI
               valueFrom:
-                secretKeyRef:
+               secretKeyRef:
                   name: mongo
                   key: uri
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: wl-discord-bot
-  labels:
-    app: wl-discord-bot
-
-spec:
-  type: NodePort
-  selector:
-    app: wl-discord-bot
