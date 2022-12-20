@@ -1,24 +1,22 @@
 package org.mcwonderland.domain.module
 
-import java.io.File
+import java.io.InputStream
 import java.util.Properties
 
-class ProjectVersion {
+class ProjectVersion(private val classLoader: ClassLoader) {
 
     private val unknownVersion = "unknown"
 
     fun get(): String {
-        val file = getVersionFile() ?: return unknownVersion
-        val properties = Properties().apply { load(file.inputStream()) }
+        val inputStream = getVersionResource() ?: return unknownVersion
+
+        val properties = Properties().apply { load(inputStream) }
 
         return properties.getProperty("version") ?: unknownVersion
     }
 
-    private fun getVersionFile(): File? {
-        return this.javaClass.classLoader.getResource("version.properties")?.file?.let { File(it) }
+    private fun getVersionResource(): InputStream? {
+        return classLoader.getResourceAsStream("version.properties")
     }
 
-    private fun unknown(): String {
-        return "unknown"
-    }
 }

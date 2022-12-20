@@ -10,15 +10,6 @@ dependencies {
 }
 
 
-tasks.register<WriteProperties>("versionProperties") {
-    group = "build"
-    description = "Generates version.properties file."
-
-    outputFile = file("$buildDir/resources/main/version.properties")
-    property("version", version)
-    dependsOn("build")
-}
-
 
 tasks.getByName("shadowJar") {
     dependsOn(":mojang:test")

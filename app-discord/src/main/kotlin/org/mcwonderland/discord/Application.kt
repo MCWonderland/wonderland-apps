@@ -7,12 +7,13 @@ import net.dv8tion.jda.api.requests.GatewayIntent
 import org.mcwonderland.discord.commands.HelpHandleImpl
 import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.listener.CommandListener
+import org.mcwonderland.discord.module.BotActivity
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandProcessorImpl
 import org.mcwonderland.domain.commands.*
+import org.mcwonderland.domain.module.ProjectVersion
 import org.mcwonderland.domain.repository.UserRepository
 import org.shanerx.mojang.Mojang
-
 
 fun main() {
     val injector: Injector = Guice.createInjector(
@@ -59,4 +60,6 @@ fun main() {
             injector.getInstance(UserRepository::class.java),
         ),
     )
+
+    BotActivity(jda).setActivity("版本 v${ProjectVersion(object {}::class.java.classLoader).get()}")
 }

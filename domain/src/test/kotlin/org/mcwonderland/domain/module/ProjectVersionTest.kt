@@ -1,35 +1,42 @@
 package org.mcwonderland.domain.module
 
-import org.junit.jupiter.api.Assertions.*
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class ProjectVersionTest {
 
-    private val file = File("build/resources/main/version.properties")
-    private val version = ProjectVersion()
+    private lateinit var classLoader: ClassLoader
+    private lateinit var version: ProjectVersion
 
     @BeforeEach
     fun setup() {
-        file.delete()
+        classLoader = mockk(relaxed = true)
+        version = ProjectVersion(classLoader)
     }
 
     @Test
     fun withoutVersionFile_shouldReturnUnknown() {
+        mockVersionFile(null)
         assertEquals("unknown", version.get())
     }
 
     @Test
     fun noVersionKey_shouldReturnUnknown() {
-        file.writeText("foo=bar")
+        mockVersionFile("foo=bar")
         assertEquals("unknown", version.get())
     }
 
     @Test
     fun withVersionKey_shouldReturnVersion() {
-        file.writeText("version=1.0.0")
+        mockVersionFile("version=1.0.0")
         assertEquals("1.0.0", version.get())
+    }
+
+    private fun mockVersionFile(content: String?) {
+        every { classLoader.getResourceAsStream("version.properties") } returns content?.byteInputStream()
     }
 
 }
