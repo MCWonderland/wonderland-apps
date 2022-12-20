@@ -44,3 +44,6 @@ bin/
 ### Gradle ###
 .gradle/
 /.idea/
+
+### version.properties ###
+version.properties

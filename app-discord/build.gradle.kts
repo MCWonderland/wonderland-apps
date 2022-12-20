@@ -1,6 +1,5 @@
 version = "1.1.0"
 
-
 dependencies {
     implementation(project(":mojang"))
     implementation(project(":mongo"))
@@ -9,6 +8,17 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.google.inject:guice:5.1.0")
 }
+
+
+tasks.register<WriteProperties>("versionProperties") {
+    group = "build"
+    description = "Generates version.properties file."
+
+    outputFile = file("$buildDir/resources/main/version.properties")
+    property("version", version)
+    dependsOn("build")
+}
+
 
 tasks.getByName("shadowJar") {
     dependsOn(":mojang:test")
