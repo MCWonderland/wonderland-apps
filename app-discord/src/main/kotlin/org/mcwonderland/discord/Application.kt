@@ -15,20 +15,20 @@ import org.shanerx.mojang.Mojang
 
 
 fun main() {
-    val jda = JDABuilder
-        .createDefault(System.getenv("DISCORD_BOT_TOKEN"))
-        .enableIntents(listOf(GatewayIntent.MESSAGE_CONTENT))
-        .build()
-        .awaitReady()
-
     val injector: Injector = Guice.createInjector(
-        AppModule(jda = jda, mojangApi = Mojang().connect()),
+        AppModule(mojangApi = Mojang().connect()),
         DatabaseModule(),
         CommandModule(),
         ServiceModule()
     )
 
     val config = injector.getInstance(Config::class.java)
+
+    val jda = JDABuilder
+        .createDefault(config.botToken)
+        .enableIntents(listOf(GatewayIntent.MESSAGE_CONTENT))
+        .build()
+        .awaitReady()
 
     val commands = mutableListOf(
         injector.getInstance(CommandAddToTeam::class.java),
@@ -44,7 +44,13 @@ fun main() {
         injector.getInstance(CommandRemoveReg::class.java),
     )
 
-    commands.add(CommandHelp("help", commands, HelpHandleImpl(config.commandPrefix) as CommandHelpHandle<CommandContext>))
+    commands.add(
+        CommandHelp(
+            "help",
+            commands,
+            HelpHandleImpl(config.commandPrefix) as CommandHelpHandle<CommandContext>
+        )
+    )
 
     jda.addEventListener(
         CommandListener(

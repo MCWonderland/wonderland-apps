@@ -1,6 +1,7 @@
 package org.mcwonderland.discord.config
 
 interface Config {
+    val botToken: String
     val commandPrefix: String
     val dbName: String
     val mongoUrl: String
