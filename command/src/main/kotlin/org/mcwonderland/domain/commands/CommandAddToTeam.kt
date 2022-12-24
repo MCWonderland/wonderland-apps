@@ -18,7 +18,7 @@ class CommandAddToTeam(
     private val handle: CommandAddToTeamHandle<CommandContext>,
 ) : Command {
 
-    override val usage: String = "/$label <team> <id>"
+    override val usage: String = "$label <team> <id>"
 
     override fun execute(context: CommandContext) {
         val teamId = context.getArg(0) ?: return handle.failWithUsage(context, usage)

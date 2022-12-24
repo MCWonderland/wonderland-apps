@@ -2,7 +2,6 @@ package org.mcwonderland.discord
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
-import net.dv8tion.jda.api.JDA
 import org.mcwonderland.discord.config.CommandLabels
 import org.mcwonderland.discord.config.Config
 import org.mcwonderland.discord.config.Messages
@@ -12,12 +11,8 @@ import org.mcwonderland.domain.repository.UserRepository
 import org.mcwonderland.mojang.MojangAccountImpl
 import org.shanerx.mojang.Mojang
 import java.io.File
-import java.util.*
 
-class AppModule(
-    private val jda: JDA,
-    private val mojangApi: Mojang,
-) : AbstractModule() {
+class AppModule(mojangApi: Mojang) : AbstractModule() {
 
     private val mojangAccount = MojangAccountImpl(mojangApi)
 
@@ -29,8 +24,7 @@ class AppModule(
     @Provides
     fun config(): Config {
         val file = File("config.properties")
-        val property = Properties().apply { load(file.inputStream()) }
-        return AppConfig(property)
+        return AppConfig(file)
     }
 
     @Provides
@@ -39,8 +33,8 @@ class AppModule(
     }
 
     @Provides
-    fun messages(mojangAccount: MojangAccount): Messages {
-        return Messages(mojangAccount)
+    fun messages(mojangAccount: MojangAccount, config: Config): Messages {
+        return Messages(mojangAccount, config)
     }
 
     @Provides

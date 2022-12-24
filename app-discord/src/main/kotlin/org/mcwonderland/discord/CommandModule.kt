@@ -126,4 +126,14 @@ class CommandModule() : AbstractModule() {
             handle = ToggleRegHandleImpl(providers.messages) as CommandToggleRegHandle<CommandContext>
         )
     }
+
+    @Provides
+    fun commandRemoveReg(providers: CommandProviders, registrationService: RegistrationService): CommandRemoveReg {
+        return CommandRemoveReg(
+            label = providers.commandLabels.removeReg,
+            service = registrationService,
+            handle = RemoveRegHandleImpl(providers.messages) as CommandRemoveRegHandle<CommandContext>
+        )
+    }
+
 }

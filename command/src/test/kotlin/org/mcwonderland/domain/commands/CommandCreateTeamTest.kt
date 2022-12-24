@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -13,8 +13,6 @@ import org.mcwonderland.domain.exceptions.UsersAlreadyInTeamException
 import org.mcwonderland.domain.exceptions.UsersNotFoundException
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.TeamService
-import org.mcwonderland.domain.commands.CommandCreateTeam
-import org.mcwonderland.domain.commands.CommandCreateTeamHandle
 import org.mcwonderland.domain.model.Team
 
 internal class CommandCreateTeamTest : CommandTestBase() {

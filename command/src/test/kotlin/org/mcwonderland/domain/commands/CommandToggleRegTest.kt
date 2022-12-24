@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.commands.CommandToggleReg
-import org.mcwonderland.domain.commands.CommandToggleRegHandle
 import org.mcwonderland.domain.features.RegistrationService
 
 class CommandToggleRegTest : CommandTestBase() {
@@ -24,13 +22,19 @@ class CommandToggleRegTest : CommandTestBase() {
     }
 
     @Test
+    fun withoutPermission_shouldDenied() {
+        executeWithNoArgs().let { verify { handle.failPermissionDenied(context, any()) } }
+    }
+
+    @Test
     fun shouldCallRegistrationService() {
         assertToggleMessage(true) { handle.onEnableRegistrations(context) }
         assertToggleMessage(false) { handle.onDisableRegistrations(context) }
     }
 
     private fun assertToggleMessage(state: Boolean, toggle: () -> Unit) {
-        every { service.toggleAllowRegistrations(sender) } returns state
+        every { service.toggleAllowRegistrations() } returns state
+        sender.addAdminPerm()
         executeWithNoArgs()
         verify { toggle() }
     }

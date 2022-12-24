@@ -26,6 +26,10 @@ class RegistrationRepositoryImpl(
         updateRegistrationState(userId, true)
     }
 
+    override fun removeRegistration(userId: String) {
+        updateRegistrationState(userId, false)
+    }
+
     override fun toggleRegistration(userId: String): Boolean {
         val newState = !isRegistered(userId)
         updateRegistrationState(userId, newState)

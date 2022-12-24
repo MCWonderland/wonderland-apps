@@ -8,7 +8,7 @@ class CommandHelp(
     private val commands: List<Command>,
     private val handle: CommandHelpHandle<CommandContext>
 ) : Command {
-    override val usage: String = "/$label"
+    override val usage: String = "$label"
 
     override fun execute(context: CommandContext) {
         return handle.showHelp(context, commands)

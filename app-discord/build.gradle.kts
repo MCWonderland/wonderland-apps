@@ -1,5 +1,4 @@
-version = "1.0.0"
-
+version = "1.0.1"
 
 dependencies {
     implementation(project(":mojang"))
@@ -8,6 +7,15 @@ dependencies {
 
     implementation("net.dv8tion:JDA:5.0.0-alpha.22")
     implementation("com.google.inject:guice:5.1.0")
+}
+
+
+
+tasks.getByName("shadowJar") {
+    dependsOn(":mojang:test")
+    dependsOn(":mongo:test")
+    dependsOn(":command:test")
+    dependsOn(":test")
 }
 
 tasks.jar {

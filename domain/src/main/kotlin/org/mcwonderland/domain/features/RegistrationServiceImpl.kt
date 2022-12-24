@@ -2,7 +2,7 @@ package org.mcwonderland.domain.features
 
 import org.mcwonderland.domain.exceptions.NotAllowRegistrationsException
 import org.mcwonderland.domain.exceptions.RequireLinkedAccountException
-import org.mcwonderland.domain.model.Settings
+import org.mcwonderland.domain.exceptions.UserNotFoundException
 import org.mcwonderland.domain.model.User
 import org.mcwonderland.domain.repository.RegistrationRepository
 import org.mcwonderland.domain.repository.SettingsRepository
@@ -12,7 +12,8 @@ class RegistrationServiceImpl(
     private val accountLinker: AccountLinker,
     private val registrationRepository: RegistrationRepository,
     private val settingsRepository: SettingsRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userFinder: UserFinder
 ) : RegistrationService {
 
     override fun toggleRegister(user: User): Boolean {
@@ -29,16 +30,20 @@ class RegistrationServiceImpl(
         return registrationRepository.listRegistrations().let { userRepository.findUsers(it) }
     }
 
-    override fun clearRegistrations(executor: User) {
-        executor.checkAdminPermission()
+    override fun clearRegistrations() {
         registrationRepository.clearRegistrations()
     }
 
-    override fun toggleAllowRegistrations(user: User): Boolean {
-        user.checkAdminPermission()
+    override fun toggleAllowRegistrations(): Boolean {
         val current = settingsRepository.isAllowRegistrations()
 
         return settingsRepository.setAllowRegistrations(!current)
+    }
+
+    override fun removeRegistration(userId: String): User {
+        val user = userFinder.find(userId) ?: throw UserNotFoundException(userId)
+        registrationRepository.removeRegistration(user.id)
+        return user
     }
 
 }

@@ -43,5 +43,7 @@ bin/
 
 ### Gradle ###
 .gradle/
-/app-discord/config.properties
 /.idea/
+
+### version.properties ###
+version.properties

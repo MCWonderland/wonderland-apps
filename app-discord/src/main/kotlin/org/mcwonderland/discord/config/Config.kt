@@ -1,13 +1,15 @@
 package org.mcwonderland.discord.config
 
 interface Config {
+    val botToken: String
     val commandPrefix: String
     val dbName: String
-    val mongoConnectionEnv: String
+    val mongoUrl: String
     val commandLabels: CommandLabels
 }
 
 interface CommandLabels {
+    val removeReg: String
     val link: String
     val register: String
 
@@ -25,13 +27,14 @@ interface CommandLabels {
 
 class CommandLabelsDefault : CommandLabels {
     override val addToTeam: String = "addtoteam"
-    override val createTeam: String = "createTeam"
+    override val createTeam: String = "createteam"
+    override val removeReg: String = "removereg"
     override val link: String = "link"
     override val register: String = "register"
-    override val removeTeam: String = "removeTeam"
-    override val listTeams: String = "listTeams"
+    override val removeTeam: String = "removeteam"
+    override val listTeams: String = "listteams"
     override val listReg: String = "listreg"
     override val toggleReg: String = "togglereg"
-    override val deleteTeam: String = "deleteTeam"
+    override val deleteTeam: String = "deleteteam"
     override val clearReg: String = "clearreg"
 }

@@ -1,0 +1,43 @@
+name: Discord Bot
+on:
+  push:
+    tags:
+      - 'discord-bot-v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Build with Gradle
+        run: ./gradlew :app-discord:test :app-discord:shadowJar
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
+
+      - name: Build Docker Image With Commit Tag
+        run: cd app-discord && docker build . -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }} -t ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:latest
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTER_URI }}
+          username: ${{ secrets.CONTAINER_REGISTER_TOKEN }}
+          password: ${{ secrets.CONTAINER_REGISTER_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }}
+
+      - name: Update K8s Pod
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: set image deployment/wl-discord-bot wl-discord-bot=${{ secrets.CONTAINER_REGISTER_URI }}/wl-discord-bot:${{ steps.get_version.outputs.VERSION }}

@@ -9,7 +9,10 @@ import org.mcwonderland.domain.model.Team
 import org.mcwonderland.domain.model.User
 import java.awt.Color
 
-class Messages(private val mojangAccount: MojangAccount) {
+class Messages(
+    private val mojangAccount: MojangAccount,
+    private val config: Config
+) {
 
     fun membersCantBeEmpty(): MessageEmbed {
         return EmbedBuilder()
@@ -142,7 +145,7 @@ class Messages(private val mojangAccount: MojangAccount) {
         return EmbedBuilder()
             .setTitle("報名清單")
             .addField("報名人數", users.size.toString(), false)
-            .addField("報名名單", users.joinToString("\n") { discordTag(it) }, false)
+            .addField("報名名單", users.joinToString("\n") { tagAndName(it) }, false)
             .build()
     }
 
@@ -239,7 +242,14 @@ class Messages(private val mojangAccount: MojangAccount) {
         return EmbedBuilder()
             .setColor(Color.CYAN)
             .setTitle("指令用法")
-            .setDescription(usage)
+            .setDescription(config.commandPrefix + usage)
+            .build()
+    }
+
+    fun registrationRemoved(user: User): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("移除完畢！")
+            .setDescription("已將 ${tagAndName(user)} 從報名列表中移除")
             .build()
     }
 

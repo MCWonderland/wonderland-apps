@@ -12,11 +12,12 @@ class CommandClearReg(
     private val handle: CommandClearRegHandle<CommandContext>
 ) : Command {
 
-    override val usage: String = "/$label"
+    override val usage: String = "$label"
 
     override fun execute(context: CommandContext) {
         return try {
-            registrationService.clearRegistrations(context.sender)
+            context.checkAdminPermission()
+            registrationService.clearRegistrations()
             handle.onCleared(context)
         } catch (e: PermissionDeniedException) {
             handle.failPermissionDenied(context, e)

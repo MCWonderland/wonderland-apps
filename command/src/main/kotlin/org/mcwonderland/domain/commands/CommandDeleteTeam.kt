@@ -11,7 +11,7 @@ class CommandDeleteTeam(
     private val handle: CommandDeleteTeamHandle<CommandContext>
 ) : Command {
 
-    override val usage: String = "/$label <teamId>"
+    override val usage: String = "$label <teamId>"
 
     override fun execute(context: CommandContext) {
         val teamId = context.getArg(0) ?: return handle.failWithUsage(context, usage)

@@ -1,4 +1,4 @@
-package org.mcwonderland.domain.command.impl
+package org.mcwonderland.domain.commands
 
 import io.mockk.every
 import io.mockk.mockk
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mcwonderland.domain.command.CommandContext
 import org.mcwonderland.domain.command.CommandTestBase
-import org.mcwonderland.domain.commands.CommandListReg
-import org.mcwonderland.domain.commands.CommandListRegHandle
 import org.mcwonderland.domain.fakes.Dummies
 import org.mcwonderland.domain.features.RegistrationService
 
