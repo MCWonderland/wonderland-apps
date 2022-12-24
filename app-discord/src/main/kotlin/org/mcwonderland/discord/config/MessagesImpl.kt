@@ -235,7 +235,7 @@ class Messages(
     private fun mcName(uuid: String) = mojangAccount.getNameByUUID(uuid) ?: "未知的 ID"
 
     private fun EmbedBuilder.error(): EmbedBuilder {
-        return setColor(Color.RED).setTitle("錯誤")
+        return setColor(Color.RED).setTitle("修但幾列！")
     }
 
     fun commandUsage(usage: String): MessageEmbed {
@@ -257,6 +257,13 @@ class Messages(
         return this
             .addField("隊伍名稱", team.id, false)
             .addField("隊伍成員", teamMembers(team), false)
+    }
+
+    fun teamsCleared(clearAmount: Int): MessageEmbed {
+        return EmbedBuilder()
+            .setTitle("已清除隊伍")
+            .setDescription("已清除 $clearAmount 個隊伍")
+            .build()
     }
 
     private fun teamMembers(team: Team): String {

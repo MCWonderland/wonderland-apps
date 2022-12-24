@@ -11,7 +11,7 @@ class HelpHandleImpl(private val commandPrefix: String) : CommandHelpHandle<Disc
         context.sendEmbed(EmbedBuilder().apply {
             setTitle("指令列表")
             setDescription("")
-            commands.forEach { appendDescription("\n${commandPrefix}${it.usage}") }
+            commands.sortedBy { it.label }.forEach { appendDescription("\n${commandPrefix}${it.usage}") }
         }.build())
     }
 

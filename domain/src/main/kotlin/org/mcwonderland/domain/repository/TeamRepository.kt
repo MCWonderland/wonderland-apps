@@ -9,4 +9,5 @@ interface TeamRepository {
     fun removeUserFromTeam(id: String): DBTeam?
     fun addUserToTeam(userId: String, teamId: String): DBTeam?
     fun deleteTeam(teamId: String): DBTeam?
+    fun clearTeams(): Int
 }

@@ -63,6 +63,10 @@ class TeamServiceImpl(
         teamRepository.deleteTeam(teamId) ?: throw TeamNotFoundException(teamId)
     }
 
+    override fun clearTeams(): Int {
+        return teamRepository.clearTeams()
+    }
+
     private fun checkEveryoneIsLinked(members: List<User>) {
         members.filter { !accountLinker.isLinked(it) }.let {
             if (it.isNotEmpty())

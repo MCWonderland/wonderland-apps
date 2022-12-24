@@ -43,6 +43,7 @@ fun main() {
         injector.getInstance(CommandRemoveTeam::class.java),
         injector.getInstance(CommandToggleReg::class.java),
         injector.getInstance(CommandRemoveReg::class.java),
+        injector.getInstance(CommandClearTeams::class.java),
     )
 
     commands.add(

@@ -29,5 +29,8 @@ abstract class CommandTestBase {
         return command.execute(context)
     }
 
+    fun assertUsageStartWithLabel() {
+        assert(command.usage.startsWith(command.label))
+    }
 
 }
