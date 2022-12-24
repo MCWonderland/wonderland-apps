@@ -14,7 +14,7 @@ class DatabaseModule : AbstractModule() {
 
     @Provides
     fun mongoClient(config: Config): MongoClient {
-        return MongoClientFactory.createClient(config.mongoConnectionEnv)
+        return MongoClientFactory.createClient(config.mongoUrl)
     }
 
     @Provides

@@ -33,11 +33,30 @@ subprojects {
     }
 
     dependencies {
-        if (project.name != "domain")
-            implementation(project(":domain"))
-
         testImplementation(project(":mocks"))
         testImplementation(kotlin("test"))
         testImplementation("io.mockk:mockk:1.13.2")
+    }
+
+    tasks.register<WriteProperties>("versionProperties") {
+        group = "build"
+        description = "Generates version.properties file."
+
+        outputFile = file("${project.buildDir}/resources/main/version.properties")
+        property("version", version)
+
+        outputs.upToDateWhen { false }
+    }
+
+    tasks.getByName("processResources").dependsOn("versionProperties")
+
+    if (project.name != "domain") {
+        dependencies {
+            implementation(project(":domain"))
+        }
+
+        tasks.getByName("shadowJar") {
+            dependsOn(":domain:test")
+        }
     }
 }

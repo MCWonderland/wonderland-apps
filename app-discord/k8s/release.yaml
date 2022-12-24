@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wl-discord-bot
+  labels:
+    app: wl-discord-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wl-discord-bot
+  template:
+    metadata:
+      labels:
+        app: wl-discord-bot
+    spec:
+      containers:
+        - name: wl-discord-bot
+          image: registry.digitalocean.com/wonderland-apps/wl-discord-bot:latest
+          imagePullPolicy: Always
+          env:
+            - name: DISCORD_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: discord
+                  key: token
+
+            - name: MONGO_URI
+              valueFrom:
+               secretKeyRef:
+                  name: mongo
+                  key: uri

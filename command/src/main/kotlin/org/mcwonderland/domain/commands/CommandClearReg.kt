@@ -16,7 +16,8 @@ class CommandClearReg(
 
     override fun execute(context: CommandContext) {
         return try {
-            registrationService.clearRegistrations(context.sender)
+            context.checkAdminPermission()
+            registrationService.clearRegistrations()
             handle.onCleared(context)
         } catch (e: PermissionDeniedException) {
             handle.failPermissionDenied(context, e)
