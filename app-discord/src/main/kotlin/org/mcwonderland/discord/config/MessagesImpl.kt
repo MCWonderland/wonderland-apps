@@ -130,7 +130,7 @@ class Messages(
             .setTitle("報名成功！")
             .setColor(Color.GREEN)
             .setDescription("已成功報名 Weekly Cup! 感謝你的參與")
-            .setImage("https://media.discordapp.net/attachments/1007651659503112252/1048629137578938419/img.png")
+            .setImage("https://cdn.discordapp.com/attachments/833606915518627850/1060190877869428826/IMG_3883.jpg")
             .build()
     }
 
